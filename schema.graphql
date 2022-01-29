@@ -1,0 +1,44 @@
+input CreateUserInput {
+  name: String!
+  fullName: String
+}
+
+type Health {
+  status: String!
+}
+
+type Meta {
+  build: String!
+  version: String!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
+  deleteUser(id: Int!): User!
+}
+
+type Query {
+  health: Health!
+  meta: Meta!
+  users: [User!]!
+  user(id: Int!): User!
+}
+
+input UpdateUserInput {
+  """The ID of the User to modify."""
+  id: Int!
+
+  """The name for the User."""
+  name: String!
+
+  """The full name for the User."""
+  fullName: String
+}
+
+type User {
+  id: Int!
+  name: String!
+  fullName: String
+}
+
