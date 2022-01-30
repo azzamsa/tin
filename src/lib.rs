@@ -8,9 +8,6 @@ mod user;
 
 use std::env;
 
-#[macro_use]
-extern crate diesel;
-
 use anyhow::Context;
 use async_graphql::{EmptySubscription, MergedObject, Schema};
 

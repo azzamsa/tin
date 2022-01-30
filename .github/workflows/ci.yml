@@ -1,0 +1,132 @@
+name: ci
+
+env:
+  MIN_SUPPORTED_RUST_VERSION: "1.58.1"
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  code_quality:
+    name: Code quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Install rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          # I need nightly for rustfmt
+          toolchain: nightly
+          default: true
+          profile: minimal # no documentation
+          components: clippy, rustfmt
+
+      - name: Cache
+        uses: Swatinem/rust-cache@v1
+
+      - name: Ensure `cargo fmt` has been run
+        run: make fmt_check
+
+      - name: Ensure MSRV is set in `clippy.toml`
+        run: grep "^msrv = \"${{ env.MIN_SUPPORTED_RUST_VERSION }}\"\$" clippy.toml
+
+      - name: Run clippy
+        env:
+          SQLX_OFFLINE: true
+        run: make lint
+
+
+  min_version:
+    name: Minimum supported rust version
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Install rust toolchain (v${{ env.MIN_SUPPORTED_RUST_VERSION }})
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.MIN_SUPPORTED_RUST_VERSION }}
+          default: true
+          profile: minimal
+
+      - name: Cache
+        uses: Swatinem/rust-cache@v1
+
+      - name: Prepare the database
+        run: |
+          docker-compose -f ./tests/docker-compose.yml run -d -p 5432:5432 --name postgres_db postgres_db
+          docker exec postgres_db bash -c "until pg_isready; do sleep 1; done"
+
+      - name: Migrate the database 
+        env:
+          DATABASE_URL: postgres://superuser:secret@localhost:5432/nahla
+        run: |
+          cargo install sqlx-cli --no-default-features --features postgres,native-tls
+
+          sqlx database create
+          sqlx migrate run
+
+      - name: Run tests
+        uses: actions-rs/cargo@v1
+        env:
+          DATABASE_URL: postgres://superuser:secret@localhost:5432/nahla
+        with:
+          command: test
+
+  build:
+    name: ${{ matrix.job.os }} (${{ matrix.job.target }})
+    runs-on: ${{ matrix.job.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu    }
+          # Sometimes musl is fails in the CI
+          # - { os: ubuntu-latest, target: x86_64-unknown-linux-musl   , use-cross: true }
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.job.target }}
+          override: true
+          profile: minimal
+
+      - name: Cache
+        uses: Swatinem/rust-cache@v1
+
+      - name: Show version information (Rust, cargo, GCC)
+        shell: bash
+        run: |
+          gcc --version || true
+          rustup -V
+          rustup toolchain list
+          rustup default
+          cargo -V
+          rustc -V
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        env:
+          SQLX_OFFLINE: true
+        with:
+          use-cross: ${{ matrix.job.use-cross }}
+          command: build
+          args: --locked --release --target=${{ matrix.job.target }}

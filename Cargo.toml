@@ -1,7 +1,7 @@
 [package]
-name = "adp"
+name = "nahla"
 version = "0.1.0"
-description = "A web service boilerplate using Async-GraphQL + Diesel + Poem"
+description = "A web service boilerplate in Rust"
 authors = ["azzamsa <me@azzamsa.com>"]
 edition = "2021"
 
@@ -16,7 +16,8 @@ async-graphql-poem = "3.0.25"
 anyhow = "1.0.52"
 
 # Database
-diesel = { version = "1.4.5", features=["postgres", "r2d2"] }
+sqlx = { version = "0.5", features = ["runtime-async-std-native-tls", "postgres", "offline"] }
+
 
 # log
 log = "0.4.14"

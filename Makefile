@@ -26,6 +26,9 @@ lint: ## Lint the codebase.
 	cargo clippy --locked --all-targets
 
 test:
+	# Usage: make comply db_password=secret
+	# Clean the db before the test
+	env PGPASSWORD=$(db_password) psql --host localhost --username postgres nahla --command "DELETE FROM user_;"
 	cargo test --all-targets
 
 update:
@@ -38,11 +41,11 @@ update_sqlx_schema:
 check_sqlx_schema:
 	cargo sqlx prepare --check -- --lib
 
-migrate_db:
+migrate_db: ## Setup the database schema.
 	sqlx database create
 	sqlx migrate run
 
-reset_db:
+reset_db: ## reset the database schema.
 	sqlx database drop && sqlx database create && sqlx migrate run
 
 comply: fmt lint test update_sqlx_schema ## Tasks to make the code-base comply with the rules. Mostly used in git hooks.

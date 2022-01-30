@@ -1,23 +1,19 @@
 use async_graphql::{InputObject, SimpleObject};
 
-use crate::db::schema::user_ as user;
-
-#[derive(Debug, SimpleObject, diesel::Queryable)]
+#[derive(Debug, SimpleObject)]
 pub struct User {
     pub id: i32,
     pub name: String,
     pub full_name: Option<String>,
 }
 
-#[derive(Debug, InputObject, diesel::Insertable)]
-#[table_name = "user"]
+#[derive(Debug, InputObject)]
 pub struct CreateUserInput {
     pub name: String,
     pub full_name: Option<String>,
 }
 
-#[derive(Debug, InputObject, diesel::AsChangeset)]
-#[table_name = "user"]
+#[derive(Debug, InputObject)]
 pub struct UpdateUserInput {
     /// The ID of the User to modify.
     pub id: i32,

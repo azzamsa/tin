@@ -1,17 +1,11 @@
-pub mod schema;
-
 use anyhow::Context;
-use diesel::pg::PgConnection;
-use diesel::r2d2::{ConnectionManager, Pool};
+use sqlx::{postgres::PgPoolOptions, PgPool};
 
 use crate::get_env;
 
-pub type DbPool = Pool<ConnectionManager<PgConnection>>;
-
-pub fn get_pool() -> anyhow::Result<DbPool> {
-    let url = &get_env("DATABASE_URL")?;
-    let manager = ConnectionManager::new(url);
-    Pool::builder()
-        .build(manager)
-        .context("failed to get database pool")
+pub fn get_pool() -> anyhow::Result<PgPool> {
+    PgPoolOptions::new()
+        .connect_timeout(std::time::Duration::from_secs(2))
+        .connect_lazy(&get_env("DATABASE_URL")?)
+        .context("failed to connect to database")
 }

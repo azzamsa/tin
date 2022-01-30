@@ -1,12 +1,11 @@
 use std::env;
 
 use async_graphql::{EmptySubscription, Schema};
+use nahla::db;
+use nahla::logger;
+use nahla::routes;
+use nahla::{Mutation, Query};
 use poem::{get, listener::TcpListener, post, EndpointExt, Route, Server};
-
-use adp::db;
-use adp::logger;
-use adp::routes;
-use adp::{Mutation, Query};
 
 #[tokio::main]
 async fn main() {
