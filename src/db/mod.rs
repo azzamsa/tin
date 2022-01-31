@@ -1,11 +1,42 @@
-use anyhow::Context;
-use sqlx::{postgres::PgPoolOptions, PgPool};
+use std::time::Duration;
 
-use crate::get_env;
+use sqlx::{self, postgres::PgPoolOptions, Executor, Pool, Postgres, Transaction};
 
-pub fn get_pool() -> anyhow::Result<PgPool> {
+use crate::config;
+use crate::Error;
+
+pub type DB = Pool<Postgres>;
+pub trait Queryer<'c>: Executor<'c, Database = sqlx::Postgres> {}
+
+impl<'c> Queryer<'c> for &Pool<Postgres> {}
+impl<'c> Queryer<'c> for &'c mut Transaction<'_, Postgres> {}
+
+pub async fn connect(database: &config::Database) -> Result<DB, Error> {
+    // See https://www.alexedwards.net/blog/configuring-sqldb
+    // and https://making.pusher.com/production-ready-connection-pooling-in-go
+    // for the details
+    // ret.SetMaxOpenConns(int(poolSize))
+    // ret.SetMaxIdleConns(int(poolSize / 2))
+    // ret.SetConnMaxLifetime(30 * time.Minute)
     PgPoolOptions::new()
-        .connect_timeout(std::time::Duration::from_secs(2))
-        .connect_lazy(&get_env("DATABASE_URL")?)
-        .context("failed to connect to database")
+        .max_connections(database.pool_size)
+        .max_lifetime(Duration::from_secs(30 * 60)) // 30 mins
+        .connect(&database.url)
+        .await
+        .map_err(|err| {
+            log::error!("db: connecting to DB: {}", err);
+            err.into()
+        })
+}
+
+pub async fn migrate(db: &DB) -> Result<(), Error> {
+    match sqlx::migrate!("db/migrations").run(db).await {
+        Ok(_) => Ok(()),
+        Err(err) => {
+            log::error!("migrating: {}", &err);
+            Err(err)
+        }
+    }?;
+
+    Ok(())
 }

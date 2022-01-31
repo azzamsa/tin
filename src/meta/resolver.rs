@@ -1,14 +1,22 @@
-use async_graphql::{FieldResult, Object};
+use std::sync::Arc;
 
-use super::schema::Meta;
-use super::service;
+use async_graphql::{Context, Error, FieldResult, Object};
+
+use super::model::Meta;
+use crate::context::ServerContext;
 
 #[derive(Default)]
 pub struct MetaQuery;
 
 #[Object]
 impl MetaQuery {
-    pub async fn meta(&self) -> FieldResult<Meta> {
-        service::read().await
+    pub async fn meta(&self, ctx: &Context<'_>) -> FieldResult<Meta> {
+        let server_ctx = ctx.data::<Arc<ServerContext>>()?;
+
+        let result = server_ctx.meta_service.find_meta().await;
+        match result {
+            Ok(res) => Ok(res.into()),
+            Err(err) => Err(Error::new(err.to_string())),
+        }
     }
 }

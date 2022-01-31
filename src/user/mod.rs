@@ -1,4 +1,8 @@
-mod model;
+pub mod entities;
+pub mod model;
+pub mod repository;
 pub mod resolver;
-mod schema;
-mod service;
+pub mod scalar;
+pub mod service;
+
+pub use service::Service;

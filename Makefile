@@ -8,10 +8,11 @@ setup: ## Setup the repository
 	git cliff --version || cargo install git-cliff
 	sqlx --version || cargo install sqlx-cli --no-default-features --features postgres,native-tls
 	cargo watch --version || cargo install cargo-watch
+	cargo outdated --version || cargo install --locked cargo-outdated 
 	npm install -g get-graphql-schema
 
 dev:
-	cargo watch -x clippy -x fmt -x run
+	cargo watch -x clippy -x '+nightly fmt' -x run
 
 c:
 	cargo check
@@ -46,14 +47,14 @@ migrate_db: ## Setup the database schema.
 	sqlx migrate run
 
 reset_db: ## reset the database schema.
-	sqlx database drop && sqlx database create && sqlx migrate run
+	sqlx database drop && sqlx database create
 
 comply: fmt lint test update_sqlx_schema ## Tasks to make the code-base comply with the rules. Mostly used in git hooks.
 
 check: check_sqlx_schema fmt_check lint test ## Check if the repository comply with the rules and ready to be pushed.
 
 store_schema: ## Update the schema
-	get-graphql-schema http://127.0.0.1:8000/graphql > schema.graphql
+	get-graphql-schema http://127.0.0.1:8000/graphql > tests/schema.graphql
 
 release:  ## Create a release
 	bash scripts/release.sh $(version)

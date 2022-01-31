@@ -6,7 +6,7 @@ use poem::{
     IntoResponse,
 };
 
-use crate::AppSchema;
+use crate::schema::AppSchema;
 
 #[handler]
 pub async fn graphql_playground() -> impl IntoResponse {

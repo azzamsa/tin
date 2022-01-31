@@ -63,6 +63,10 @@ jobs:
       - name: Cache
         uses: Swatinem/rust-cache@v1
 
+      - name: Prepare the environment variables
+        run: |
+          cp .example.env .env
+
       - name: Prepare the database
         run: |
           docker-compose -f ./tests/docker-compose.yml run -d -p 5432:5432 --name postgres_db postgres_db
@@ -75,7 +79,7 @@ jobs:
           cargo install sqlx-cli --no-default-features --features postgres,native-tls
 
           sqlx database create
-          sqlx migrate run
+          sqlx migrate --source db/migrations/ run
 
       - name: Run tests
         uses: actions-rs/cargo@v1

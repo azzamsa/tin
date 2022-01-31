@@ -5,9 +5,11 @@
    `user_` is the current best option.
 */
 create table if not exists user_ (
-   id serial,
+   id UUID primary key,
+   
+   created_at timestamp with time zone not null,
+   updated_at timestamp with time zone not null,
+
    name text not null unique,
-   full_name text,
-   --
-   primary key (id)
+   full_name text
 );

@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use uuid::Uuid;
 
 //
 // Create User
@@ -54,7 +55,7 @@ pub struct DeleteUserWrapper {
 // To match GraphQL response field camelCase,
 // we use `serde::rename_all` to change our Rust struct field into camelCae.
 pub struct User {
-    pub id: i32,
+    pub id: Uuid,
     pub name: String,
     pub full_name: Option<String>,
 }

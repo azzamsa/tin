@@ -1,0 +1,60 @@
+input CreateUserInput {
+  name: String!
+  fullName: String
+}
+
+"""
+Implement the DateTime<Utc> scalar
+
+The input/output is a string in RFC3339 format.
+"""
+scalar DateTime
+
+type Health {
+  status: String!
+}
+
+type Meta {
+  build: String!
+  version: String!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
+  deleteUser(id: UUID!): User!
+}
+
+type Query {
+  meta: Meta!
+  users: [User!]!
+  user(id: UUID!): User!
+  health: Health!
+}
+
+input UpdateUserInput {
+  id: UUID!
+  name: String!
+  fullName: String
+}
+
+type User {
+  id: UUID
+  createdAt: DateTime
+  name: String!
+  fullName: String
+  uniqueHash: String
+}
+
+"""
+A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as Strings
+within GraphQL. UUIDs are used to assign unique identifiers to entities without requiring a central
+allocating authority.
+
+# References
+
+* [Wikipedia: Universally Unique Identifier](http://en.wikipedia.org/wiki/Universally_unique_identifier)
+* [RFC4122: A Universally Unique IDentifier (UUID) URN Namespace](http://tools.ietf.org/html/rfc4122)
+"""
+scalar UUID
+

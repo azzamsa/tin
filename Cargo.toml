@@ -1,31 +1,36 @@
 [package]
 name = "nahla"
 version = "0.1.0"
-description = "A web service boilerplate in Rust"
-authors = ["azzamsa <me@azzamsa.com>"]
 edition = "2021"
 
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
 [dependencies]
-poem = { version = "1.2.45", features = ["test"] }
-tokio = { version = "1.15.0", features = ["rt-multi-thread"] }
+poem = { version = "1.2", features = ["test"] }
+tokio = { version = "1.15", features = ["rt-multi-thread"] }
 
 # GraphQL
-async-graphql = { version = "3.0.25" }
-async-graphql-poem = "3.0.25"
+async-graphql = { version = "3.0", features = ["uuid", "chrono"]}
+async-graphql-poem = "3.0"
 
-anyhow = "1.0.52"
+anyhow = "1.0"
+uuid = "0.8"
+ulid = { version = "0.5", features = ["uuid"] }
+time = "0.3"
+thiserror = "1.0"
+serde = "1.0"
+dotenv = "0.15"
+serde_json = "1.0"
+url = "2.2"
+chrono = { version = "0.4", features = ["serde"] }
 
 # Database
-sqlx = { version = "0.5", features = ["runtime-async-std-native-tls", "postgres", "offline"] }
-
+sqlx = { version = "0.5", features = ["runtime-async-std-native-tls", "postgres", "offline", "uuid", "chrono", "migrate"] }
 
 # log
-log = "0.4.14"
-fern = { version = "0.6.0", features = ["colored"] }
-chrono = "0.4.19"
-colored = "2.0.0"
+log = "0.4"
+env_logger = "0.9.0"
 
 [dev-dependencies]
 serde = { version = "1.0", features = ["derive"] }
 cynic = "1.0.0"
-serde_json = "1.0.75"
