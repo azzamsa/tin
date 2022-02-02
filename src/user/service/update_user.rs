@@ -1,11 +1,16 @@
 use chrono::Utc;
 
 use super::{Service, UpdateUserInput};
-use crate::errors::Error;
+use crate::errors;
 use crate::user::entities::User;
 
 impl Service {
-    pub async fn update_user(&self, input: UpdateUserInput) -> Result<User, Error> {
+    pub async fn update_user(&self, input: UpdateUserInput) -> Result<User, errors::Error> {
+        let username_exists = self.check_username_exists(&self.db, &input.name).await?;
+        if username_exists {
+            return Err(errors::core::Error::UsernameAlreadyExists.into());
+        }
+
         let user_input = User {
             id: input.id,
             name: input.name,
