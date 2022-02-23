@@ -21,16 +21,7 @@ impl UserQuery {
 
         let result = server_ctx.user_service.find_users().await;
         match result {
-            Ok(users) => Ok(users
-                .into_iter()
-                .map(|user| User {
-                    id: Some(user.id),
-                    created_at: Some(user.created_at),
-
-                    name: user.name,
-                    full_name: user.full_name,
-                })
-                .collect()),
+            Ok(users) => Ok(users.into_iter().map(|user| user.into()).collect()),
             Err(err) => Err(Error::new(err.to_string())),
         }
     }
