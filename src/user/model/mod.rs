@@ -13,8 +13,6 @@ pub struct User {
 
     pub name: String,
     pub full_name: Option<String>,
-
-    pub unique_hash: Option<String>,
 }
 
 impl From<entities::User> for User {
@@ -25,8 +23,6 @@ impl From<entities::User> for User {
 
             name: user.name,
             full_name: user.full_name,
-
-            unique_hash: Some("my unique hash!".to_string()),
         }
     }
 }

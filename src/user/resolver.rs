@@ -29,8 +29,6 @@ impl UserQuery {
 
                     name: user.name,
                     full_name: user.full_name,
-
-                    unique_hash: Some("my unique hash!".to_string()),
                 })
                 .collect()),
             Err(err) => Err(Error::new(err.to_string())),
