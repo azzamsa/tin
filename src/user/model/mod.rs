@@ -28,3 +28,8 @@ impl From<entities::User> for User {
         }
     }
 }
+
+#[derive(Debug, Clone, SimpleObject)]
+pub struct Users {
+    pub users: Vec<User>,
+}
