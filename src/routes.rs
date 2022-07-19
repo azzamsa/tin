@@ -24,7 +24,7 @@ pub async fn graphql_handler(schema: Extension<AppSchema>, req: GraphQLRequest) 
     schema.execute(req.into_inner()).await.into()
 }
 pub async fn graphql_playground() -> impl IntoResponse {
-    response::Html(playground_source(GraphQLPlaygroundConfig::new("/")))
+    response::Html(playground_source(GraphQLPlaygroundConfig::new("/graphql")))
 }
 
 pub async fn app() -> Result<Router, Error> {
