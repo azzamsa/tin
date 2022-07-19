@@ -13,6 +13,7 @@ use axum::{
 };
 
 use crate::{
+    config,
     config::Config,
     context::ServerContext,
     db, health, meta, routes,
@@ -47,10 +48,11 @@ pub async fn app() -> Result<Router, Error> {
         .data(Arc::clone(&server_context))
         .finish();
 
-    let app = Router::new()
-        .route("/", get(routes::graphql_playground))
-        .route("/graphql", post(routes::graphql_handler))
-        .layer(Extension(schema));
+    let mut app = Router::new().route("/graphql", post(routes::graphql_handler));
+    if config.env != config::Env::Production {
+        app = app.route("/", get(routes::graphql_playground));
+    }
+    let app = app.layer(Extension(schema));
 
     Ok(app)
 }
