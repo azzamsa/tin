@@ -1,6 +1,5 @@
 use super::Service;
-use crate::errors::Error;
-use crate::meta::entities::Meta;
+use crate::{errors::Error, meta::entities::Meta};
 
 impl Service {
     pub async fn find_meta(&self) -> Result<Meta, Error> {

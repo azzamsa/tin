@@ -1,62 +1,39 @@
-use std::sync::Arc;
-
 use anyhow::Result;
-use async_graphql::{EmptySubscription, Schema};
+use axum::{
+    body::Body,
+    http::{self, Request, StatusCode},
+};
 use cynic::MutationBuilder;
-use nahla::config::Config;
-use nahla::context::ServerContext;
-use nahla::routes::graphql_handler;
-use nahla::schema::{Mutation, Query};
-use nahla::{db, health, meta, user};
-use poem::{test::TestClient, Route};
-use serde_json::from_str;
+use graph::routes::app;
+use serde_json::{from_slice, to_string};
+use tower::util::ServiceExt;
 
-use super::graphql::add;
-use super::schema::CreateUserResponse;
+use super::{graphql::add, schema::CreateUserResponse};
+use crate::user::teardown;
 
 #[tokio::test]
 async fn create_user() -> Result<()> {
-    // Setup app
-    let config = Arc::new(Config::load()?);
-    let db = db::connect(&config.database).await?;
-
-    let user_service = Arc::new(user::Service::new(db.clone()));
-    let meta_service = Arc::new(meta::Service::new());
-    let health_service = Arc::new(health::Service::new());
-
-    let server_context = Arc::new(ServerContext {
-        user_service,
-        meta_service,
-        health_service,
-    });
-
-    let schema = Schema::build(Query::default(), Mutation::default(), EmptySubscription)
-        .data(Arc::clone(&server_context))
-        .finish();
-
-    // Test
-    let app = Route::new().at("/", graphql_handler);
-    let client = TestClient::new(app);
+    let app = app().await?;
 
     let args = add::CreateUserInput {
-        name: "khawa-create".to_string(),
+        name: "khawa".to_string(),
         full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
     };
     let query = add::UserMutation::build(&args);
 
-    let resp = client
-        .post("/")
-        .data(schema.clone())
-        .body_json(&query)
-        .send()
-        .await;
+    let request = Request::builder()
+        .method(http::Method::POST)
+        .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
+        .uri("/graphql")
+        .body(Body::from(to_string(&query)?))?;
 
-    resp.assert_status_is_ok();
+    let response = app.oneshot(request).await?;
+    assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_str = resp.into_body().into_string().await?;
-    let user_response: CreateUserResponse = from_str(&resp_str)?;
+    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
+    let user_response: CreateUserResponse = from_slice(&resp_byte)?;
+    assert_eq!(user_response.data.create_user.name, "khawa");
 
-    assert_eq!(user_response.data.create_user.name, "khawa-create");
-
+    teardown().await?;
     Ok(())
 }

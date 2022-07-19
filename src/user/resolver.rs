@@ -3,10 +3,8 @@ use std::sync::Arc;
 use async_graphql::{Context, Error, FieldResult, Object};
 use uuid::Uuid;
 
-use super::model::input;
-use super::model::User;
-use crate::context::ServerContext;
-use crate::user::scalar::Id;
+use super::model::{input, User};
+use crate::{context::ServerContext, user::scalar::Id};
 
 #[derive(Default)]
 pub struct UserQuery;

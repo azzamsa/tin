@@ -1,9 +1,2 @@
-# See options here: https://github.com/rust-lang/rustfmt/blob/master/Configurations.md
-
-edition = "2021"
-
-#
-# unstable features
-#
-
 group_imports = "StdExternalCrate"
+imports_granularity = "Crate"

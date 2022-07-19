@@ -2,8 +2,7 @@ use chrono::Utc;
 use ulid::Ulid;
 
 use super::{CreateUserInput, Service};
-use crate::errors;
-use crate::user::entities::User;
+use crate::{errors, user::entities::User};
 
 impl Service {
     pub async fn create_user(&self, input: CreateUserInput) -> Result<User, errors::Error> {

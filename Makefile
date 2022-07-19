@@ -8,29 +8,26 @@ setup: ## Setup the repository
 	git cliff --version || cargo install git-cliff
 	sqlx --version || cargo install sqlx-cli --no-default-features --features postgres,native-tls
 	cargo watch --version || cargo install cargo-watch
-	cargo outdated --version || cargo install --locked cargo-outdated 
+	cargo outdated --version || cargo install --locked cargo-outdated
 	npm install -g get-graphql-schema
+	dprint --version || cargo install dprint
 
 dev:
 	cargo watch -x clippy -x '+nightly fmt' -x run
 
-c:
-	cargo check
-
 fmt: ## Format the codebase.
 	cargo +nightly fmt
+	dprint fmt --config configs/dprint.json
 
 fmt_check: ## Check is the codebase properly formatted.
 	cargo +nightly fmt --all -- --check
+	dprint check --config configs/dprint.json
 
 lint: ## Lint the codebase.
 	cargo clippy --locked --all-targets
 
 test:
-	# Usage: make comply db_password=secret
-	# Clean the db before the test
-	env PGPASSWORD=$(db_password) psql --host localhost --username postgres nahla --command "DELETE FROM user_;"
-	cargo test --all-targets
+	cargo test --all-targets -- --test-threads 1
 
 update:
 	cargo update
@@ -58,3 +55,10 @@ store_schema: ## Update the schema
 
 release:  ## Create a release
 	bash scripts/release.sh $(version)
+
+##
+## Misc
+
+update_dependencies: ## Check outdated dependencies.
+	cargo update
+	cargo outdated --root-deps-only

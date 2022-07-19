@@ -8,17 +8,17 @@ if [ -n "$untracked_files" ]; then
     exit 1
 fi
 
-
 # takes the tag as an argument (e.g. v0.1.0)
 if [ -n "$1" ]; then
     # update the version
-    # jq update file "in-place" so it can't use pipe directly
-    _new_version=${1#v} # strip the `v` prefix
-    # shellcheck disable=SC2005
-    echo "$(jq --arg new_version "$_new_version" '.version = $new_version' package.json)" > package.json
+    new_version=${1#v} # strip the `v` prefix
+    sed --in-place "0,/^version = .*/s//version = \"$new_version\"/" Cargo.toml
+
+    # update Cargo.lock
+    cargo update
 
     # update the changelog
-    git-cliff --tag "$1" --sort newest > CHANGELOG.md
+    git-cliff --tag "$1" --sort newest --config configs/cliff.toml > CHANGELOG.md
     git add -A && git commit -m "$1"
     git show
     git tag -s -a "$1" -m "$1" -m "For details, see the CHANGELOG.md"

@@ -1,8 +1,7 @@
 use uuid::Uuid;
 
 use super::Service;
-use crate::errors::Error;
-use crate::user::entities::User;
+use crate::{errors::Error, user::entities::User};
 
 impl Service {
     pub async fn find_user(&self, id: Uuid) -> Result<User, Error> {

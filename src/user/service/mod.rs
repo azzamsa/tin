@@ -7,9 +7,10 @@ mod update_user;
 
 use uuid::Uuid;
 
-use crate::db::DB;
-use crate::user::model::input;
-use crate::user::repository::Repository;
+use crate::{
+    db::DB,
+    user::{model::input, repository::Repository},
+};
 
 #[derive(Debug)]
 pub struct Service {

@@ -1,8 +1,10 @@
 use async_graphql::{EmptySubscription, MergedObject, Schema};
 
-use crate::health::resolver::HealthQuery;
-use crate::meta::resolver::MetaQuery;
-use crate::user::resolver::{UserMutation, UserQuery};
+use crate::{
+    health::resolver::HealthQuery,
+    meta::resolver::MetaQuery,
+    user::resolver::{UserMutation, UserQuery},
+};
 
 #[derive(MergedObject, Default)]
 pub struct Query(MetaQuery, UserQuery, HealthQuery);

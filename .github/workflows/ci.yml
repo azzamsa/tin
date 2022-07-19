@@ -1,7 +1,7 @@
 name: ci
 
 env:
-  MIN_SUPPORTED_RUST_VERSION: "1.58.1"
+  MIN_SUPPORTED_RUST_VERSION: "1.62.0"
 
 on:
   workflow_dispatch:
@@ -32,8 +32,15 @@ jobs:
       - name: Cache
         uses: Swatinem/rust-cache@v1
 
-      - name: Ensure `cargo fmt` has been run
-        run: make fmt_check
+      - name: Install dprint
+        run: |
+          curl --location https://github.com/dprint/dprint/releases/download/0.30.3/dprint-x86_64-unknown-linux-gnu.zip --output dprint.zip
+          unzip dprint.zip
+          cp dprint ~/.cargo/bin/
+          dprint --version
+
+      - name: Ensure `fmt` has been run
+        run:  make fmt_check
 
       - name: Ensure MSRV is set in `clippy.toml`
         run: grep "^msrv = \"${{ env.MIN_SUPPORTED_RUST_VERSION }}\"\$" clippy.toml
@@ -82,11 +89,9 @@ jobs:
           sqlx migrate --source db/migrations/ run
 
       - name: Run tests
-        uses: actions-rs/cargo@v1
         env:
           DATABASE_URL: postgres://superuser:secret@localhost:5432/nahla
-        with:
-          command: test
+        run: make test
 
   build:
     name: ${{ matrix.job.os }} (${{ matrix.job.target }})
@@ -96,8 +101,6 @@ jobs:
       matrix:
         job:
           - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu    }
-          # Sometimes musl is fails in the CI
-          # - { os: ubuntu-latest, target: x86_64-unknown-linux-musl   , use-cross: true }
 
     steps:
       - name: Checkout source code

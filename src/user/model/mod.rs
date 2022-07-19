@@ -3,8 +3,10 @@ pub mod input;
 use async_graphql::SimpleObject;
 use serde::{Deserialize, Serialize};
 
-use crate::user::entities;
-use crate::user::scalar::{Id, Time};
+use crate::user::{
+    entities,
+    scalar::{Id, Time},
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize, SimpleObject)]
 pub struct User {

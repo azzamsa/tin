@@ -1,6 +1,6 @@
 ## Setting Up Database
 
-``` bash
+```bash
 # install sqlx-cli
 $ cargo install sqlx-cli --no-default-features --features postgres
 

@@ -1,36 +1,48 @@
 [package]
-name = "nahla"
+name = "graph"
 version = "0.1.0"
+authors = ["azzamsa <vcs@azzamsa.com>"]
+categories = ["web-programming"]
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+exclude = ["/README.md"]
+keywords = ["boilerplate"]
+license = "MIT"
+repository = "https://github.com/azzamsa/rust-graphql"
+description = "Rust GraphQL Template"
 
 [dependencies]
-poem = { version = "1.2", features = ["test"] }
-tokio = { version = "1.15", features = ["rt-multi-thread"] }
+axum = "0.5.13"
+tokio = { version = "1.20.0", features = ["macros", "rt-multi-thread"] }
 
 # GraphQL
-async-graphql = { version = "3.0", features = ["uuid", "chrono"]}
-async-graphql-poem = "3.0"
-
-anyhow = "1.0"
-uuid = "0.8"
-ulid = { version = "0.5", features = ["uuid"] }
-time = "0.3"
-thiserror = "1.0"
-serde = "1.0"
-dotenv = "0.15"
-serde_json = "1.0"
-url = "2.2"
-chrono = { version = "0.4", features = ["serde"] }
+async-graphql = { version = "4.0.5", features = ["uuid", "chrono"] }
+async-graphql-axum = "4.0.5"
 
 # Database
-sqlx = { version = "0.5", features = ["runtime-async-std-native-tls", "postgres", "offline", "uuid", "chrono", "migrate"] }
+sqlx = { version = "0.6.0", features = ["runtime-async-std-native-tls", "postgres", "offline", "uuid", "chrono", "migrate"] }
 
 # log
-log = "0.4"
 env_logger = "0.9.0"
+log = "0.4"
+
+anyhow = "1.0"
+base64 = "0.13.0"
+chrono = { version = "0.4", features = ["serde"] }
+dotenv = "0.15"
+serde = "1.0"
+serde_json = "1.0"
+thiserror = "1.0"
+time = "0.3"
+ulid = { version = "0.6.0", features = ["uuid"] }
+url = "2.2"
+uuid = "1.1.2"
 
 [dev-dependencies]
-serde = { version = "1.0", features = ["derive"] }
+# git hooks
+cargo-husky = { version = "1", features = ["user-hooks"] }
+
 cynic = "1.0.0"
+hyper = { version = "0.14.20", features = ["full"] }
+mime = "0.3.16"
+serde = { version = "1.0", features = ["derive"] }
+tower = { version = "0.4", features = ["util"] }

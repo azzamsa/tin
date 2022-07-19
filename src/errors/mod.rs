@@ -31,8 +31,8 @@ impl std::convert::From<sqlx::Error> for Error {
     }
 }
 
-impl std::convert::From<poem::Error> for Error {
-    fn from(err: poem::Error) -> Self {
+impl std::convert::From<axum::Error> for Error {
+    fn from(err: axum::Error) -> Self {
         Error::Internal(err.to_string())
     }
 }
@@ -97,5 +97,11 @@ impl std::convert::From<url::ParseError> for Error {
 impl std::convert::From<async_graphql::Error> for Error {
     fn from(err: async_graphql::Error) -> Self {
         Error::Internal(err.message)
+    }
+}
+
+impl std::convert::From<std::net::AddrParseError> for Error {
+    fn from(err: std::net::AddrParseError) -> Self {
+        Error::Internal(err.to_string())
     }
 }

@@ -1,67 +1,48 @@
-use std::sync::Arc;
-
-use anyhow::{Context, Result};
-use async_graphql::{EmptySubscription, Schema};
+use anyhow::Result;
+use axum::{
+    body::Body,
+    http::{self, Request, StatusCode},
+};
 use cynic::{MutationBuilder, QueryBuilder};
-use nahla::config::Config;
-use nahla::context::ServerContext;
-use nahla::routes::graphql_handler;
-use nahla::schema::{Mutation, Query};
-use nahla::{db, health, meta, user};
-use poem::{test::TestClient, Route};
-use serde_json::{from_str, Value};
+use graph::routes::app;
+use serde_json::{from_slice, to_string, Value};
+use tower::util::ServiceExt;
 
-use super::graphql::queries;
-use super::graphql::queries::{ReadUserArguments, UserQuery};
-use super::graphql::{add, delete};
-use super::schema::CreateUserResponse;
+use super::{
+    graphql::{
+        add, delete, queries,
+        queries::{ReadUserArguments, UserQuery},
+    },
+    schema::CreateUserResponse,
+};
+use crate::user::teardown;
 
 #[tokio::test]
 async fn delete_user() -> Result<()> {
-    // Setup app
-    let config = Arc::new(Config::load()?);
-    let db = db::connect(&config.database).await?;
-
-    let user_service = Arc::new(user::Service::new(db.clone()));
-    let meta_service = Arc::new(meta::Service::new());
-    let health_service = Arc::new(health::Service::new());
-
-    let server_context = Arc::new(ServerContext {
-        user_service,
-        meta_service,
-        health_service,
-    });
-
-    let schema = Schema::build(Query::default(), Mutation::default(), EmptySubscription)
-        .data(Arc::clone(&server_context))
-        .finish();
-
-    // Test
-    let app = Route::new().at("/", graphql_handler);
-    let client = TestClient::new(app);
-
+    let app = app().await?;
     //
     // Create User
     //
 
     let args = add::CreateUserInput {
-        name: "khawa-delete".to_string(),
+        name: "khawa".to_string(),
         full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
     };
     let query = add::UserMutation::build(&args);
 
-    let resp = client
-        .post("/")
-        .data(schema.clone())
-        .body_json(&query)
-        .send()
-        .await;
-    resp.assert_status_is_ok();
+    let request = Request::builder()
+        .method(http::Method::POST)
+        .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
+        .uri("/graphql")
+        .body(Body::from(to_string(&query)?))?;
 
-    let resp_str = resp.into_body().into_string().await?;
-    let user_response: CreateUserResponse = from_str(&resp_str)?;
+    let response = app.clone().oneshot(request).await?;
+    assert_eq!(response.status(), StatusCode::OK);
 
-    assert_eq!(user_response.data.create_user.name, "khawa-delete");
+    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
+    let user_response: CreateUserResponse = from_slice(&resp_byte)?;
+    assert_eq!(user_response.data.create_user.name, "khawa");
+
     let user_id = user_response.data.create_user.id;
 
     //
@@ -71,12 +52,14 @@ async fn delete_user() -> Result<()> {
     let user_id_str = delete::Uuid(user_id.to_string());
     let args = delete::DeleteUserArguments { id: user_id_str };
     let query = delete::UserMutation::build(&args);
-    let _resp = client
-        .post("/")
-        .data(schema.clone())
-        .body_json(&query)
-        .send()
-        .await;
+
+    let request = Request::builder()
+        .method(http::Method::POST)
+        .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
+        .uri("/graphql")
+        .body(Body::from(to_string(&query)?))?;
+
+    let _ = app.clone().oneshot(request).await?;
 
     //
     // Make sure user deleted
@@ -86,19 +69,18 @@ async fn delete_user() -> Result<()> {
     };
     let query = UserQuery::build(args);
 
-    let resp = client
-        .post("/")
-        .data(schema.clone())
-        .body_json(&query)
-        .send()
-        .await;
-    resp.assert_status_is_ok();
+    let request = Request::builder()
+        .method(http::Method::POST)
+        .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
+        .uri("/graphql")
+        .body(Body::from(to_string(&query)?))?;
 
-    let resp_str = resp.into_body().into_string().await?;
-
-    let body: Value = from_str(&resp_str).context("failed to deserialize response")?;
+    let response = app.clone().oneshot(request).await?;
+    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
+    let body: Value = from_slice(&resp_byte)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(error_message, "user not found");
 
+    teardown().await?;
     Ok(())
 }

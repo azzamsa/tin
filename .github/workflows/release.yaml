@@ -1,0 +1,77 @@
+# inspired by ripgrep workflow
+
+name: release
+
+on:
+  push:
+    tags:
+    - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  publish:
+    name: Publish for ${{ matrix.build }}
+    runs-on: ${{ matrix.os }}
+    env:
+      CARGO: cargo
+      # When CARGO is set to CROSS, this is set to `--target matrix.target`.
+      TARGET_FLAGS:
+      # When CARGO is set to CROSS, TARGET_DIR includes matrix.target.
+      TARGET_DIR: ./target
+      # Emit backtraces on panics.
+      RUST_BACKTRACE: 1
+    strategy:
+      matrix:
+        build: [linux]
+        include:
+        - build: linux
+          os: ubuntu-20.04
+          rust: stable
+          target: x86_64-unknown-linux-gnu
+          artifact_name: graph
+          asset_name: graph-linux-amd64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          profile: minimal
+          override: true
+          target: ${{ matrix.target }}
+
+      - name: Use Cross
+        # currently only used for non-windows
+        # because they didn't pick up these variables
+        run: |
+          cargo install cross
+          echo "CARGO=cross" >> $GITHUB_ENV
+          echo "TARGET_FLAGS=--target ${{ matrix.target }}" >> $GITHUB_ENV
+          echo "TARGET_DIR=./target/${{ matrix.target }}" >> $GITHUB_ENV
+
+      - name: Show command used for Cargo
+        run: |
+          echo "cargo command is: ${{ env.CARGO }}"
+          echo "target flag is: ${{ env.TARGET_FLAGS }}"
+          echo "target dir is: ${{ env.TARGET_DIR }}"
+      - name: Build release binary
+        run: ${{ env.CARGO }} build --verbose --release ${{ env.TARGET_FLAGS }}
+
+      - name: Strip release binary (linux and macos)
+        if: matrix.build == 'linux'
+        run: |
+          strip "target/${{ matrix.target }}/release/graph"
+
+      - name: Upload binaries to release
+        if: matrix.build == 'linux'
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GH_TOKEN }}
+          file: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref }}
+          overwrite: true
