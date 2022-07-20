@@ -30,10 +30,17 @@ Rust GraphQL Template 🏗️
 - [Axum](https://github.com/tokio-rs/axum) web framework
 - [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit
 - [Async-GraphQL](https://github.com/async-graphql/async-graphql) GraphQL server library
+- [utoipa](https://github.com/juhaku/utoipa) Auto generated OpenAPI documentation
+- [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator
+- Integration tests
+- Github Action workflows
+- Git hooks for continuous development (format, lint, test)
 
 ## Usage
 
 ```bash
+$ make setup
+
 $ cargo r
 ```
 
@@ -46,6 +53,7 @@ $ # Run unit tests and integration tests
 $ make check
 
 $ # Develop
+$ make setup
 $ make dev
 ```
 

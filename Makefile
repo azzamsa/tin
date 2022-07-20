@@ -9,8 +9,8 @@ setup: ## Setup the repository
 	sqlx --version || cargo install sqlx-cli --no-default-features --features postgres,native-tls
 	cargo watch --version || cargo install cargo-watch
 	cargo outdated --version || cargo install --locked cargo-outdated
-	npm install -g get-graphql-schema
 	dprint --version || cargo install dprint
+	# npm install -g get-graphql-schema
 
 dev:
 	cargo watch -x clippy -x '+nightly fmt' -x run
