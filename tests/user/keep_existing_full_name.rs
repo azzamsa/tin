@@ -6,7 +6,7 @@ use axum::{
 use cynic::MutationBuilder;
 use graph::routes::app;
 use serde_json::{from_slice, to_string};
-use tower::util::ServiceExt;
+use tower::{util::ServiceExt, Service};
 
 use super::{
     graphql::{add, update},
@@ -16,7 +16,8 @@ use crate::user::teardown;
 
 #[tokio::test]
 async fn keep_existing_full_name() -> Result<()> {
-    let app = app().await?;
+    let mut router = app().await?;
+    let app = router.ready().await?;
     //
     // Create User
     //
@@ -33,7 +34,7 @@ async fn keep_existing_full_name() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.clone().oneshot(request).await?;
+    let response = app.call(request).await?;
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
     let user_response: CreateUserResponse = from_slice(&resp_byte)?;
     let user_id = user_response.data.create_user.id;
@@ -53,7 +54,7 @@ async fn keep_existing_full_name() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.clone().oneshot(request).await?;
+    let response = app.call(request).await?;
     //
     // Make sure the full name preserved
     //
