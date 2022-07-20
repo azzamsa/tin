@@ -14,9 +14,3 @@ impl Default for Service {
         Self::new()
     }
 }
-
-#[derive(Debug)]
-pub struct Meta {
-    pub build: String,
-    pub version: String,
-}
