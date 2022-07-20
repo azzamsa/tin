@@ -13,8 +13,7 @@ use crate::user::{graphql::update, teardown};
 
 #[tokio::test]
 async fn duplicate_username_create() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
     //
     // Create User
     //
@@ -31,7 +30,7 @@ async fn duplicate_username_create() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let _ = app.call(request).await?;
+    let _ = app.ready().await?.call(request).await?;
 
     //
     // Create next user with the same name
@@ -49,7 +48,7 @@ async fn duplicate_username_create() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
     let body: Value = from_slice(&resp_byte)?;
     let error_message = &body["errors"][0]["message"];
@@ -79,7 +78,7 @@ async fn duplicate_username_update() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     //
@@ -98,7 +97,7 @@ async fn duplicate_username_update() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
@@ -123,7 +122,7 @@ async fn duplicate_username_update() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
     let body: Value = from_slice(&resp_byte)?;
     let error_message = &body["errors"][0]["message"];

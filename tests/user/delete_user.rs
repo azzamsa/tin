@@ -19,8 +19,7 @@ use crate::user::teardown;
 
 #[tokio::test]
 async fn delete_user() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
 
     //
     // Create User
@@ -38,7 +37,7 @@ async fn delete_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
@@ -61,7 +60,7 @@ async fn delete_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let _ = app.call(request).await?;
+    let _ = app.ready().await?.call(request).await?;
     //
     // Make sure user deleted
     //
@@ -76,7 +75,7 @@ async fn delete_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
     let body: Value = from_slice(&resp_byte)?;
     let error_message = &body["errors"][0]["message"];

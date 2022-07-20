@@ -16,8 +16,7 @@ use crate::user::teardown;
 
 #[tokio::test]
 async fn keep_existing_full_name() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
     //
     // Create User
     //
@@ -34,7 +33,7 @@ async fn keep_existing_full_name() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
     let user_response: CreateUserResponse = from_slice(&resp_byte)?;
     let user_id = user_response.data.create_user.id;
@@ -54,7 +53,7 @@ async fn keep_existing_full_name() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     //
     // Make sure the full name preserved
     //

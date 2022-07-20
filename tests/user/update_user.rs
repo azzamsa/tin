@@ -16,8 +16,7 @@ use crate::user::{graphql::update::Uuid, teardown};
 
 #[tokio::test]
 async fn update_user() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
     //
     // Create User
     //
@@ -34,7 +33,7 @@ async fn update_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
@@ -61,7 +60,7 @@ async fn update_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = app.ready().await?.call(request).await?;
     let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
     let user_response: UpdateUserResponse = from_slice(&resp_byte)?;
 
