@@ -17,7 +17,7 @@ impl Repository {
         after: Option<Uuid>,
         last: Option<i32>,
         before: Option<Uuid>,
-    ) -> Result<(Vec<entities::User>, PageInfo), Error> {
+    ) -> Result<(Vec<entities::User>, PageInfo, i64), Error> {
         let default_page_size = 10;
 
         let mut query: String = "select * from user_".to_string();
@@ -77,6 +77,18 @@ impl Repository {
         };
 
         //
+        // total count
+        //
+        let total_count_query = "select count(*) as exact_count from  user_";
+        let total_count: i64 = match sqlx::query(total_count_query).fetch_one(db).await {
+            Err(err) => {
+                log::error!("counting users: {}", &err);
+                return Err(err.into());
+            }
+            Ok(row) => row.get(0),
+        };
+
+        //
         // has_next query
         //
         if let Some(_first) = first {
@@ -117,6 +129,6 @@ impl Repository {
             end_cursor,
         };
 
-        Ok((rows, page_info))
+        Ok((rows, page_info, total_count))
     }
 }

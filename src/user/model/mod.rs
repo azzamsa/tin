@@ -58,6 +58,8 @@ pub struct UserConnection {
     pub edges: Vec<UserEdge>,
     // Information to aid in pagination.
     pub page_info: PageInfo,
+    // Identifies the total count of items in the connection.
+    pub total_count: i64,
 }
 
 #[derive(Debug, Clone, SimpleObject)]

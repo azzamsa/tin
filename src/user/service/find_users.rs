@@ -35,7 +35,7 @@ impl Service {
             (None, Some(before)) => (None, Some(Base64Cursor::decode(&before)?.into())),
         };
 
-        let (users, page_info) = self
+        let (users, page_info, total_count) = self
             .repo
             .find_all_users(&self.db, first, after_, last, before_)
             .await?;
@@ -44,6 +44,7 @@ impl Service {
         let user_connection = UserConnection {
             edges: user_edges,
             page_info: page_info.into(),
+            total_count,
         };
 
         Ok(user_connection)
