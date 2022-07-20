@@ -48,7 +48,9 @@ pub async fn app() -> Result<Router, Error> {
         .data(Arc::clone(&server_context))
         .finish();
 
-    let mut app = Router::new().route("/graphql", post(routes::graphql_handler));
+    let mut app = Router::new()
+        .route("/graphql", post(routes::graphql_handler))
+        .route("/health", get(health::resolver::health));
     if config.env != config::Env::Production {
         app = app.route("/", get(routes::graphql_playground));
     }

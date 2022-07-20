@@ -1,8 +1,9 @@
 use std::sync::Arc;
 
 use async_graphql::{Context, Error, FieldResult, Object};
+use axum::{response::IntoResponse, Json};
 
-use super::model::Health;
+use super::model::{Health, HealthResponse};
 use crate::context::ServerContext;
 
 #[derive(Default)]
@@ -19,4 +20,15 @@ impl HealthQuery {
             Err(err) => Err(Error::new(err.to_string())),
         }
     }
+}
+
+/// Test server health wihout invoking many
+/// moving parts.
+pub async fn health() -> impl IntoResponse {
+    let data = Health {
+        status: "running".into(),
+    };
+    let response = HealthResponse { data };
+
+    Json(response)
 }

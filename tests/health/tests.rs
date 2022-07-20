@@ -5,7 +5,7 @@ use axum::{
 };
 use cynic::QueryBuilder;
 use graph::routes::app;
-use serde_json::{from_slice, to_string};
+use serde_json::{from_slice, json, to_string, Value};
 use tower::util::ServiceExt;
 
 use super::{graphql::queries::HealthQuery, schema::HealthResponse};
@@ -28,5 +28,20 @@ async fn health() -> Result<()> {
     let health_response: HealthResponse = from_slice(&resp_byte)?;
     assert_eq!(health_response.data.health.status, "running");
 
+    Ok(())
+}
+
+#[tokio::test]
+async fn health_restapi() -> Result<()> {
+    let app = app().await?;
+
+    let request = Request::builder().uri("/health").body(Body::empty())?;
+
+    let response = app.oneshot(request).await?;
+    assert_eq!(response.status(), StatusCode::OK);
+
+    let body = hyper::body::to_bytes(response.into_body()).await?;
+    let body: Value = serde_json::from_slice(&body)?;
+    assert_eq!(body, json!({ "data": { "status": "running" } }));
     Ok(())
 }

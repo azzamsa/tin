@@ -15,3 +15,8 @@ impl From<entities::Health> for Health {
         }
     }
 }
+
+#[derive(Debug, Serialize)]
+pub struct HealthResponse {
+    pub data: Health,
+}
