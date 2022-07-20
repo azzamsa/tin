@@ -29,8 +29,8 @@ impl Service {
 pub struct PageInfo {
     pub has_next_page: bool,
     pub has_previous_page: bool,
-    pub start_cursor: Option<Uuid>,
-    pub end_cursor: Option<Uuid>,
+    pub start_cursor: Option<String>,
+    pub end_cursor: Option<String>,
 }
 
 #[derive(Debug)]

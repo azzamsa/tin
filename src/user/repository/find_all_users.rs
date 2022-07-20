@@ -1,9 +1,11 @@
 use sqlx::{self, Row};
+use uuid::Uuid;
 
 use super::Repository;
 use crate::{
     db::Queryer,
     errors::core::Error,
+    relay::Base64Cursor,
     user::{entities, service::PageInfo},
 };
 
@@ -11,10 +13,10 @@ impl Repository {
     pub async fn find_all_users<'c, C: Queryer<'c> + Copy>(
         &self,
         db: C,
-        after: Option<String>,
-        before: Option<String>,
         first: Option<i32>,
+        after: Option<Uuid>,
         last: Option<i32>,
+        before: Option<Uuid>,
     ) -> Result<(Vec<entities::User>, PageInfo), Error> {
         let default_page_size = 10;
 
@@ -77,34 +79,33 @@ impl Repository {
         //
         // has_next query
         //
-        match (first, last) {
-            (None, None) => return Err(Error::MissingFirstAndLastPaginationArguments),
-            (Some(_), Some(_)) => return Err(Error::PassedFirstAndLastPaginationArguments),
-            (Some(_first), None) => {
-                has_next_page = match sqlx::query(&has_next_query).fetch_one(db).await {
-                    Err(err) => {
-                        log::error!("calculating has_next in users: {}", &err);
-                        return Err(err.into());
-                    }
-
-                    Ok(row) => row.get(0),
-                };
-            }
-            (None, Some(last)) => {
-                log::debug!("rows length: {}. last: {}", rows.len(), last);
-                has_previous_page = rows.len() > last.try_into()?;
-
-                // The real value start from index 1. The 0 index only act as a sign for `has_previous_page`
-                rows = if has_previous_page {
-                    rows[1..rows.len()].to_vec()
-                } else {
-                    rows
+        if let Some(_first) = first {
+            has_next_page = match sqlx::query(&has_next_query).fetch_one(db).await {
+                Err(err) => {
+                    log::error!("calculating has_next in users: {}", &err);
+                    return Err(err.into());
                 }
+
+                Ok(row) => row.get(0),
+            };
+        };
+
+        if let Some(last) = last {
+            log::debug!("rows length: {}. last: {}", rows.len(), last);
+            has_previous_page = rows.len() > last.try_into()?;
+
+            // The real value start from index 1. The 0 index only act as a sign for `has_previous_page`
+            rows = if has_previous_page {
+                rows[1..rows.len()].to_vec()
+            } else {
+                rows
             }
-        }
+        };
 
         let (start_cursor, end_cursor) = if !rows.is_empty() {
-            (Some(rows[0].id), Some(rows[rows.len() - 1].id))
+            let start_cursor = Base64Cursor::new(rows[0].id).encode();
+            let end_cursor = Base64Cursor::new(rows[rows.len() - 1].id).encode();
+            (Some(start_cursor), Some(end_cursor))
         } else {
             (None, None)
         };

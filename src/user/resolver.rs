@@ -3,7 +3,7 @@ use std::sync::Arc;
 use async_graphql::{Context, Error, FieldResult, Object};
 use uuid::Uuid;
 
-use super::model::{input, User, UserConnection, UserEdge};
+use super::model::{input, User, UserConnection};
 use crate::{context::ServerContext, user::scalar::Id};
 
 #[derive(Default)]
@@ -29,14 +29,7 @@ impl UserQuery {
             .find_users(after.clone(), before.clone(), first, last)
             .await;
         match result {
-            Ok((users, page_info)) => {
-                let user_edges: Vec<UserEdge> = users.into_iter().map(|user| user.into()).collect();
-                let res = UserConnection {
-                    edges: user_edges,
-                    page_info: page_info.into(),
-                };
-                Ok(res)
-            }
+            Ok(users) => Ok(users),
             Err(err) => Err(Error::new(err.to_string())),
         }
     }

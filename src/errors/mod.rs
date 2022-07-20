@@ -2,6 +2,8 @@ pub mod core;
 
 use thiserror::Error;
 
+use crate::relay;
+
 // pub type Error = Box<dyn std::error::Error>;
 // pub type Error = anyhow::Error;
 #[derive(Error, Debug, Clone)]
@@ -103,5 +105,11 @@ impl std::convert::From<async_graphql::Error> for Error {
 impl std::convert::From<std::net::AddrParseError> for Error {
     fn from(err: std::net::AddrParseError) -> Self {
         Error::Internal(err.to_string())
+    }
+}
+
+impl std::convert::From<relay::Base64CursorError> for Error {
+    fn from(err: relay::Base64CursorError) -> Self {
+        Error::InvalidArgument(err.to_string())
     }
 }

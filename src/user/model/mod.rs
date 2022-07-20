@@ -3,10 +3,13 @@ pub mod input;
 use async_graphql::SimpleObject;
 use serde::{Deserialize, Serialize};
 
-use crate::user::{
-    entities,
-    scalar::{Id, Time},
-    service,
+use crate::{
+    relay::Base64Cursor,
+    user::{
+        entities,
+        scalar::{Id, Time},
+        service,
+    },
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize, SimpleObject)]
@@ -32,36 +35,39 @@ impl From<entities::User> for User {
 
 #[derive(Debug, Clone, SimpleObject)]
 pub struct UserEdge {
+    // The item at the end of the edge.
     pub node: User,
-    pub cursor: Id,
+    // A cursor for use in pagination.
+    pub cursor: String,
 }
 
 impl From<entities::User> for UserEdge {
     fn from(user: entities::User) -> Self {
-        let user_id = user.id;
+        let cursor = Base64Cursor::new(user.id).encode();
         let user_model = user.into();
-
         Self {
             node: user_model,
-            cursor: user_id,
+            cursor,
         }
     }
 }
 
 #[derive(Debug, Clone, SimpleObject)]
 pub struct UserConnection {
+    // A list of edges.
     pub edges: Vec<UserEdge>,
+    // Information to aid in pagination.
     pub page_info: PageInfo,
 }
 
 #[derive(Debug, Clone, SimpleObject)]
 pub struct PageInfo {
     // When paginating forwards, the cursor to continue.
-    pub end_cursor: Option<Id>,
+    pub end_cursor: Option<String>,
     // When paginating forwards, are there more items?
     pub has_next_page: bool,
     // When paginating backwards, the cursor to continue.
-    pub start_cursor: Option<Id>,
+    pub start_cursor: Option<String>,
     // When paginating backwards, are there more items?
     pub has_previous_page: bool,
 }
