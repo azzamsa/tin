@@ -3,8 +3,8 @@ use std::sync::Arc;
 use async_graphql::{Context, Error, FieldResult, Object};
 use uuid::Uuid;
 
-use super::model::{input, User};
-use crate::{context::ServerContext, relay, user::scalar::Id};
+use super::model::{input, User, UserConnection, UserEdge};
+use crate::{context::ServerContext, user::scalar::Id};
 
 #[derive(Default)]
 pub struct UserQuery;
@@ -21,20 +21,21 @@ impl UserQuery {
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-    ) -> relay::ConnectionResult<User> {
+    ) -> FieldResult<UserConnection> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
-        let result = server_ctx.user_service.find_users().await;
+        let result = server_ctx
+            .user_service
+            .find_users(after.clone(), before.clone(), first, last)
+            .await;
         match result {
-            Ok(users) => {
-                let users_: Vec<User> = users.into_iter().map(|user| user.into()).collect();
-
-                relay::query(
-                    users_.clone().into_iter(),
-                    relay::Params::new(after, before, first, last),
-                    10,
-                )
-                .await
+            Ok((users, page_info)) => {
+                let user_edges: Vec<UserEdge> = users.into_iter().map(|user| user.into()).collect();
+                let res = UserConnection {
+                    edges: user_edges,
+                    page_info: page_info.into(),
+                };
+                Ok(res)
             }
             Err(err) => Err(Error::new(err.to_string())),
         }

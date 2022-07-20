@@ -26,6 +26,14 @@ impl Service {
 }
 
 #[derive(Debug)]
+pub struct PageInfo {
+    pub has_next_page: bool,
+    pub has_previous_page: bool,
+    pub start_cursor: Option<Uuid>,
+    pub end_cursor: Option<Uuid>,
+}
+
+#[derive(Debug)]
 pub struct User {
     pub id: Uuid,
     pub name: String,

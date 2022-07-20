@@ -1,24 +1,121 @@
-use sqlx;
+use sqlx::{self, Row};
 
 use super::Repository;
-use crate::{db::Queryer, errors::core::Error, user::entities};
+use crate::{
+    db::Queryer,
+    errors::core::Error,
+    user::{entities, service::PageInfo},
+};
 
 impl Repository {
-    pub async fn find_all_users<'c, C: Queryer<'c>>(
+    pub async fn find_all_users<'c, C: Queryer<'c> + Copy>(
         &self,
         db: C,
-    ) -> Result<Vec<entities::User>, Error> {
-        const QUERY: &str = "select * from user_ ORDER BY id";
+        after: Option<String>,
+        before: Option<String>,
+        first: Option<i32>,
+        last: Option<i32>,
+    ) -> Result<(Vec<entities::User>, PageInfo), Error> {
+        let default_page_size = 10;
 
-        match sqlx::query_as::<_, entities::User>(QUERY)
+        let mut query: String = "select * from user_".to_string();
+        let mut has_next_query: String = String::new();
+
+        let mut has_next_page: bool = false;
+        let mut has_previous_page: bool = false;
+
+        match (first, after, last, before) {
+            // First
+            (Some(first), None, None, None) => {
+                query = format!("{query} order by id asc limit {}", first);
+                    has_next_query = format!(
+                    r#"select count(*) > {first} from
+                     ( select "id" from user_ order by id asc limit {limit} )
+                   as data"#,
+                    limit = first + 1
+                );
+
+
+            }
+            // First & after,
+            (Some(first), Some(after), None, None) => {
+                query = format!("{query} where id > '{after}' order by id asc limit {first}");
+                has_next_query = format!(
+                    r#"select count(*) > {first} from
+                     ( select "id" from user_ where id > '{after}' order by id asc limit {limit} )
+                   as data"#,
+                    limit = first + 1
+                );
+
+
+            }
+            // Last
+            (None, None, Some(last), None) => {
+                query = format!(
+                    "select * from ( select * from user_ order by id desc limit {limit} ) as data order by id asc",
+                    limit = last + 1
+                );
+            }
+            // Last & before
+            (None, None, Some(last), Some(before)) => {
+                query = format!("select * from ( select * from user_ where id < '{before}' order by id desc limit {limit} ) as data order by id asc;", limit = last + 1)
+            } // Default page size
+            _ => query = format!("{query} limit {}", default_page_size),
+        };
+
+        let mut rows = match sqlx::query_as::<_, entities::User>(&query)
             .fetch_all(db)
             .await
         {
             Err(err) => {
                 log::error!("finding users: {}", &err);
-                Err(err.into())
+                return Err(err.into());
             }
-            Ok(res) => Ok(res),
+            Ok(res) => res,
+        };
+
+        //
+        // has_next query
+        //
+        match (first, last) {
+            (None, None) => return Err(Error::MissingFirstAndLastPaginationArguments),
+            (Some(_), Some(_)) => return Err(Error::PassedFirstAndLastPaginationArguments),
+            (Some(_first), None) => {
+                has_next_page = match sqlx::query(&has_next_query).fetch_one(db).await {
+                    Err(err) => {
+                        log::error!("calculating has_next in users: {}", &err);
+                        return Err(err.into());
+                    }
+
+                    Ok(row) => row.get(0),
+                };
+            }
+            (None, Some(last)) => {
+                log::debug!("rows length: {}. last: {}", rows.len(), last);
+                has_previous_page = rows.len() > last.try_into()?;
+
+                // The real value start from index 1. The 0 index only act as a sign for `has_previous_page`
+                rows = if has_previous_page {
+                    rows[1..rows.len()].to_vec()
+                } else {
+                    rows
+                }
+            }
         }
+
+        let (start_cursor, end_cursor) = if !rows.is_empty() {
+            (Some(rows[0].id), Some(rows[rows.len() - 1].id))
+        } else {
+            (None, None)
+        };
+
+        let page_info = PageInfo {
+            has_next_page,
+            has_previous_page,
+            start_cursor,
+            end_cursor,
+        };
+
+        Ok((rows, page_info))
     }
 }

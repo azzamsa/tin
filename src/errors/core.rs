@@ -6,6 +6,8 @@ use sqlx;
 pub enum Error {
     // Other
     Internal,
+    MissingFirstAndLastPaginationArguments,
+    PassedFirstAndLastPaginationArguments,
 
     // User
     UserNotFound,
@@ -23,6 +25,13 @@ impl std::convert::From<Error> for crate::Error {
 
             // Other
             Error::Internal => crate::Error::Internal(String::new()),
+            Error::MissingFirstAndLastPaginationArguments => crate::Error::InvalidArgument(
+                "You must provide a `first` or `last` value to properly paginate the entity."
+                    .to_string(),
+            ),
+            Error::PassedFirstAndLastPaginationArguments => crate::Error::InvalidArgument(
+                "Passing both `first` and `last` for pagination is not supported.".to_string(),
+            ),
         }
     }
 }
@@ -38,6 +47,14 @@ impl std::convert::From<sqlx::Error> for Error {
 
 impl std::convert::From<async_graphql::Error> for Error {
     fn from(err: async_graphql::Error) -> Self {
+        match err {
+            _ => Error::Internal,
+        }
+    }
+}
+
+impl std::convert::From<std::num::TryFromIntError> for Error {
+    fn from(err: std::num::TryFromIntError) -> Self {
         match err {
             _ => Error::Internal,
         }
