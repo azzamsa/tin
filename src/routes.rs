@@ -11,6 +11,8 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 use crate::{
     config,
@@ -48,11 +50,27 @@ pub async fn app() -> Result<Router, Error> {
         .data(Arc::clone(&server_context))
         .finish();
 
+    #[derive(OpenApi)]
+    #[openapi(
+        handlers(
+            health::resolver::health,
+        ),
+        components(health::model::Health, health::model::HealthResponse),
+        tags(
+            (name = "Rust GraphQL", description = "Rust GraphQL Boilerplate 🏗️")
+        )
+    )]
+    struct ApiDoc;
+
     let mut app = Router::new()
         .route("/graphql", post(routes::graphql_handler))
         .route("/health", get(health::resolver::health));
     if config.env != config::Env::Production {
-        app = app.route("/", get(routes::graphql_playground));
+        app = app
+            .route("/playground", get(routes::graphql_playground))
+            .merge(
+                SwaggerUi::new("/swagger/*tail").url("/api-doc/openapi.json", ApiDoc::openapi()),
+            );
     }
     let app = app.layer(Extension(schema));
 

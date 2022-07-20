@@ -1,5 +1,5 @@
 mod entities;
-mod model;
+pub mod model;
 mod service;
 
 // public

@@ -24,6 +24,13 @@ impl HealthQuery {
 
 /// Test server health wihout invoking many
 /// moving parts.
+#[utoipa::path(
+        get,
+        path = "/health",
+        responses(
+            (status = 200, description = "server is running", body = HealthResponse),
+        ),
+    )]
 pub async fn health() -> impl IntoResponse {
     let data = Health {
         status: "running".into(),
