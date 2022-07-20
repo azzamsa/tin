@@ -60,5 +60,4 @@ release:  ## Create a release
 ## Misc
 
 update_dependencies: ## Check outdated dependencies.
-	cargo update
 	cargo outdated --root-deps-only
