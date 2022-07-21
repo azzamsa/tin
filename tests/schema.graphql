@@ -25,9 +25,16 @@ type Mutation {
   deleteUser(id: UUID!): User!
 }
 
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  startCursor: String
+  hasPreviousPage: Boolean!
+}
+
 type Query {
   meta: Meta!
-  users: [User!]!
+  users(first: Int, after: String, last: Int, before: String): UserConnection!
   user(id: UUID!): User!
   health: Health!
 }
@@ -39,17 +46,27 @@ input UpdateUserInput {
 }
 
 type User {
-  id: UUID
-  createdAt: DateTime
+  id: UUID!
+  createdAt: DateTime!
   name: String!
   fullName: String
-  uniqueHash: String
+}
+
+type UserConnection {
+  edges: [UserEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
 }
 
 """
-A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as Strings
-within GraphQL. UUIDs are used to assign unique identifiers to entities without requiring a central
-allocating authority.
+A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as
+Strings within GraphQL. UUIDs are used to assign unique identifiers to
+entities without requiring a central allocating authority.
 
 # References
 

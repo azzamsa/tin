@@ -7,14 +7,36 @@ pub mod queries {
     use super::schema;
 
     #[derive(cynic::QueryFragment, Debug)]
-    #[cynic(graphql_type = "Query")]
+    #[cynic(graphql_type = "Query", argument_struct = "ReadUsersArguments")]
     pub struct UsersQuery {
-        pub users: Vec<User>,
+        #[arguments(first = &args.first, after = &args.after, last = &args.last, before = &args.before)]
+        pub users: UserConnection,
+    }
+
+    // All sturct must be inline
+    #[derive(cynic::FragmentArguments, Debug)]
+    pub struct ReadUsersArguments {
+        pub first: Option<i32>,
+        pub after: Option<String>,
+        pub last: Option<i32>,
+        pub before: Option<String>,
+    }
+
+    #[derive(cynic::QueryFragment, Debug)]
+    pub struct UserConnection {
+        pub total_count: i32,
+        pub edges: Vec<UserEdge>,
+    }
+
+    #[derive(cynic::QueryFragment, Debug)]
+    pub struct UserEdge {
+        pub node: User,
+        pub cursor: String,
     }
 
     #[derive(cynic::QueryFragment, Debug)]
     pub struct User {
-        pub id: Option<Uuid>,
+        pub id: Uuid,
         pub name: String,
         pub full_name: Option<String>,
     }
@@ -61,7 +83,7 @@ pub mod add {
 
     #[derive(cynic::QueryFragment, Debug)]
     pub struct User {
-        pub id: Option<Uuid>,
+        pub id: Uuid,
         pub name: String,
         pub full_name: Option<String>,
     }
@@ -96,7 +118,7 @@ pub mod update {
 
     #[derive(cynic::QueryFragment, Debug)]
     pub struct User {
-        pub id: Option<Uuid>,
+        pub id: Uuid,
         pub name: String,
         pub full_name: Option<String>,
     }
@@ -122,7 +144,7 @@ pub mod delete {
 
     #[derive(cynic::QueryFragment, Debug)]
     pub struct User {
-        pub id: Option<Uuid>,
+        pub id: Uuid,
         pub name: String,
         pub full_name: Option<String>,
     }

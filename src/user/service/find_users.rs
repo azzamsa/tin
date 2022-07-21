@@ -1,52 +1,47 @@
-use super::Service;
+use super::{PageInfo, Service};
 use crate::{
-    errors::{
-        core::Error::{
-            MissingFirstAndLastPaginationArguments, PassedFirstAndLastPaginationArguments,
-        },
-        Error,
-    },
-    relay::Base64Cursor,
-    user::model::{UserConnection, UserEdge},
+    errors::Error,
+    relay::validation::{convert_params, validate_params},
+    user::model::UserEdge,
 };
 
 impl Service {
     pub async fn find_users(
         &self,
-        after: Option<String>,
-        before: Option<String>,
         first: Option<i32>,
+        after: Option<String>,
         last: Option<i32>,
-    ) -> Result<UserConnection, Error> {
-        match (first, last) {
-            (None, None) => return Err(MissingFirstAndLastPaginationArguments.into()),
-            (Some(_), Some(_)) => return Err(PassedFirstAndLastPaginationArguments.into()),
-            (Some(_first), None) => (Some(first), None),
-            (None, Some(last)) => (None, Some(last)),
-        };
+        before: Option<String>,
+    ) -> Result<Vec<UserEdge>, Error> {
+        validate_params(first, last)?;
+        let (after_uuid, before_uuid) = convert_params(after, before)?;
 
-        let (after_, before_) = match (after, before) {
-            (None, None) => (None, None),
-            (Some(after), Some(before)) => (
-                Some(Base64Cursor::decode(&after)?.into()),
-                Some(Base64Cursor::decode(&before)?.into()),
-            ),
-            (Some(after), None) => (Some(Base64Cursor::decode(&after)?.into()), None),
-            (None, Some(before)) => (None, Some(Base64Cursor::decode(&before)?.into())),
-        };
-
-        let (users, page_info, total_count) = self
+        let users = self
             .repo
-            .find_all_users(&self.db, first, after_, last, before_)
+            .find_all_users(&self.db, first, after_uuid, last, before_uuid)
             .await?;
 
         let user_edges: Vec<UserEdge> = users.into_iter().map(|user| user.into()).collect();
-        let user_connection = UserConnection {
-            edges: user_edges,
-            page_info: page_info.into(),
-            total_count,
-        };
+        Ok(user_edges)
+    }
+    pub async fn find_page_info(
+        &self,
+        first: Option<i32>,
+        after: Option<String>,
+        last: Option<i32>,
+        before: Option<String>,
+    ) -> Result<PageInfo, Error> {
+        let (after_uuid, before_uuid) = convert_params(after, before)?;
 
-        Ok(user_connection)
+        let users = self
+            .repo
+            .find_all_users(&self.db, first, after_uuid, last, before_uuid)
+            .await?;
+
+        let page_info = self
+            .repo
+            .find_page_info(&self.db, &users, first, after_uuid, last, before_uuid)
+            .await?;
+        Ok(page_info)
     }
 }

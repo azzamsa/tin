@@ -17,21 +17,27 @@ impl UserQuery {
     pub async fn users(
         &self,
         ctx: &Context<'_>,
-        after: Option<String>,
-        before: Option<String>,
         first: Option<i32>,
+        after: Option<String>,
         last: Option<i32>,
+        before: Option<String>,
     ) -> FieldResult<UserConnection> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
-
-        let result = server_ctx
+        let edges = server_ctx
             .user_service
-            .find_users(after.clone(), before.clone(), first, last)
-            .await;
-        match result {
-            Ok(users) => Ok(users),
-            Err(err) => Err(Error::new(err.to_string())),
-        }
+            .find_users(first, after.clone(), last, before.clone())
+            .await?;
+
+        let user_connection = UserConnection {
+            edges,
+            //
+            after,
+            before,
+            first,
+            last,
+        };
+
+        Ok(user_connection)
     }
     pub async fn user(&self, ctx: &Context<'_>, id: Uuid) -> FieldResult<User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;

@@ -1,3 +1,5 @@
+pub mod validation;
+
 use async_graphql::static_assertions::_core::fmt::Formatter;
 use uuid::Uuid;
 

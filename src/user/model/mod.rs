@@ -1,9 +1,12 @@
 pub mod input;
+use std::sync::Arc;
 
-use async_graphql::SimpleObject;
+use async_graphql::{ComplexObject, Context, Result, SimpleObject};
 use serde::{Deserialize, Serialize};
+use sqlx::Row;
 
 use crate::{
+    context::ServerContext,
     relay::Base64Cursor,
     user::{
         entities,
@@ -53,13 +56,55 @@ impl From<entities::User> for UserEdge {
 }
 
 #[derive(Debug, Clone, SimpleObject)]
+#[graphql(complex)]
 pub struct UserConnection {
     // A list of edges.
     pub edges: Vec<UserEdge>,
+    //
+    // helper
+    //
+    #[graphql(skip)]
+    pub after: Option<String>,
+    #[graphql(skip)]
+    pub before: Option<String>,
+    #[graphql(skip)]
+    pub first: Option<i32>,
+    #[graphql(skip)]
+    pub last: Option<i32>,
+}
+
+#[ComplexObject]
+impl UserConnection {
     // Information to aid in pagination.
-    pub page_info: PageInfo,
+    async fn page_info(&self, ctx: &Context<'_>) -> Result<PageInfo> {
+        let server_ctx = ctx.data::<Arc<ServerContext>>()?;
+        let page_info = server_ctx
+            .user_service
+            .find_page_info(
+                self.first,
+                self.after.clone(),
+                self.last,
+                self.before.clone(),
+            )
+            .await?;
+        Ok(page_info.into())
+    }
     // Identifies the total count of items in the connection.
-    pub total_count: i64,
+    async fn total_count(&self, ctx: &Context<'_>) -> Result<i64> {
+        let server_ctx = ctx.data::<Arc<ServerContext>>()?;
+        let db = &server_ctx.user_service.db;
+
+        let total_count_query = "select count(*) as exact_count from  user_";
+        let total_count = match sqlx::query(total_count_query).fetch_one(db).await {
+            Err(err) => {
+                log::error!("counting users: {}", &err);
+                return Err(err.into());
+                // None
+            }
+            Ok(row) => Ok(row.get(0)),
+        };
+        total_count
+    }
 }
 
 #[derive(Debug, Clone, SimpleObject)]

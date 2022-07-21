@@ -15,7 +15,7 @@ use crate::{
 #[derive(Debug)]
 pub struct Service {
     repo: Repository,
-    db: DB,
+    pub db: DB,
 }
 
 impl Service {

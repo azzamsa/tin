@@ -2,6 +2,33 @@ use serde::Deserialize;
 use uuid::Uuid;
 
 //
+// Users
+//
+
+#[derive(Debug, Deserialize)]
+pub struct UsersResponse {
+    pub data: UserConnectionWrapper,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all(deserialize = "camelCase"))]
+pub struct UserConnectionWrapper {
+    pub users: UserConnection,
+}
+#[derive(Debug, Deserialize)]
+#[serde(rename_all(deserialize = "camelCase"))]
+pub struct UserConnection {
+    pub total_count: i32,
+    pub edges: Vec<UserEdge>,
+}
+#[derive(Debug, Deserialize)]
+#[serde(rename_all(deserialize = "camelCase"))]
+pub struct UserEdge {
+    pub node: User,
+    pub cursor: String,
+}
+
+//
 // Create User
 //
 
