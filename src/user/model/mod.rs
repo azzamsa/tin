@@ -2,7 +2,6 @@ pub mod input;
 use std::sync::Arc;
 
 use async_graphql::{ComplexObject, Context, Result, SimpleObject};
-use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
 use crate::{
@@ -15,7 +14,7 @@ use crate::{
     },
 };
 
-#[derive(Debug, Clone, Serialize, Deserialize, SimpleObject)]
+#[derive(Debug, SimpleObject)]
 pub struct User {
     pub id: Id,
     pub created_at: Time,
@@ -36,7 +35,7 @@ impl From<entities::User> for User {
     }
 }
 
-#[derive(Debug, Clone, SimpleObject)]
+#[derive(Debug, SimpleObject)]
 pub struct UserEdge {
     // The item at the end of the edge.
     pub node: User,
@@ -55,7 +54,7 @@ impl From<entities::User> for UserEdge {
     }
 }
 
-#[derive(Debug, Clone, SimpleObject)]
+#[derive(Debug, SimpleObject)]
 #[graphql(complex)]
 pub struct UserConnection {
     // A list of edges.
@@ -107,7 +106,7 @@ impl UserConnection {
     }
 }
 
-#[derive(Debug, Clone, SimpleObject)]
+#[derive(Debug, SimpleObject)]
 pub struct PageInfo {
     // When paginating forwards, the cursor to continue.
     pub end_cursor: Option<String>,

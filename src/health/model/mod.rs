@@ -1,10 +1,10 @@
 use async_graphql::SimpleObject;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use utoipa::Component;
 
 use crate::health::entities;
 
-#[derive(Debug, Clone, Serialize, Deserialize, SimpleObject, Component)]
+#[derive(Debug, SimpleObject, Serialize, Component)]
 pub struct Health {
     pub status: String,
 }
