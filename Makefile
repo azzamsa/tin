@@ -50,7 +50,8 @@ comply: fmt lint test update_sqlx_schema ## Tasks to make the code-base comply w
 
 check: check_sqlx_schema fmt_check lint test ## Check if the repository comply with the rules and ready to be pushed.
 
-store_schema: ## Update the schema
+update_graphql_schema: ## Update the schema
+	## run the app before running this command `cargo r`
 	get-graphql-schema http://127.0.0.1:8000/graphql > tests/schema.graphql
 
 release:  ## Create a release
@@ -59,5 +60,5 @@ release:  ## Create a release
 ##
 ## Misc
 
-update_dependencies: ## Check outdated dependencies.
+outdated_dependencies: ## Check outdated dependencies.
 	cargo outdated --root-deps-only
