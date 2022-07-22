@@ -1,6 +1,6 @@
 [package]
 name = "graph"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["azzamsa <vcs@azzamsa.com>"]
 categories = ["web-programming"]
 edition = "2021"
