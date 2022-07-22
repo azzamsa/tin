@@ -27,14 +27,19 @@ Rust GraphQL Template 🏗️
 
 ## Features
 
-- [Axum](https://github.com/tokio-rs/axum) web framework
-- [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit
 - [Async-GraphQL](https://github.com/async-graphql/async-graphql) GraphQL server library
-- [utoipa](https://github.com/juhaku/utoipa) Auto generated OpenAPI documentation
+  - Relay compatible cursor-based pagination
+  - Playground disabled in the production environment for performance reasons
+- [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit
+- [Axum](https://github.com/tokio-rs/axum) web framework
+- [utoipa](https://github.com/juhaku/utoipa) Auto-generated OpenAPI documentation
 - [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator
-- Integration tests
-- Github Action workflows
+- Exhaustive Integration tests
+  - Uses [Cynic](https://github.com/obmarg/cynic) for GraphQL client
+- Github Action for CI and release
 - Git hooks for continuous development (format, lint, test)
+  - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky)
+- Consistent formatting using [dprint](https://github.com/dprint/dprint)
 
 ## Usage
 
