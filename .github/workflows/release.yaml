@@ -44,6 +44,13 @@ jobs:
           override: true
           target: ${{ matrix.target }}
 
+      - name: Install OpenSSL
+        run: |
+          sudo apt-get install pkg-config libssl-dev
+
+      - name: Cache
+        uses: Swatinem/rust-cache@v1
+
       - name: Use Cross
         # currently only used for non-windows
         # because they didn't pick up these variables
@@ -58,8 +65,9 @@ jobs:
           echo "cargo command is: ${{ env.CARGO }}"
           echo "target flag is: ${{ env.TARGET_FLAGS }}"
           echo "target dir is: ${{ env.TARGET_DIR }}"
+
       - name: Build release binary
-        run: ${{ env.CARGO }} build --verbose --release ${{ env.TARGET_FLAGS }}
+        run: ${{ env.CARGO }} build --locked --verbose --release ${{ env.TARGET_FLAGS }}
 
       - name: Strip release binary (linux and macos)
         if: matrix.build == 'linux'
