@@ -4,8 +4,6 @@ use thiserror::Error;
 
 use crate::relay;
 
-// pub type Error = Box<dyn std::error::Error>;
-// pub type Error = anyhow::Error;
 #[derive(Error, Debug, Clone)]
 pub enum Error {
     #[error("Internal error")]
