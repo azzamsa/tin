@@ -106,6 +106,12 @@ impl std::convert::From<std::net::AddrParseError> for Error {
     }
 }
 
+impl std::convert::From<hyper::Error> for Error {
+    fn from(err: hyper::Error) -> Self {
+        Error::Internal(err.to_string())
+    }
+}
+
 impl std::convert::From<relay::Base64CursorError> for Error {
     fn from(err: relay::Base64CursorError) -> Self {
         Error::InvalidArgument(err.to_string())

@@ -18,10 +18,7 @@ async fn main() -> Result<(), graph::Error> {
     let address = &SocketAddr::new(host, port);
 
     log::info!("App started at `{}`", address);
-    Server::bind(address)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    Server::bind(address).serve(app.into_make_service()).await?;
 
     Ok(())
 }
