@@ -10,13 +10,13 @@ setup: ## Setup the repository
 	cargo watch --version || cargo install cargo-watch
 	cargo outdated --version || cargo install --locked cargo-outdated
 	dprint --version || cargo install dprint
-	# npm install -g get-graphql-schema
+	## npm install -g get-graphql-schema
 
 dev:
 	cargo watch -x clippy -x '+nightly fmt' -x run
 
 fmt: ## Format the codebase.
-	cargo +nightly fmt
+	cargo +nightly fmt --all
 	dprint fmt --config configs/dprint.json
 
 fmt_check: ## Check is the codebase properly formatted.
@@ -24,7 +24,10 @@ fmt_check: ## Check is the codebase properly formatted.
 	dprint check --config configs/dprint.json
 
 lint: ## Lint the codebase.
-	cargo clippy --locked --all-targets
+	cargo clippy --locked --all-targets --all-features
+
+doc_check: ## Check the documentation.
+	cargo doc --all-features --no-deps
 
 test:
 	cargo test --all-targets -- --test-threads 1
@@ -48,7 +51,7 @@ reset_db: ## reset the database schema.
 
 comply: fmt lint test update_sqlx_schema ## Tasks to make the code-base comply with the rules. Mostly used in git hooks.
 
-check: check_sqlx_schema fmt_check lint test ## Check if the repository comply with the rules and ready to be pushed.
+check: check_sqlx_schema fmt_check lint test doc_check ## Check if the repository comply with the rules and ready to be pushed.
 
 update_graphql_schema: ## Update the schema
 	## run the app before running this command `cargo r`
