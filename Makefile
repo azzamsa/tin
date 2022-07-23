@@ -60,5 +60,6 @@ release:  ## Create a release
 ##
 ## Misc
 
-outdated_dependencies: ## Check outdated dependencies.
+check_dependencies: ## Check dependencies health.
+	cargo +nightly udeps
 	cargo outdated --root-deps-only
