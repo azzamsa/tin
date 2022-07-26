@@ -41,26 +41,20 @@ Rust GraphQL Template 🏗️
   - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky)
 - Consistent formatting using [dprint](https://github.com/dprint/dprint)
 
+## Navigating the Code
+
+All the features can be found in the [CHANGELOG](CHANGELOG.md) file tagged with `feat`.
+The file only contains user-facing changes, so you won't get lost navigating the code.
+
 ## Usage
 
 ```bash
-$ make setup
+$ clone the repository
 
-$ cargo r
+$ make dev  # see also `make setup`
 ```
 
-## Development
-
-```bash
-$ clone the repository 
-
-$ # Run unit tests and integration tests
-$ make check
-
-$ # Develop
-$ make setup
-$ make dev
-```
+Go to the playground `http://127.0.0.1:8000/playground` to see the schema.
 
 ## Credits
 
