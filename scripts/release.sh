@@ -12,7 +12,7 @@ fi
 if [ -n "$1" ]; then
     # update the version
     new_version=${1#v} # strip the `v` prefix
-    sed --in-place "0,/^version = .*/s//version = \"$new_version\"/" Cargo.toml
+    cargo set-version $new_version
 
     # update Cargo.lock
     cargo update

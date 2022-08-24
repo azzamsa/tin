@@ -6,6 +6,7 @@ help: # https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 setup: ## Setup the repository
 	echo "::: Setting up..."
 	git cliff --version || cargo install git-cliff
+	cargo-set-version --help || cargo install cargo-edit
 	sqlx --version || cargo install sqlx-cli --no-default-features --features postgres,native-tls
 	cargo watch --version || cargo install cargo-watch
 	cargo outdated --version || cargo install --locked cargo-outdated
