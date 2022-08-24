@@ -28,7 +28,7 @@ const APP_ENV_DEV: &str = "dev";
 const APP_ENV_STAGING: &str = "staging";
 const APP_ENV_PRODUCTION: &str = "production";
 
-#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
+#[derive(Debug, Eq, PartialEq, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Env {
     Dev,

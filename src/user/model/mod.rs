@@ -94,15 +94,13 @@ impl UserConnection {
         let db = &server_ctx.user_service.db;
 
         let total_count_query = "select count(*) as exact_count from  user_";
-        let total_count = match sqlx::query(total_count_query).fetch_one(db).await {
+        match sqlx::query(total_count_query).fetch_one(db).await {
             Err(err) => {
                 log::error!("counting users: {}", &err);
-                return Err(err.into());
-                // None
+                Err(err.into())
             }
             Ok(row) => Ok(row.get(0)),
-        };
-        total_count
+        }
     }
 }
 
