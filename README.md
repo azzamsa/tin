@@ -48,8 +48,11 @@ The file only contains user-facing changes, so you won't get lost navigating the
 
 ## Usage
 
-```bash
+```shell
 $ clone the repository
+
+$ # Create database
+$ sudo -u postgres createdb graphql
 
 $ make dev  # see also `make setup`
 ```
