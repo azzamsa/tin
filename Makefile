@@ -29,12 +29,8 @@ lint: ## Lint the codebase.
 doc_check: ## Check the documentation.
 	cargo doc --all-features --no-deps
 
-test:
+test: ## Test the codebase.
 	cargo test --all-targets -- --test-threads 1
-
-update:
-	cargo update
-	cargo outdated --root-deps-only
 
 update_sqlx_schema:
 	cargo sqlx prepare -- --lib
@@ -60,8 +56,9 @@ update_graphql_schema: ## Update the schema
 release:  ## Create a release
 	bash scripts/release.sh $(version)
 
-##
-## Misc
+#
+# Misc
+#
 
 check_dependencies: ## Check dependencies health.
 	cargo +nightly udeps
