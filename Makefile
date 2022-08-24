@@ -10,7 +10,6 @@ setup: ## Setup the repository
 	cargo watch --version || cargo install cargo-watch
 	cargo outdated --version || cargo install --locked cargo-outdated
 	dprint --version || cargo install dprint
-	## npm install -g get-graphql-schema
 
 dev:
 	cargo watch -x clippy -x '+nightly fmt' -x run
@@ -48,10 +47,6 @@ reset_db: ## reset the database schema.
 comply: fmt lint test update_sqlx_schema ## Tasks to make the code-base comply with the rules. Mostly used in git hooks.
 
 check: check_sqlx_schema fmt_check lint test doc_check ## Check if the repository comply with the rules and ready to be pushed.
-
-update_graphql_schema: ## Update the schema
-	## run the app before running this command `cargo r`
-	get-graphql-schema http://127.0.0.1:8000/graphql > tests/schema.graphql
 
 release:  ## Create a release
 	bash scripts/release.sh $(version)

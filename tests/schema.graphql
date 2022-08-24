@@ -1,6 +1,7 @@
+
 input CreateUserInput {
-  name: String!
-  fullName: String
+	name: String!
+	fullName: String
 }
 
 """
@@ -10,58 +11,38 @@ The input/output is a string in RFC3339 format.
 """
 scalar DateTime
 
+
 type Health {
-  status: String!
+	status: String!
 }
 
+
+
 type Meta {
-  build: String!
-  version: String!
+	build: String!
+	version: String!
 }
 
 type Mutation {
-  createUser(input: CreateUserInput!): User!
-  updateUser(input: UpdateUserInput!): User!
-  deleteUser(id: UUID!): User!
+	createUser(input: CreateUserInput!): User!
+	updateUser(input: UpdateUserInput!): User!
+	deleteUser(id: UUID!): User!
 }
 
 type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  startCursor: String
-  hasPreviousPage: Boolean!
+	endCursor: String
+	hasNextPage: Boolean!
+	startCursor: String
+	hasPreviousPage: Boolean!
 }
 
 type Query {
-  meta: Meta!
-  users(first: Int, after: String, last: Int, before: String): UserConnection!
-  user(id: UUID!): User!
-  health: Health!
+	meta: Meta!
+	users(first: Int, after: String, last: Int, before: String): UserConnection!
+	user(id: UUID!): User!
+	health: Health!
 }
 
-input UpdateUserInput {
-  id: UUID!
-  name: String!
-  fullName: String
-}
-
-type User {
-  id: UUID!
-  createdAt: DateTime!
-  name: String!
-  fullName: String
-}
-
-type UserConnection {
-  edges: [UserEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type UserEdge {
-  node: User!
-  cursor: String!
-}
 
 """
 A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as
@@ -75,3 +56,31 @@ entities without requiring a central allocating authority.
 """
 scalar UUID
 
+input UpdateUserInput {
+	id: UUID!
+	name: String!
+	fullName: String
+}
+
+type User {
+	id: UUID!
+	createdAt: DateTime!
+	name: String!
+	fullName: String
+}
+
+type UserConnection {
+	edges: [UserEdge!]!
+	pageInfo: PageInfo!
+	totalCount: Int!
+}
+
+type UserEdge {
+	node: User!
+	cursor: String!
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+}

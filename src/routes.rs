@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{fs, sync::Arc};
 
 use async_graphql::{
     http::{playground_source, GraphQLPlaygroundConfig},
@@ -49,6 +49,10 @@ pub async fn app() -> Result<Router, Error> {
     let schema = Schema::build(Query::default(), Mutation::default(), EmptySubscription)
         .data(Arc::clone(&server_context))
         .finish();
+
+    // Export schema to file
+    let schema_location = &config.schema_location;
+    fs::write(schema_location, &schema.sdl())?;
 
     #[derive(OpenApi)]
     #[openapi(

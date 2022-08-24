@@ -11,6 +11,7 @@ const ENV_APP_BASE_URL: &str = "APP_BASE_URL";
 const ENV_HTTP_PORT: &str = "PORT";
 const ENV_DATABASE_URL: &str = "DATABASE_URL";
 const ENV_DATABASE_POOL_SIZE: &str = "DATABASE_POOL_SIZE";
+const ENV_SCHEMA_LOCATION: &str = "SCHEMA_LOCATION";
 
 const POSTGRES_SCHEME: &str = "postgres";
 
@@ -18,6 +19,7 @@ const POSTGRES_SCHEME: &str = "postgres";
 pub struct Config {
     pub env: Env,
     pub base_url: String,
+    pub schema_location: String,
     pub http: Http,
     pub database: Database,
 }
@@ -96,6 +98,10 @@ impl Config {
         let base_url =
             std::env::var(ENV_APP_BASE_URL).map_err(|_| env_not_found(ENV_APP_BASE_URL))?;
 
+        // GraphQL
+        let schema_location =
+            std::env::var(ENV_SCHEMA_LOCATION).map_err(|_| env_not_found(ENV_SCHEMA_LOCATION))?;
+
         // http
         let http_port = std::env::var(ENV_HTTP_PORT)
             .ok()
@@ -119,6 +125,7 @@ impl Config {
 
         let mut config = Self {
             base_url,
+            schema_location,
             env,
             http,
             database,
