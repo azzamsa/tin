@@ -14,9 +14,6 @@ if [ -n "$1" ]; then
     new_version=${1#v} # strip the `v` prefix
     cargo set-version $new_version
 
-    # update Cargo.lock
-    cargo update
-
     # update the changelog
     git-cliff --tag "$1" --sort newest --config configs/cliff.toml > CHANGELOG.md
     # format newly added changelog file
