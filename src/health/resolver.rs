@@ -3,7 +3,7 @@ use std::sync::Arc;
 use async_graphql::{Context, Error, FieldResult, Object};
 use axum::{response::IntoResponse, Json};
 
-use super::model::{Health, HealthResponse};
+use super::model;
 use crate::context::ServerContext;
 
 #[derive(Default)]
@@ -11,7 +11,7 @@ pub struct HealthQuery;
 
 #[Object]
 impl HealthQuery {
-    pub async fn health(&self, ctx: &Context<'_>) -> FieldResult<Health> {
+    pub async fn health(&self, ctx: &Context<'_>) -> FieldResult<model::Health> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
         let result = server_ctx.health_service.find_health().await;
@@ -32,10 +32,10 @@ impl HealthQuery {
         ),
     )]
 pub async fn health() -> impl IntoResponse {
-    let data = Health {
+    let data = model::Health {
         status: "running".into(),
     };
-    let response = HealthResponse { data };
+    let response = model::HealthResponse { data };
 
     Json(response)
 }

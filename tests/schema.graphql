@@ -1,6 +1,12 @@
 
 input CreateUserInput {
+	"""
+	The name for the User.
+	"""
 	name: String!
+	"""
+	The full name for the User.
+	"""
 	fullName: String
 }
 
@@ -57,15 +63,33 @@ entities without requiring a central allocating authority.
 scalar UUID
 
 input UpdateUserInput {
+	"""
+	The ID of the User to modify.
+	"""
 	id: UUID!
+	"""
+	The name for the User.
+	"""
 	name: String!
+	"""
+	The full name for the User.
+	"""
 	fullName: String
 }
 
 type User {
+	"""
+	The ID of the User.
+	"""
 	id: UUID!
 	createdAt: DateTime!
+	"""
+	The name for the User.
+	"""
 	name: String!
+	"""
+	The full name for the User.
+	"""
 	fullName: String
 }
 

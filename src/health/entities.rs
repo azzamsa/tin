@@ -1,6 +1,4 @@
-use async_graphql::SimpleObject;
-
-#[derive(Debug, SimpleObject)]
+#[derive(Debug)]
 pub struct Health {
     pub status: String,
 }

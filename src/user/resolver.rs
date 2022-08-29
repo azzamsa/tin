@@ -3,7 +3,10 @@ use std::sync::Arc;
 use async_graphql::{Context, Error, FieldResult, Object};
 use uuid::Uuid;
 
-use super::model::{input, User, UserConnection};
+use super::{
+    model::{input, User, UserConnection},
+    service,
+};
 use crate::{context::ServerContext, user::scalar::Id};
 
 #[derive(Default)]
@@ -59,7 +62,11 @@ impl UserMutation {
     ) -> FieldResult<User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
-        let result = server_ctx.user_service.create_user(input.into()).await;
+        let service_input = service::CreateUserInput {
+            name: input.name,
+            full_name: input.full_name,
+        };
+        let result = server_ctx.user_service.create_user(service_input).await;
         match result {
             Ok(res) => Ok(res.into()),
             Err(err) => Err(Error::new(err.to_string())),
@@ -72,7 +79,12 @@ impl UserMutation {
     ) -> FieldResult<User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
-        let result = server_ctx.user_service.update_user(input.into()).await;
+        let service_input = service::UpdateUserInput {
+            id: input.id,
+            name: input.name,
+            full_name: input.full_name,
+        };
+        let result = server_ctx.user_service.update_user(service_input).await;
         match result {
             Ok(res) => Ok(res.into()),
             Err(err) => Err(Error::new(err.to_string())),

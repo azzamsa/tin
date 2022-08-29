@@ -1,6 +1,4 @@
-use async_graphql::SimpleObject;
-
-#[derive(Debug, SimpleObject)]
+#[derive(Debug)]
 pub struct Meta {
     pub build: String,
     pub version: String,

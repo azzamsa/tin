@@ -1,18 +1,22 @@
 use async_graphql::InputObject;
-use uuid::Uuid;
 
 use crate::user::scalar::Id;
 
 #[derive(InputObject)]
 pub struct CreateUserInput {
+    /// The name for the User.
     pub name: String,
+    /// The full name for the User.
     pub full_name: Option<String>,
 }
 
 #[derive(InputObject)]
 pub struct UpdateUserInput {
-    pub id: Uuid,
+    /// The ID of the User to modify.
+    pub id: Id,
+    /// The name for the User.
     pub name: String,
+    /// The full name for the User.
     pub full_name: Option<String>,
 }
 

@@ -16,10 +16,13 @@ use crate::{
 
 #[derive(Debug, SimpleObject)]
 pub struct User {
+    /// The ID of the User.
     pub id: Id,
     pub created_at: Time,
 
+    /// The name for the User.
     pub name: String,
+    /// The full name for the User.
     pub full_name: Option<String>,
 }
 
