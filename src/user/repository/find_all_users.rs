@@ -2,12 +2,7 @@ use sqlx::{self, Row};
 use uuid::Uuid;
 
 use super::Repository;
-use crate::{
-    db::Queryer,
-    errors::core::Error,
-    relay::Base64Cursor,
-    user::{entities, service::PageInfo},
-};
+use crate::{db::Queryer, errors::core::Error, relay::Base64Cursor, user::entities};
 
 impl Repository {
     pub async fn find_all_users<'c, C: Queryer<'c> + Copy>(
@@ -87,7 +82,7 @@ impl Repository {
         after: Option<Uuid>,
         last: Option<i32>,
         before: Option<Uuid>,
-    ) -> Result<PageInfo, Error> {
+    ) -> Result<entities::PageInfo, Error> {
         let mut has_next_query: String = String::new();
         let mut has_next_page: bool = false;
 
@@ -135,7 +130,7 @@ impl Repository {
         };
 
         let has_previous_page = self.has_previous_page(rows, last).await?;
-        let page_info = PageInfo {
+        let page_info = entities::PageInfo {
             has_next_page,
             has_previous_page,
             start_cursor,

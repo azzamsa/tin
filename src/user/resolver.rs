@@ -3,10 +3,7 @@ use std::sync::Arc;
 use async_graphql::{Context, Error, FieldResult, Object};
 use uuid::Uuid;
 
-use super::{
-    model::{input, User, UserConnection},
-    service,
-};
+use super::{model, service};
 use crate::{context::ServerContext, user::scalar::Id};
 
 #[derive(Default)]
@@ -24,14 +21,15 @@ impl UserQuery {
         after: Option<String>,
         last: Option<i32>,
         before: Option<String>,
-    ) -> FieldResult<UserConnection> {
+    ) -> FieldResult<model::UserConnection> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
-        let edges = server_ctx
+        let user_edges = server_ctx
             .user_service
             .find_users(first, after.clone(), last, before.clone())
             .await?;
+        let edges: Vec<model::UserEdge> = user_edges.into_iter().map(|user| user.into()).collect();
 
-        let user_connection = UserConnection {
+        let user_connection = model::UserConnection {
             edges,
             //
             after,
@@ -42,7 +40,7 @@ impl UserQuery {
 
         Ok(user_connection)
     }
-    pub async fn user(&self, ctx: &Context<'_>, id: Uuid) -> FieldResult<User> {
+    pub async fn user(&self, ctx: &Context<'_>, id: Uuid) -> FieldResult<model::User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
         let result = server_ctx.user_service.find_user(id).await;
@@ -58,8 +56,8 @@ impl UserMutation {
     pub async fn create_user(
         &self,
         ctx: &Context<'_>,
-        input: input::CreateUserInput,
-    ) -> FieldResult<User> {
+        input: model::input::CreateUserInput,
+    ) -> FieldResult<model::User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
         let service_input = service::CreateUserInput {
@@ -75,8 +73,8 @@ impl UserMutation {
     pub async fn update_user(
         &self,
         ctx: &Context<'_>,
-        input: input::UpdateUserInput,
-    ) -> FieldResult<User> {
+        input: model::input::UpdateUserInput,
+    ) -> FieldResult<model::User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
         let service_input = service::UpdateUserInput {
@@ -90,7 +88,7 @@ impl UserMutation {
             Err(err) => Err(Error::new(err.to_string())),
         }
     }
-    pub async fn delete_user(&self, ctx: &Context<'_>, id: Id) -> FieldResult<User> {
+    pub async fn delete_user(&self, ctx: &Context<'_>, id: Id) -> FieldResult<model::User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
         let result = server_ctx.user_service.delete_user(id).await;

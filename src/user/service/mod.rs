@@ -23,14 +23,6 @@ impl Service {
 }
 
 #[derive(Debug)]
-pub struct PageInfo {
-    pub has_next_page: bool,
-    pub has_previous_page: bool,
-    pub start_cursor: Option<String>,
-    pub end_cursor: Option<String>,
-}
-
-#[derive(Debug)]
 pub struct CreateUserInput {
     pub name: String,
     pub full_name: Option<String>,

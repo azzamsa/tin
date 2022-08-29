@@ -10,7 +10,6 @@ use crate::{
     user::{
         entities,
         scalar::{Id, Time},
-        service,
     },
 };
 
@@ -46,6 +45,15 @@ pub struct UserEdge {
     pub cursor: String,
 }
 
+impl From<entities::UserEdge> for UserEdge {
+    fn from(user: entities::UserEdge) -> Self {
+        Self {
+            node: user.node.into(),
+            cursor: user.cursor,
+        }
+    }
+}
+
 impl From<entities::User> for UserEdge {
     fn from(user: entities::User) -> Self {
         let cursor = Base64Cursor::new(user.id).encode();
@@ -73,6 +81,29 @@ pub struct UserConnection {
     pub first: Option<i32>,
     #[graphql(skip)]
     pub last: Option<i32>,
+}
+
+#[derive(Debug, SimpleObject)]
+pub struct PageInfo {
+    // When paginating forwards, the cursor to continue.
+    pub end_cursor: Option<String>,
+    // When paginating forwards, are there more items?
+    pub has_next_page: bool,
+    // When paginating backwards, the cursor to continue.
+    pub start_cursor: Option<String>,
+    // When paginating backwards, are there more items?
+    pub has_previous_page: bool,
+}
+
+impl From<entities::PageInfo> for PageInfo {
+    fn from(page_info: entities::PageInfo) -> Self {
+        Self {
+            has_next_page: page_info.has_next_page,
+            has_previous_page: page_info.has_previous_page,
+            start_cursor: page_info.start_cursor,
+            end_cursor: page_info.end_cursor,
+        }
+    }
 }
 
 #[ComplexObject]
@@ -103,29 +134,6 @@ impl UserConnection {
                 Err(err.into())
             }
             Ok(row) => Ok(row.get(0)),
-        }
-    }
-}
-
-#[derive(Debug, SimpleObject)]
-pub struct PageInfo {
-    // When paginating forwards, the cursor to continue.
-    pub end_cursor: Option<String>,
-    // When paginating forwards, are there more items?
-    pub has_next_page: bool,
-    // When paginating backwards, the cursor to continue.
-    pub start_cursor: Option<String>,
-    // When paginating backwards, are there more items?
-    pub has_previous_page: bool,
-}
-
-impl From<service::PageInfo> for PageInfo {
-    fn from(page_info: service::PageInfo) -> Self {
-        Self {
-            has_next_page: page_info.has_next_page,
-            has_previous_page: page_info.has_previous_page,
-            start_cursor: page_info.start_cursor,
-            end_cursor: page_info.end_cursor,
         }
     }
 }
