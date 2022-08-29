@@ -18,6 +18,7 @@ Rust GraphQL Template 🏗️
 - [Async-GraphQL](https://github.com/async-graphql/async-graphql) GraphQL server library
   - Relay compatible cursor-based pagination
   - Playground disabled in the production environment for performance reasons
+  - Store GraphQL schema to file automatically
 - [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit
 - [Axum](https://github.com/tokio-rs/axum) web framework
 - [utoipa](https://github.com/juhaku/utoipa) Auto-generated OpenAPI documentation
@@ -37,16 +38,18 @@ The file only contains user-facing changes, so you won't get lost navigating the
 ## Usage
 
 ```shell
-$ clone the repository
+$ # Clone the repository
 
-$ # Create database
+$ # Create a database
 $ sudo -u postgres createdb graphql
 
-$ make dev  # see also `make setup`
+$ touch $SCHEMA_LOCATION # See .example.env
+$ make dev  # See also `make setup`
 ```
 
 Go to the playground `http://127.0.0.1:8000/playground` to see the schema.
 
 ## Credits
 
-- [Noto Emoji](https://github.com/googlefonts/noto-emoji)
+- [Clean and Scalable Architecture for Web Applications in Rust](https://kerkour.com/rust-web-application-clean-architecture) by Sylvain Kerkour
+- Icons and emoji from [Noto Emoji](https://github.com/googlefonts/noto-emoji)
