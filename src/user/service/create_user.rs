@@ -8,7 +8,7 @@ impl Service {
     pub async fn create_user(
         &self,
         input: CreateUserInput,
-    ) -> Result<entities::User, errors::Error> {
+    ) -> Result<entities::User, crate::Error> {
         let username_exists = self.check_username_exists(&self.db, &input.name).await?;
         if username_exists {
             return Err(errors::core::Error::UsernameAlreadyExists.into());

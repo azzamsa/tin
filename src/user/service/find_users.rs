@@ -1,6 +1,5 @@
 use super::Service;
 use crate::{
-    errors::Error,
     relay::validation::{convert_params, validate_params},
     user::entities,
 };
@@ -12,7 +11,7 @@ impl Service {
         after: Option<String>,
         last: Option<i32>,
         before: Option<String>,
-    ) -> Result<Vec<entities::UserEdge>, Error> {
+    ) -> Result<Vec<entities::UserEdge>, crate::Error> {
         validate_params(first, last)?;
         let (after_uuid, before_uuid) = convert_params(after, before)?;
 
@@ -31,7 +30,7 @@ impl Service {
         after: Option<String>,
         last: Option<i32>,
         before: Option<String>,
-    ) -> Result<entities::PageInfo, Error> {
+    ) -> Result<entities::PageInfo, crate::Error> {
         let (after_uuid, before_uuid) = convert_params(after, before)?;
 
         let users = self
