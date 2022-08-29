@@ -1,4 +1,4 @@
-use std::{fmt, str::FromStr};
+use std::{fmt, path::Path, str::FromStr};
 
 use dotenv;
 use serde::{Deserialize, Serialize};
@@ -142,6 +142,15 @@ impl Config {
         if database_url.scheme() != POSTGRES_SCHEME {
             return Err(Error::InvalidArgument(String::from(
                 "config: database_url is not a valid postgres URL",
+            )));
+        }
+
+        //  GrahpQL
+        let path = Path::new(&self.schema_location);
+        if !path.exists() {
+            return Err(Error::InvalidArgument(format!(
+                "config: GraphQL schema location doesn't exists '{}'",
+                &self.schema_location
             )));
         }
 
