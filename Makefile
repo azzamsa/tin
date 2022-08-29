@@ -49,7 +49,7 @@ comply: fmt lint test update_sqlx_schema ## Tasks to make the code-base comply w
 
 check: check_sqlx_schema fmt_check lint test doc_check ## Check if the repository comply with the rules and ready to be pushed.
 
-release:  ## Create a release
+release: ## Create a new release. Example `make release version=v2.2.0`
 	bash scripts/release.sh $(version)
 
 #
