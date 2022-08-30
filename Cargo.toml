@@ -20,8 +20,8 @@ async-graphql = { version = "4.0.5", features = ["uuid", "chrono"] }
 async-graphql-axum = "4.0.5"
 
 # Rest
-utoipa = { git = "https://github.com/juhaku/utoipa", rev = "9641faf", features = ["axum_extras"] }
-utoipa-swagger-ui = { git = "https://github.com/juhaku/utoipa", rev = "9641faf", features = ["axum"] }
+utoipa = { version = "2.0.0", features = ["axum_extras"] }
+utoipa-swagger-ui = { version = "2.0.0", features = ["axum"] }
 
 # Database
 sqlx = { version = "0.6.0", features = ["runtime-async-std-native-tls", "postgres", "offline", "uuid", "chrono", "migrate"] }
