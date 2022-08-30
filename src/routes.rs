@@ -56,10 +56,10 @@ pub async fn app() -> Result<Router, Error> {
 
     #[derive(OpenApi)]
     #[openapi(
-        handlers(
+        paths(
             health::resolver::health,
         ),
-        components(health::model::Health, health::model::HealthResponse),
+        components(schemas(health::model::Health, health::model::HealthResponse)),
         tags(
             (name = "Rust GraphQL", description = "Rust GraphQL Boilerplate 🏗️")
         )

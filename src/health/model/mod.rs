@@ -1,10 +1,10 @@
 use async_graphql::SimpleObject;
 use serde::Serialize;
-use utoipa::Component;
+use utoipa::ToSchema;
 
 use crate::health::entities;
 
-#[derive(Debug, SimpleObject, Serialize, Component)]
+#[derive(Debug, SimpleObject, Serialize, ToSchema)]
 pub struct Health {
     pub status: String,
 }
@@ -17,7 +17,7 @@ impl From<entities::Health> for Health {
     }
 }
 
-#[derive(Debug, Serialize, Component)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct HealthResponse {
     pub data: Health,
 }

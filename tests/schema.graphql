@@ -1,5 +1,5 @@
 
-input CreateUserInput {
+input CreateUserInput{
 	"""
 	The name for the User.
 	"""
@@ -15,7 +15,7 @@ Implement the DateTime<Utc> scalar
 
 The input/output is a string in RFC3339 format.
 """
-scalar DateTime
+scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339")
 
 
 type Health {
@@ -60,9 +60,9 @@ entities without requiring a central allocating authority.
 * [Wikipedia: Universally Unique Identifier](http://en.wikipedia.org/wiki/Universally_unique_identifier)
 * [RFC4122: A Universally Unique IDentifier (UUID) URN Namespace](http://tools.ietf.org/html/rfc4122)
 """
-scalar UUID
+scalar UUID @specifiedBy(url: "http://tools.ietf.org/html/rfc4122")
 
-input UpdateUserInput {
+input UpdateUserInput{
 	"""
 	The ID of the User to modify.
 	"""
