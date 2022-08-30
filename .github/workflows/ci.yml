@@ -1,4 +1,4 @@
-name: ci
+name: CI
 
 env:
   MIN_SUPPORTED_RUST_VERSION: "1.62.0"
@@ -94,7 +94,7 @@ jobs:
         run: make test
 
   build:
-    name: ${{ matrix.job.os }} (${{ matrix.job.target }})
+    name: Build (${{ matrix.job.os }}, ${{ matrix.job.target }})
     runs-on: ${{ matrix.job.os }}
     strategy:
       fail-fast: false
