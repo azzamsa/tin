@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2022-08-29
+
+### Features
+
+- Store GraphQL schema to file automatically ([1a9b985](1a9b985c0a58baf5b796ec3ce20080d9316f269b))
+
+### Bug fixes
+
+- Validate GrahpQL schema location ([d7bdc52](d7bdc523789a0b7b24f8ebe84119f821176c619a))
+
 ## [0.1.1] - 2022-07-22
 
 ### Features
