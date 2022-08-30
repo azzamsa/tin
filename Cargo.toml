@@ -51,3 +51,11 @@ hyper = { version = "0.14.20", features = ["full"] }
 mime = "0.3.16"
 serde = { version = "1.0", features = ["derive"] }
 tower = { version = "0.4", features = ["util"] }
+
+# cross-rs configuration
+[package.metadata.cross.target.x86_64-unknown-linux-gnu]
+# The latest version of cross-rs doesn't include OpenSSL support
+pre-build = [
+  "dpkg --add-architecture $CROSS_DEB_ARCH",
+  "apt-get update && apt-get install --assume-yes libssl-dev:$CROSS_DEB_ARCH",
+]
