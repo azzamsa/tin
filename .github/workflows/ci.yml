@@ -1,7 +1,7 @@
 name: CI
 
 env:
-  MIN_SUPPORTED_RUST_VERSION: "1.62.0"
+  MIN_SUPPORTED_RUST_VERSION: "1.64.0"
 
 on: [push, pull_request]
 
