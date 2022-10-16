@@ -44,6 +44,9 @@ jobs:
         run: |
           sudo apt-get install pkg-config libssl-dev
 
+      - name: Install latest cross release
+        uses: taiki-e/install-action@cross
+
       - name: Cache
         uses: Swatinem/rust-cache@v1
 
@@ -51,7 +54,6 @@ jobs:
         # currently only used for non-windows
         # because they didn't pick up these variables
         run: |
-          cargo install --version 0.2.4 cross
           echo "CARGO=cross" >> $GITHUB_ENV
           echo "TARGET_FLAGS=--target ${{ matrix.target }}" >> $GITHUB_ENV
           echo "TARGET_DIR=./target/${{ matrix.target }}" >> $GITHUB_ENV
