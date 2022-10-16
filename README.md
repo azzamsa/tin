@@ -30,6 +30,10 @@
   - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky)
 - Consistent formatting using [dprint](https://github.com/dprint/dprint)
 
+## Other Variants
+
+- [Without the database](https://github.com/azzamsa/tin/tree/no-database)
+
 ## Navigating the Code
 
 All the features can be found in the [CHANGELOG](CHANGELOG.md) file tagged with `feat`.
