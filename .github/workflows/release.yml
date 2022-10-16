@@ -66,9 +66,9 @@ jobs:
         run: ${{ env.CARGO }} build --locked --verbose --release ${{ env.TARGET_FLAGS }}
 
       - name: Strip release binary (linux and macos)
-        if: matrix.build == 'linux'
+        if: "!contains(matrix.buid, 'windows')"
         run: |
-          strip "target/${{ matrix.target }}/release/graph"
+          strip "target/${{ matrix.target }}/release/tin"
 
       - name: Upload binaries to release
         if: matrix.build == 'linux'
