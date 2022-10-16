@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2022-10-16
+
+### Features
+
+- Make writing schema optional ([f81aebb](f81aebb5a30007aa0b5bed1a6fb660eb1e42789e))
+
 ## [0.1.2] - 2022-08-30
 
 ### Features
