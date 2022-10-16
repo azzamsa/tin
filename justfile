@@ -93,8 +93,3 @@ up arg="":
     	cargo +nightly udeps
         cargo outdated --root-deps-only
     fi;
-
-# Local Variables:
-# mode: makefile
-# End:
-# vim: set ft=make :
