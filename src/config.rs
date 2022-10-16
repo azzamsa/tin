@@ -19,7 +19,7 @@ const POSTGRES_SCHEME: &str = "postgres";
 pub struct Config {
     pub env: Env,
     pub base_url: String,
-    pub schema_location: String,
+    pub schema_location: Option<String>,
     pub http: Http,
     pub database: Database,
 }
@@ -99,8 +99,10 @@ impl Config {
             std::env::var(ENV_APP_BASE_URL).map_err(|_| env_not_found(ENV_APP_BASE_URL))?;
 
         // GraphQL
-        let schema_location =
-            std::env::var(ENV_SCHEMA_LOCATION).map_err(|_| env_not_found(ENV_SCHEMA_LOCATION))?;
+        let schema_location = match std::env::var(ENV_SCHEMA_LOCATION) {
+            Ok(location) => Some(location),
+            Err(_) => None,
+        };
 
         // http
         let http_port = std::env::var(ENV_HTTP_PORT)
@@ -146,13 +148,18 @@ impl Config {
         }
 
         //  GrahpQL
-        let path = Path::new(&self.schema_location);
-        if !path.exists() {
-            return Err(Error::InvalidArgument(format!(
-                "config: GraphQL schema location doesn't exists '{}'",
-                &self.schema_location
-            )));
-        }
+        match &self.schema_location {
+            Some(location) => {
+                let path = Path::new(location);
+                if !path.exists() {
+                    return Err(Error::InvalidArgument(format!(
+                        "config: GraphQL schema location doesn't exists '{}'",
+                        &location
+                    )));
+                }
+            }
+            None => (),
+        };
 
         Ok(())
     }
