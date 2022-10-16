@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2022-10-16
+
+### Bug fixes
+
+- `Cargo.lock` version is outdated ([913596c](913596c4db6c2357492b49766189204dcb9a7b76))
+
 ## [0.2.0] - 2022-10-16
 
 ### Features
