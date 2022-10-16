@@ -1,1 +1,5 @@
-just check
+just _check-sqlx-schema
+just fmt-check
+just lint
+just _unit-test
+just _doc-check

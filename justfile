@@ -47,6 +47,10 @@ lint:
 _doc-check:
     cargo doc --all-features --no-deps
 
+# Run the unit tests.
+_unit-test:
+	cargo test --lib
+
 # Test the codebase.
 test:
     cargo test --all-targets -- --test-threads 1
