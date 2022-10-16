@@ -3,22 +3,15 @@ name: CI
 env:
   MIN_SUPPORTED_RUST_VERSION: "1.62.0"
 
-on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   code_quality:
     name: Code quality
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v3
 
       - name: Install rust toolchain
         uses: actions-rs/toolchain@v1
@@ -29,8 +22,8 @@ jobs:
           profile: minimal # no documentation
           components: clippy, rustfmt
 
-      - name: Cache
-        uses: Swatinem/rust-cache@v1
+      - name: Install latest just release
+        uses: extractions/setup-just@v1
 
       - name: Install dprint
         run: |
@@ -39,8 +32,11 @@ jobs:
           cp dprint ~/.cargo/bin/
           dprint --version
 
+      - name: Cache
+        uses: Swatinem/rust-cache@v1
+
       - name: Ensure `fmt` has been run
-        run:  make fmt_check
+        run:  just fmt-check
 
       - name: Ensure MSRV is set in `clippy.toml`
         run: grep "^msrv = \"${{ env.MIN_SUPPORTED_RUST_VERSION }}\"\$" clippy.toml
@@ -48,17 +44,14 @@ jobs:
       - name: Run clippy
         env:
           SQLX_OFFLINE: true
-        run: make lint
-
+        run: just lint
 
   min_version:
     name: Minimum supported rust version
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v3
 
       - name: Install rust toolchain (v${{ env.MIN_SUPPORTED_RUST_VERSION }})
         uses: actions-rs/toolchain@v1
@@ -66,6 +59,9 @@ jobs:
           toolchain: ${{ env.MIN_SUPPORTED_RUST_VERSION }}
           default: true
           profile: minimal
+
+      - name: Install latest just release
+        uses: extractions/setup-just@v1
 
       - name: Cache
         uses: Swatinem/rust-cache@v1
@@ -91,7 +87,7 @@ jobs:
       - name: Run tests
         env:
           DATABASE_URL: postgres://superuser:secret@localhost:5432/tin
-        run: make test
+        run: just test
 
   build:
     name: Build (${{ matrix.job.os }}, ${{ matrix.job.target }})
@@ -104,9 +100,7 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v3
 
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -119,7 +113,7 @@ jobs:
       - name: Cache
         uses: Swatinem/rust-cache@v1
 
-      - name: Show version information (Rust, cargo, GCC)
+      - name: Show version information
         shell: bash
         run: |
           gcc --version || true

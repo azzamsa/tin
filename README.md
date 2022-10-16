@@ -44,7 +44,7 @@ $ # Create a database
 $ sudo -u postgres createdb tin
 
 $ touch $SCHEMA_LOCATION # See .example.env
-$ make dev  # See also `make setup`
+$ just dev  # See also `just setup`
 ```
 
 Go to the playground `http://127.0.0.1:8000/playground` to see the schema.

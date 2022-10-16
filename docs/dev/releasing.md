@@ -1,10 +1,12 @@
 ## Release Checklist
 
-- Run the lint check: `make check`.
-- Run the release task: `make release version=v<mayor.minor.path>`. Such `make release version=v0.1.7`.
-- Push the release commit.
-- Check if [Continuous Integration](https://github.com/azzamsa/tin/actions/workflows/ci.yml) workflow is completed successfully.
-- Push the release tags.
-- Wait for [Continuous Deployment](https://github.com/azzamsa/tin/actions/workflows/cd.yml) workflow to finish.
-- Create a new GitHub release with the created tag above, and copy the release news from the CHANGELOG.md.
-  Document Title
+- Run `just check`.
+- Run the release task: `just release v<major.minor.path>`. Such `just release v0.1.7`.
+- Check if [Continuous Integration][ci] workflow is completed successfully.
+- Push the tags: `git push --tags`
+
+<!-- dprint-ignore-start -->
+
+[ci]: https://github.com/azzamsa/tin/actions/workflows/ci.yml
+
+<!-- dprint-ignore-end -->
