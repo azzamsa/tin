@@ -17,6 +17,7 @@ _default:
 # Setup the repository
 setup:
     git cliff --version || cargo install git-cliff
+    cargo nextest --version || cargo install --locked cargo-nextest
     cargo-set-version --help || cargo install cargo-edit
     sqlx --version || cargo install sqlx-cli --no-default-features --features postgres,native-tls
     cargo watch --version || cargo install cargo-watch
@@ -51,11 +52,11 @@ _doc-check:
 
 # Run the unit tests.
 _unit-test:
-    cargo test --lib
+    cargo nextest run --lib
 
 # Test the codebase.
 test:
-    cargo test --all-targets -- --test-threads 1
+    cargo nextest run --all-targets --test-threads 1
 
 _update-sqlx-schema:
     cargo sqlx prepare -- --lib
