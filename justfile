@@ -1,5 +1,7 @@
 #!/usr/bin/env -S just --justfile
 
+shebang := if os() == 'windows' { 'powershell.exe' } else { '/usr/bin/sh' }
+
 set dotenv-load := true
 
 alias d := dev
@@ -49,7 +51,7 @@ _doc-check:
 
 # Run the unit tests.
 _unit-test:
-	cargo test --lib
+    cargo test --lib
 
 # Test the codebase.
 test:
@@ -80,10 +82,16 @@ check: _check-sqlx-schema fmt-check lint test _doc-check
 release version:
     bash scripts/release.sh {{ version }}
 
-# # Check dependencies health.
-up:
-    cargo +nightly udeps
-    cargo outdated --root-deps-only
+# Check dependencies health. Pass `--write` to uppgrade dependencies.
+up arg="":
+    #!{{ shebang }}
+    if [ "{{ arg }}" = "--write" ]; then
+    	cargo upgrade
+    	cargo update
+    else
+    	cargo +nightly udeps
+        cargo outdated --root-deps-only
+    fi;
 
 # Local Variables:
 # mode: makefile
