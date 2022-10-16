@@ -1,12 +1,12 @@
 <div align="center">
-  <h1>Tin</h1>
 
-<img src='docs/construction.svg' width=80px />
+<img src='docs/logo.svg' width=250px />
 
-Rust GraphQL Template 🏗️
+<br/>
+<h4>Rust GraphQL Template 🏗️</h4>
 
-<a href="https://github.com/azzamsa/tin/workflows/ci.yml">
-    <img src="https://github.com/azzamsa/tin/workflows/ci/badge.svg" alt="Build status" />
+<a href="https://github.com/azzamsa/tin/actions/workflows/ci.yml">
+    <img src="https://github.com/azzamsa/tin/actions/workflows/ci.yml/badge.svg" alt="Build status" />
   </a>
 
 </div>
