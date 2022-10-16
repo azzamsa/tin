@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use anyhow::Result;
-use graph::{config::Config, db};
+use tin::{config::Config, db};
 
 mod graphql;
 pub mod schema;

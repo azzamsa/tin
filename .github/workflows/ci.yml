@@ -81,7 +81,7 @@ jobs:
 
       - name: Migrate the database 
         env:
-          DATABASE_URL: postgres://superuser:secret@localhost:5432/nahla
+          DATABASE_URL: postgres://superuser:secret@localhost:5432/tin
         run: |
           cargo install sqlx-cli --no-default-features --features postgres,native-tls
 
@@ -90,7 +90,7 @@ jobs:
 
       - name: Run tests
         env:
-          DATABASE_URL: postgres://superuser:secret@localhost:5432/nahla
+          DATABASE_URL: postgres://superuser:secret@localhost:5432/tin
         run: make test
 
   build:

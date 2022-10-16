@@ -4,8 +4,8 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use cynic::MutationBuilder;
-use graph::routes::app;
 use serde_json::{from_slice, to_string};
+use tin::routes::app;
 use tower::{util::ServiceExt, Service};
 
 use super::{

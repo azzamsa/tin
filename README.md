@@ -1,12 +1,12 @@
 <div align="center">
-  <h1>Rust GraphQL</h1>
+  <h1>Tin</h1>
 
 <img src='docs/construction.svg' width=80px />
 
 Rust GraphQL Template 🏗️
 
-<a href="https://github.com/azzamsa/rust-graphql/workflows/ci.yml">
-    <img src="https://github.com/azzamsa/rust-graphql/workflows/ci/badge.svg" alt="Build status" />
+<a href="https://github.com/azzamsa/tin/workflows/ci.yml">
+    <img src="https://github.com/azzamsa/tin/workflows/ci/badge.svg" alt="Build status" />
   </a>
 
 </div>
@@ -41,7 +41,7 @@ The file only contains user-facing changes, so you won't get lost navigating the
 $ # Clone the repository
 
 $ # Create a database
-$ sudo -u postgres createdb graphql
+$ sudo -u postgres createdb tin
 
 $ touch $SCHEMA_LOCATION # See .example.env
 $ make dev  # See also `make setup`
