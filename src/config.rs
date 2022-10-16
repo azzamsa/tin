@@ -2,18 +2,13 @@ use std::{fmt, path::Path, str::FromStr};
 
 use dotenv;
 use serde::{Deserialize, Serialize};
-use url::Url;
 
 use crate::Error;
 
 const ENV_APP_ENV: &str = "APP_ENV";
 const ENV_APP_BASE_URL: &str = "APP_BASE_URL";
 const ENV_HTTP_PORT: &str = "PORT";
-const ENV_DATABASE_URL: &str = "DATABASE_URL";
-const ENV_DATABASE_POOL_SIZE: &str = "DATABASE_POOL_SIZE";
 const ENV_SCHEMA_LOCATION: &str = "SCHEMA_LOCATION";
-
-const POSTGRES_SCHEME: &str = "postgres";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
@@ -21,7 +16,6 @@ pub struct Config {
     pub base_url: String,
     pub schema_location: Option<String>,
     pub http: Http,
-    pub database: Database,
 }
 
 const APP_ENV_DEV: &str = "dev";
@@ -65,14 +59,6 @@ impl fmt::Display for Env {
     }
 }
 
-/// Database contains the data necessary to connect to a database
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Database {
-    pub url: String,
-    pub pool_size: u32,
-}
-const DEFAULT_DATABASE_POOL_SIZE: u32 = 100;
-
 /// Http contains the data specific to the HTTP(s) server
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Http {
@@ -111,26 +97,11 @@ impl Config {
 
         let http = Http { port: http_port };
 
-        // database
-        let database_url =
-            std::env::var(ENV_DATABASE_URL).map_err(|_| env_not_found(ENV_DATABASE_URL))?;
-        let database_pool_size = std::env::var(ENV_DATABASE_POOL_SIZE)
-            .ok()
-            .map_or(Ok(DEFAULT_DATABASE_POOL_SIZE), |pool_size_str| {
-                pool_size_str.parse::<u32>()
-            })?;
-
-        let database = Database {
-            url: database_url,
-            pool_size: database_pool_size,
-        };
-
         let mut config = Self {
             base_url,
             schema_location,
             env,
             http,
-            database,
         };
 
         config.clean_and_validate()?;
@@ -139,14 +110,6 @@ impl Config {
     }
 
     fn clean_and_validate(&mut self) -> Result<(), Error> {
-        // Database
-        let database_url = Url::parse(&self.database.url)?;
-        if database_url.scheme() != POSTGRES_SCHEME {
-            return Err(Error::InvalidArgument(String::from(
-                "config: database_url is not a valid postgres URL",
-            )));
-        }
-
         //  GrahpQL
         match &self.schema_location {
             Some(location) => {

@@ -19,7 +19,6 @@
   - Relay compatible cursor-based pagination
   - Playground disabled in the production environment for performance reasons
   - Store GraphQL schema to file automatically
-- [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit
 - [Axum](https://github.com/tokio-rs/axum) web framework
 - [utoipa](https://github.com/juhaku/utoipa) Auto-generated OpenAPI documentation
 - [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator
@@ -39,9 +38,6 @@ The file only contains user-facing changes, so you won't get lost navigating the
 
 ```shell
 $ # Clone the repository
-
-$ # Create a database
-$ sudo -u postgres createdb tin
 
 $ touch $SCHEMA_LOCATION # See .example.env
 $ just dev  # See also `just setup`

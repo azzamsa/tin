@@ -18,7 +18,6 @@ _default:
 setup:
     git cliff --version || cargo install git-cliff
     cargo-set-version --help || cargo install cargo-edit
-    sqlx --version || cargo install sqlx-cli --no-default-features --features postgres,native-tls
     cargo watch --version || cargo install cargo-watch
     cargo outdated --version || cargo install --locked cargo-outdated
     dprint --version || cargo install dprint
@@ -57,26 +56,11 @@ _unit-test:
 test:
     cargo test --all-targets -- --test-threads 1
 
-_update-sqlx-schema:
-    cargo sqlx prepare -- --lib
-
-_check-sqlx-schema:
-    cargo sqlx prepare --check -- --lib
-
-# Setup the database schema.
-_migrate-db:
-    sqlx database create
-    sqlx migrate run
-
-# reset the database schema.
-_reset-db:
-    sqlx database drop && sqlx database create
-
 # Tasks to make the code-base comply with the rules. Mostly used in git hooks.
-comply: fmt lint test _update-sqlx-schema
+comply: fmt lint test
 
 # Check if the repository comply with the rules and ready to be pushed.
-check: _check-sqlx-schema fmt-check lint test _doc-check
+check: fmt-check lint test _doc-check
 
 # Create a new release. Example `just release v2.2.0`
 release version:

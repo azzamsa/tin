@@ -1,22 +1,4 @@
 
-input CreateUserInput {
-	"""
-	The name for the User.
-	"""
-	name: String!
-	"""
-	The full name for the User.
-	"""
-	fullName: String
-}
-
-"""
-Implement the DateTime<Utc> scalar
-
-The input/output is a string in RFC3339 format.
-"""
-scalar DateTime
-
 
 type Health {
 	status: String!
@@ -29,82 +11,12 @@ type Meta {
 	version: String!
 }
 
-type Mutation {
-	createUser(input: CreateUserInput!): User!
-	updateUser(input: UpdateUserInput!): User!
-	deleteUser(id: UUID!): User!
-}
-
-type PageInfo {
-	endCursor: String
-	hasNextPage: Boolean!
-	startCursor: String
-	hasPreviousPage: Boolean!
-}
-
 type Query {
 	meta: Meta!
-	users(first: Int, after: String, last: Int, before: String): UserConnection!
-	user(id: UUID!): User!
 	health: Health!
 }
 
 
-"""
-A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as
-Strings within GraphQL. UUIDs are used to assign unique identifiers to
-entities without requiring a central allocating authority.
-
-# References
-
-* [Wikipedia: Universally Unique Identifier](http://en.wikipedia.org/wiki/Universally_unique_identifier)
-* [RFC4122: A Universally Unique IDentifier (UUID) URN Namespace](http://tools.ietf.org/html/rfc4122)
-"""
-scalar UUID
-
-input UpdateUserInput {
-	"""
-	The ID of the User to modify.
-	"""
-	id: UUID!
-	"""
-	The name for the User.
-	"""
-	name: String!
-	"""
-	The full name for the User.
-	"""
-	fullName: String
-}
-
-type User {
-	"""
-	The ID of the User.
-	"""
-	id: UUID!
-	createdAt: DateTime!
-	"""
-	The name for the User.
-	"""
-	name: String!
-	"""
-	The full name for the User.
-	"""
-	fullName: String
-}
-
-type UserConnection {
-	edges: [UserEdge!]!
-	pageInfo: PageInfo!
-	totalCount: Int!
-}
-
-type UserEdge {
-	node: User!
-	cursor: String!
-}
-
 schema {
 	query: Query
-	mutation: Mutation
 }

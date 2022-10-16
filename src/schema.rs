@@ -1,15 +1,8 @@
-use async_graphql::{EmptySubscription, MergedObject, Schema};
+use async_graphql::{EmptyMutation, EmptySubscription, MergedObject, Schema};
 
-use crate::{
-    health::resolver::HealthQuery,
-    meta::resolver::MetaQuery,
-    user::resolver::{UserMutation, UserQuery},
-};
+use crate::{health::resolver::HealthQuery, meta::resolver::MetaQuery};
 
 #[derive(MergedObject, Default)]
-pub struct Query(MetaQuery, UserQuery, HealthQuery);
+pub struct Query(MetaQuery, HealthQuery);
 
-#[derive(MergedObject, Default)]
-pub struct Mutation(UserMutation);
-
-pub type AppSchema = Schema<Query, Mutation, EmptySubscription>;
+pub type AppSchema = Schema<Query, EmptyMutation, EmptySubscription>;

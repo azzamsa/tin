@@ -70,23 +70,7 @@ jobs:
         run: |
           cp .example.env .env
 
-      - name: Prepare the database
-        run: |
-          docker-compose -f ./tests/docker-compose.yml run -d -p 5432:5432 --name postgres_db postgres_db
-          docker exec postgres_db bash -c "until pg_isready; do sleep 1; done"
-
-      - name: Migrate the database 
-        env:
-          DATABASE_URL: postgres://superuser:secret@localhost:5432/tin
-        run: |
-          cargo install sqlx-cli --no-default-features --features postgres,native-tls
-
-          sqlx database create
-          sqlx migrate --source db/migrations/ run
-
       - name: Run tests
-        env:
-          DATABASE_URL: postgres://superuser:secret@localhost:5432/tin
         run: just test
 
   build:

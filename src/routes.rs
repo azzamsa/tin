@@ -2,7 +2,7 @@ use std::{fs, sync::Arc};
 
 use async_graphql::{
     http::{playground_source, GraphQLPlaygroundConfig},
-    EmptySubscription, Schema,
+    EmptyMutation, EmptySubscription, Schema,
 };
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::{
@@ -18,9 +18,9 @@ use crate::{
     config,
     config::Config,
     context::ServerContext,
-    db, health, meta, routes,
-    schema::{AppSchema, Mutation, Query},
-    user, Error,
+    health, meta, routes,
+    schema::{AppSchema, Query},
+    Error,
 };
 
 pub async fn graphql_handler(schema: Extension<AppSchema>, req: GraphQLRequest) -> GraphQLResponse {
@@ -33,20 +33,15 @@ pub async fn graphql_playground() -> impl IntoResponse {
 pub async fn app() -> Result<Router, Error> {
     let config = Arc::new(Config::load()?);
 
-    let db = db::connect(&config.database).await?;
-    db::migrate(&db).await?;
-
-    let user_service = Arc::new(user::Service::new(db.clone()));
     let meta_service = Arc::new(meta::Service::new());
     let health_service = Arc::new(health::Service::new());
 
     let server_context = Arc::new(ServerContext {
-        user_service,
         meta_service,
         health_service,
     });
 
-    let schema = Schema::build(Query::default(), Mutation::default(), EmptySubscription)
+    let schema = Schema::build(Query::default(), EmptyMutation, EmptySubscription)
         .data(Arc::clone(&server_context))
         .finish();
 
