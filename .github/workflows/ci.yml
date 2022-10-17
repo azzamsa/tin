@@ -114,8 +114,8 @@ jobs:
           override: true
           profile: minimal
 
-      - name: Cache
-        uses: Swatinem/rust-cache@v1
+      # - name: Cache
+      #   uses: Swatinem/rust-cache@v1
 
       - name: Show version information
         shell: bash
