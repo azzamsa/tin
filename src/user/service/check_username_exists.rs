@@ -1,5 +1,5 @@
 use super::Service;
-use crate::{db::Queryer, errors::core::Error};
+use crate::{db::Queryer, errors::app::Error};
 
 impl Service {
     /// returns true if a username exists. false otherwise

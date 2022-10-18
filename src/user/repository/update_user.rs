@@ -1,7 +1,7 @@
 use sqlx;
 
 use super::Repository;
-use crate::{db, errors::core::Error, user::entities};
+use crate::{db, errors::app::Error, user::entities};
 
 impl Repository {
     pub async fn update_user<'c, C: db::Queryer<'c>>(

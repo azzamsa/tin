@@ -2,7 +2,7 @@ use chrono::Utc;
 use ulid::Ulid;
 
 use super::{CreateUserInput, Service};
-use crate::{errors, user::entities};
+use crate::{errors::app::Error, user::entities};
 
 impl Service {
     pub async fn create_user(
@@ -11,7 +11,7 @@ impl Service {
     ) -> Result<entities::User, crate::Error> {
         let username_exists = self.check_username_exists(&self.db, &input.name).await?;
         if username_exists {
-            return Err(errors::core::Error::UsernameAlreadyExists.into());
+            return Err(Error::UsernameAlreadyExists.into());
         }
 
         let user_input = entities::User {

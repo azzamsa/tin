@@ -1,4 +1,4 @@
-pub mod core;
+pub mod app;
 
 use thiserror::Error;
 

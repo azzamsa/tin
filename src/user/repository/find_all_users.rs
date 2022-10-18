@@ -2,7 +2,7 @@ use sqlx::{self, Row};
 use uuid::Uuid;
 
 use super::Repository;
-use crate::{db::Queryer, errors::core::Error, relay::Base64Cursor, user::entities};
+use crate::{db::Queryer, errors::app::Error, relay::Base64Cursor, user::entities};
 
 impl Repository {
     pub async fn find_all_users<'c, C: Queryer<'c> + Copy>(

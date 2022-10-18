@@ -1,7 +1,7 @@
 use sqlx;
 
 use super::Repository;
-use crate::{db::Queryer, errors::core::Error, user::entities};
+use crate::{db::Queryer, errors::app::Error, user::entities};
 
 impl Repository {
     pub async fn create_user<'c, C: Queryer<'c>>(

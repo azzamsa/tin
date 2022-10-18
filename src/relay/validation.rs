@@ -2,7 +2,7 @@ use uuid::Uuid;
 
 use crate::{
     errors::{
-        core::Error::{
+        app::Error::{
             MissingFirstAndLastPaginationArguments, PassedFirstAndLastPaginationArguments,
         },
         Error,
