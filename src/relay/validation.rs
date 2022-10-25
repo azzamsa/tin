@@ -14,7 +14,7 @@ use crate::{
 pub fn convert_params(
     after: Option<String>,
     before: Option<String>,
-) -> Result<(Option<Uuid>, Option<Uuid>), Error> {
+) -> Result<(Option<Uuid>, Option<Uuid>), crate::Error> {
     let (after_uuid, before_uuid) = match (after, before) {
         (None, None) => (None, None),
         (Some(after), Some(before)) => (

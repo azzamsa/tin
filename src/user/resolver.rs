@@ -9,9 +9,6 @@ use crate::{context::ServerContext, user::scalar::Id};
 #[derive(Default)]
 pub struct UserQuery;
 
-#[derive(Default)]
-pub struct UserMutation;
-
 #[Object]
 impl UserQuery {
     pub async fn users(
@@ -50,6 +47,9 @@ impl UserQuery {
         }
     }
 }
+
+#[derive(Default)]
+pub struct UserMutation;
 
 #[Object]
 impl UserMutation {
