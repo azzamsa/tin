@@ -70,7 +70,7 @@ impl Repository {
         let mut has_previous_page: bool = false;
         if let Some(last) = last {
             log::debug!("rows length: {}. last: {}", rows.len(), last);
-            has_previous_page = rows.len() > last.try_into()?;
+            has_previous_page = rows.len() > last as usize
         };
         Ok(has_previous_page)
     }
