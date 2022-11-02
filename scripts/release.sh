@@ -18,7 +18,7 @@ if [ -n "$1" ]; then
     cargo update -p tin
 
     # update the changelog
-    git-cliff --tag "$1" --sort newest --config configs/cliff.toml > CHANGELOG.md
+    git-cliff --tag "$1" --sort newest --config .config/cliff.toml > CHANGELOG.md
     # format newly added changelog file
     just fmt
 
