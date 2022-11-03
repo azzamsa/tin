@@ -17,7 +17,7 @@ impl Repository {
             .await
         {
             Err(err) => {
-                log::error!("finding user by name: {}", &err);
+                tracing::error!("{}", &err);
                 Err(err.into())
             }
             Ok(None) => Err(Error::UserNotFound),

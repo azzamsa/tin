@@ -130,7 +130,7 @@ impl UserConnection {
         let total_count_query = "select count(*) as exact_count from  user_";
         match sqlx::query(total_count_query).fetch_one(db).await {
             Err(err) => {
-                log::error!("counting users: {}", &err);
+                tracing::error!("{}", &err);
                 Err(err.into())
             }
             Ok(row) => Ok(row.get(0)),

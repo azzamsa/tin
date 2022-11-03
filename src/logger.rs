@@ -1,17 +1,16 @@
-use env_logger::Builder;
-use log::LevelFilter;
+use tracing_subscriber::{filter::EnvFilter, layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::config::{Config, Env};
 
 pub fn init(config: &Config) {
     let log_level = if config.env == Env::Production {
-        LevelFilter::Info
+        "info"
     } else {
-        LevelFilter::Debug
+        "debug"
     };
 
-    Builder::new()
-        .filter_level(log_level)
-        .filter_module("sqlx::query", LevelFilter::Error)
+    tracing_subscriber::registry()
+        .with(EnvFilter::new(log_level))
+        .with(tracing_subscriber::fmt::layer())
         .init();
 }

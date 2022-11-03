@@ -45,7 +45,7 @@ impl Repository {
             .await
         {
             Err(err) => {
-                log::error!("finding users: {}", &err);
+                tracing::error!("{}", &err);
                 return Err(err.into());
             }
             Ok(res) => res,
@@ -69,7 +69,7 @@ impl Repository {
     ) -> Result<bool, Error> {
         let mut has_previous_page: bool = false;
         if let Some(last) = last {
-            log::debug!("rows length: {}. last: {}", rows.len(), last);
+            tracing::debug!("rows length: {}. last: {}", rows.len(), last);
             has_previous_page = rows.len() > last as usize
         };
         Ok(has_previous_page)
@@ -114,7 +114,7 @@ impl Repository {
         if let Some(_first) = first {
             has_next_page = match sqlx::query(&has_next_query).fetch_one(db).await {
                 Err(err) => {
-                    log::error!("calculating has_next in users: {}", &err);
+                    tracing::error!("{}", &err);
                     return Err(err.into());
                 }
                 Ok(row) => row.get(0),

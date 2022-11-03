@@ -23,7 +23,7 @@ impl Repository {
             .await
         {
             Err(err) => {
-                log::error!("inserting user: {}", &err);
+                tracing::error!("{}", &err);
                 Err(err.into())
             }
             Ok(user) => Ok(user),

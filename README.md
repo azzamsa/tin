@@ -21,6 +21,7 @@
   - Store GraphQL schema to file automatically
 - [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit
 - [Axum](https://github.com/tokio-rs/axum) web framework
+- [Tracing](https://github.com/tokio-rs/tracing) with local timestamp.
 - [utoipa](https://github.com/juhaku/utoipa) Auto-generated OpenAPI documentation
 - [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator
 - Exhaustive Integration tests

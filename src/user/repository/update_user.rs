@@ -25,7 +25,7 @@ impl Repository {
             .await
         {
             Err(err) => {
-                log::error!("updating user: {}", &err);
+                tracing::error!("{}", &err);
                 Err(err.into())
             }
             Ok(user) => Ok(user),
