@@ -70,39 +70,9 @@ impl std::convert::From<tracing_subscriber::filter::FromEnvError> for Error {
     }
 }
 
-impl std::convert::From<std::num::ParseIntError> for Error {
-    fn from(err: std::num::ParseIntError) -> Self {
-        Error::InvalidArgument(err.to_string())
-    }
-}
-
-impl std::convert::From<std::str::ParseBoolError> for Error {
-    fn from(err: std::str::ParseBoolError) -> Self {
-        Error::InvalidArgument(err.to_string())
-    }
-}
-
-impl std::convert::From<serde_json::Error> for Error {
-    fn from(err: serde_json::Error) -> Self {
-        Error::InvalidArgument(err.to_string())
-    }
-}
-
 impl std::convert::From<std::string::FromUtf8Error> for Error {
     fn from(err: std::string::FromUtf8Error) -> Self {
         Error::Internal(err.to_string())
-    }
-}
-
-impl std::convert::From<uuid::Error> for Error {
-    fn from(_: uuid::Error) -> Self {
-        Error::InvalidArgument(String::from("parsing UUID"))
-    }
-}
-
-impl std::convert::From<url::ParseError> for Error {
-    fn from(err: url::ParseError) -> Self {
-        Error::InvalidArgument(format!("url is not valid: {}", err))
     }
 }
 
@@ -121,6 +91,36 @@ impl std::convert::From<std::net::AddrParseError> for Error {
 impl std::convert::From<hyper::Error> for Error {
     fn from(err: hyper::Error) -> Self {
         Error::Internal(err.to_string())
+    }
+}
+
+impl std::convert::From<std::num::ParseIntError> for Error {
+    fn from(err: std::num::ParseIntError) -> Self {
+        Error::InvalidArgument(err.to_string())
+    }
+}
+
+impl std::convert::From<std::str::ParseBoolError> for Error {
+    fn from(err: std::str::ParseBoolError) -> Self {
+        Error::InvalidArgument(err.to_string())
+    }
+}
+
+impl std::convert::From<serde_json::Error> for Error {
+    fn from(err: serde_json::Error) -> Self {
+        Error::InvalidArgument(err.to_string())
+    }
+}
+
+impl std::convert::From<uuid::Error> for Error {
+    fn from(_: uuid::Error) -> Self {
+        Error::InvalidArgument(String::from("parsing UUID"))
+    }
+}
+
+impl std::convert::From<url::ParseError> for Error {
+    fn from(err: url::ParseError) -> Self {
+        Error::InvalidArgument(format!("url is not valid: {}", err))
     }
 }
 
