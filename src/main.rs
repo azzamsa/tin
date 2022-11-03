@@ -9,7 +9,7 @@ use tin::{config::Config, logger, routes::app};
 #[tokio::main]
 async fn main() -> Result<(), tin::Error> {
     let config = Arc::new(Config::load()?);
-    logger::init(&config);
+    logger::init(&config)?;
 
     let app = app().await?;
 

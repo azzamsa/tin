@@ -58,6 +58,18 @@ impl std::convert::From<sqlx::migrate::MigrateError> for Error {
     }
 }
 
+impl std::convert::From<tracing_subscriber::filter::ParseError> for Error {
+    fn from(err: tracing_subscriber::filter::ParseError) -> Self {
+        Error::Internal(err.to_string())
+    }
+}
+
+impl std::convert::From<tracing_subscriber::filter::FromEnvError> for Error {
+    fn from(err: tracing_subscriber::filter::FromEnvError) -> Self {
+        Error::Internal(err.to_string())
+    }
+}
+
 impl std::convert::From<std::num::ParseIntError> for Error {
     fn from(err: std::num::ParseIntError) -> Self {
         Error::InvalidArgument(err.to_string())

@@ -12,6 +12,7 @@ const ENV_HTTP_PORT: &str = "PORT";
 const ENV_DATABASE_URL: &str = "DATABASE_URL";
 const ENV_DATABASE_POOL_SIZE: &str = "DATABASE_POOL_SIZE";
 const ENV_SCHEMA_LOCATION: &str = "SCHEMA_LOCATION";
+const ENV_UTC_OFFSET_HOUR: &str = "UTC_OFFSET_HOUR";
 
 const POSTGRES_SCHEME: &str = "postgres";
 
@@ -20,6 +21,7 @@ pub struct Config {
     pub env: Env,
     pub base_url: String,
     pub schema_location: Option<String>,
+    pub utc_offset_hour: i8,
     pub http: Http,
     pub database: Database,
 }
@@ -97,6 +99,9 @@ impl Config {
             .parse::<Env>()?;
         let base_url =
             std::env::var(ENV_APP_BASE_URL).map_err(|_| env_not_found(ENV_APP_BASE_URL))?;
+        let utc_offset_hour =
+            std::env::var(ENV_UTC_OFFSET_HOUR).map_err(|_| env_not_found(ENV_UTC_OFFSET_HOUR))?;
+        let utc_offset_hour: i8 = utc_offset_hour.parse()?;
 
         // GraphQL
         let schema_location = match std::env::var(ENV_SCHEMA_LOCATION) {
@@ -128,6 +133,7 @@ impl Config {
         let mut config = Self {
             base_url,
             schema_location,
+            utc_offset_hour,
             env,
             http,
             database,
