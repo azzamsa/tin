@@ -12,17 +12,17 @@ repository = "https://github.com/azzamsa/tin"
 description = "Rust GraphQL Template"
 
 [dependencies]
-axum = "0.5.16"
-hyper = "0.14.20"
-tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
+axum = "0.5"
+hyper = "0.14"
+tokio = { version = "1.21", features = ["macros", "rt-multi-thread"] }
 
 # GraphQL
-async-graphql = { version = "4.0.15", features = ["uuid", "chrono"] }
-async-graphql-axum = "4.0.15"
+async-graphql = { version = "4.0", features = ["uuid", "chrono"] }
+async-graphql-axum = "4.0"
 
 # Rest
-utoipa = { version = "2.2.0", features = ["axum_extras"] }
-utoipa-swagger-ui = { version = "2.0.1", features = ["axum"] }
+utoipa = { version = "2.2", features = ["axum_extras"] }
+utoipa-swagger-ui = { version = "2.0", features = ["axum"] }
 
 # Database
 sqlx = { version = "0.6.2", features = ["runtime-async-std-native-tls", "postgres", "offline", "uuid", "chrono", "migrate"] }
@@ -34,25 +34,23 @@ tracing-subscriber = { version = "0.3", features = ["env-filter", "time", "local
 # Configurations
 dotenv = "0.15"
 
-base64 = "0.13.0"
-chrono = { version = "0.4", features = ["serde"] }
+base64 = "0.13"
+chrono = "0.4"
 serde = "1.0"
 serde_json = "1.0"
 thiserror = "1.0"
 time = "0.3"
-ulid = { version = "1.0.0", features = ["uuid"] }
+ulid = { version = "1.0", features = ["uuid"] }
 url = "2.3"
-uuid = "1.2.1"
+uuid = "1.2"
 
 [dev-dependencies]
 # git hooks
 cargo-husky = { version = "1", features = ["user-hooks"] }
 
 anyhow = "1.0"
-cynic = "2.0.0"
-hyper = { version = "0.14.20", features = ["full"] }
-mime = "0.3.16"
-serde = { version = "1.0", features = ["derive"] }
+cynic = "2.0"
+mime = "0.3"
 tower = { version = "0.4", features = ["util"] }
 
 # cross-rs configuration
