@@ -14,7 +14,7 @@ impl HealthQuery {
     pub async fn health(&self, ctx: &Context<'_>) -> FieldResult<model::Health> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
-        let result = server_ctx.health_service.find_health().await;
+        let result = server_ctx.health_service.get_health().await;
         match result {
             Ok(res) => Ok(res.into()),
             Err(err) => Err(Error::new(err.to_string())),

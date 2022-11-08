@@ -1,4 +1,4 @@
-mod find_meta;
+mod get_meta;
 
 #[derive(Debug)]
 pub struct Service;

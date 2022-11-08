@@ -1,4 +1,4 @@
-mod find_health;
+mod get_health;
 
 #[derive(Debug)]
 pub struct Service;

@@ -13,7 +13,7 @@ impl MetaQuery {
     pub async fn meta(&self, ctx: &Context<'_>) -> FieldResult<model::Meta> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
-        let result = server_ctx.meta_service.find_meta().await;
+        let result = server_ctx.meta_service.get_meta().await;
         match result {
             Ok(res) => Ok(res.into()),
             Err(err) => Err(Error::new(err.to_string())),
