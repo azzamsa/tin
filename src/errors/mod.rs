@@ -31,12 +31,6 @@ impl std::convert::From<sqlx::Error> for Error {
     }
 }
 
-impl std::convert::From<axum::Error> for Error {
-    fn from(err: axum::Error) -> Self {
-        Error::Internal(err.to_string())
-    }
-}
-
 impl std::convert::From<std::io::Error> for Error {
     fn from(err: std::io::Error) -> Self {
         Error::Internal(err.to_string())
