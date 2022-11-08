@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2022-11-08
+
+### Features
+
+- Use local timestamp in tracing ([2ecaaaf](2ecaaaf9eb461007dc21fbdc154c86bebd569fca))
+
+### Bug fixes
+
+- Migrate to tracing ([8d9710d](8d9710d83329f4286f32efafcc3db3d03babc67a))
+
 ## [0.2.1] - 2022-10-16
 
 ### Bug fixes
