@@ -7,14 +7,14 @@ pub mod queries {
     use super::schema;
 
     #[derive(cynic::QueryFragment, Debug)]
-    #[cynic(graphql_type = "Query", argument_struct = "ReadUsersArguments")]
+    #[cynic(graphql_type = "Query", variables = "ReadUsersArguments")]
     pub struct UsersQuery {
-        #[arguments(first = &args.first, after = &args.after, last = &args.last, before = &args.before)]
+        #[arguments(first: $first, after : $after, last : $last, before : $before)]
         pub users: UserConnection,
     }
 
     // All sturct must be inline
-    #[derive(cynic::FragmentArguments, Debug)]
+    #[derive(cynic::QueryVariables, Debug)]
     pub struct ReadUsersArguments {
         pub first: Option<i32>,
         pub after: Option<String>,
@@ -42,20 +42,21 @@ pub mod queries {
     }
 
     #[derive(cynic::QueryFragment, Debug)]
-    #[cynic(graphql_type = "Query", argument_struct = "ReadUserArguments")]
+    #[cynic(graphql_type = "Query", variables = "ReadUserArguments")]
     pub struct UserQuery {
-        #[arguments(id = &args.id)]
+        #[arguments(id : $id)]
         pub user: User,
     }
 
     // All sturct must be inline
-    #[derive(cynic::FragmentArguments, Debug)]
+    #[derive(cynic::QueryVariables, Debug)]
     pub struct ReadUserArguments {
         pub id: Uuid,
     }
 
     // All sturct must be inline
     #[derive(cynic::Scalar, Debug, Clone)]
+    #[cynic(graphql_type = "UUID")]
     pub struct Uuid(pub String);
 }
 
@@ -63,22 +64,20 @@ pub mod queries {
 pub mod add {
     use super::schema;
 
-    #[derive(cynic::QueryFragment, Debug)]
-    #[cynic(graphql_type = "Mutation", argument_struct = "CreateUserInput")]
-    pub struct UserMutation {
-        #[arguments(input =
-              CreateUserInput {
-                 name: args.name.clone(),
-                 full_name: args.full_name.clone(),
-            }
-        )]
-        pub create_user: User,
-    }
-
-    #[derive(cynic::InputObject, cynic::FragmentArguments, Debug)]
+    #[derive(cynic::QueryVariables, Debug)]
     pub struct CreateUserInput {
         pub name: String,
         pub full_name: Option<String>,
+    }
+
+    #[derive(cynic::QueryFragment, Debug)]
+    #[cynic(graphql_type = "Mutation", variables = "CreateUserInput")]
+    pub struct UserMutation {
+        #[arguments(input : {
+            name: $name,
+            fullName: $full_name,
+        })]
+        pub create_user: User,
     }
 
     #[derive(cynic::QueryFragment, Debug)]
@@ -89,6 +88,7 @@ pub mod add {
     }
 
     #[derive(cynic::Scalar, Debug, Clone)]
+    #[cynic(graphql_type = "UUID")]
     pub struct Uuid(pub String);
 }
 
@@ -96,20 +96,7 @@ pub mod add {
 pub mod update {
     use super::schema;
 
-    #[derive(cynic::QueryFragment, Debug)]
-    #[cynic(graphql_type = "Mutation", argument_struct = "UpdateUserInput")]
-    pub struct UserMutation {
-        #[arguments(input =
-                    UpdateUserInput {
-                        id: args.id.clone(),
-                        name: args.name.clone(),
-                        full_name: args.full_name.clone(),
-            }
-        )]
-        pub update_user: User,
-    }
-
-    #[derive(cynic::InputObject, cynic::FragmentArguments, Debug)]
+    #[derive(cynic::QueryVariables, Debug)]
     pub struct UpdateUserInput {
         pub id: Uuid,
         pub name: String,
@@ -117,12 +104,25 @@ pub mod update {
     }
 
     #[derive(cynic::QueryFragment, Debug)]
+    #[cynic(graphql_type = "Mutation", variables = "UpdateUserInput")]
+    pub struct UserMutation {
+        #[arguments(input : {
+            id: $id,
+            name: $name,
+            fullName: $full_name,
+        })]
+        pub update_user: User,
+    }
+
+    #[derive(cynic::QueryFragment, Debug)]
     pub struct User {
         pub id: Uuid,
         pub name: String,
         pub full_name: Option<String>,
     }
+
     #[derive(cynic::Scalar, Debug, Clone)]
+    #[cynic(graphql_type = "UUID")]
     pub struct Uuid(pub String);
 }
 
@@ -130,16 +130,16 @@ pub mod update {
 pub mod delete {
     use super::schema;
 
-    #[derive(cynic::QueryFragment, Debug)]
-    #[cynic(graphql_type = "Mutation", argument_struct = "DeleteUserArguments")]
-    pub struct UserMutation {
-        #[arguments(id = &args.id)]
-        pub delete_user: User,
-    }
-
-    #[derive(cynic::FragmentArguments, Debug)]
+    #[derive(cynic::QueryVariables, Debug)]
     pub struct DeleteUserArguments {
         pub id: Uuid,
+    }
+
+    #[derive(cynic::QueryFragment, Debug)]
+    #[cynic(graphql_type = "Mutation", variables = "DeleteUserArguments")]
+    pub struct UserMutation {
+        #[arguments(id: $id)]
+        pub delete_user: User,
     }
 
     #[derive(cynic::QueryFragment, Debug)]
@@ -148,6 +148,8 @@ pub mod delete {
         pub name: String,
         pub full_name: Option<String>,
     }
+
     #[derive(cynic::Scalar, Debug, Clone)]
+    #[cynic(graphql_type = "UUID")]
     pub struct Uuid(pub String);
 }

@@ -25,7 +25,7 @@ async fn keep_existing_full_name() -> Result<()> {
         name: "khawa".to_string(),
         full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
     };
-    let query = add::UserMutation::build(&args);
+    let query = add::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -45,7 +45,7 @@ async fn keep_existing_full_name() -> Result<()> {
         name: "khawa1".to_string(),
         full_name: None,
     };
-    let query = update::UserMutation::build(&args);
+    let query = update::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)

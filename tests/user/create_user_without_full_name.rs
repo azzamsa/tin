@@ -19,7 +19,7 @@ async fn create_user_without_full_name() -> Result<()> {
         name: "khawa".to_string(),
         full_name: None,
     };
-    let query = add::UserMutation::build(&args);
+    let query = add::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)

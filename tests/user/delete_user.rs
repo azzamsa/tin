@@ -29,7 +29,7 @@ async fn delete_user() -> Result<()> {
         name: "khawa".to_string(),
         full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
     };
-    let query = add::UserMutation::build(&args);
+    let query = add::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -52,7 +52,7 @@ async fn delete_user() -> Result<()> {
 
     let user_id_str = delete::Uuid(user_id.to_string());
     let args = delete::DeleteUserArguments { id: user_id_str };
-    let query = delete::UserMutation::build(&args);
+    let query = delete::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)

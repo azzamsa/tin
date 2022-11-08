@@ -25,7 +25,7 @@ async fn update_user() -> Result<()> {
         name: "khawa".to_string(),
         full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
     };
-    let query = add::UserMutation::build(&args);
+    let query = add::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -52,7 +52,7 @@ async fn update_user() -> Result<()> {
         name: "haitham".to_string(),
         full_name: None,
     };
-    let query = update::UserMutation::build(&args);
+    let query = update::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)

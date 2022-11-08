@@ -22,7 +22,7 @@ async fn duplicate_username_create() -> Result<()> {
         name: "khawa".to_string(),
         full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
     };
-    let query = add::UserMutation::build(&args);
+    let query = add::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -40,7 +40,7 @@ async fn duplicate_username_create() -> Result<()> {
         name: "khawa".to_string(),
         full_name: None,
     };
-    let query = add::UserMutation::build(&args);
+    let query = add::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -70,7 +70,7 @@ async fn duplicate_username_update() -> Result<()> {
         name: "khawa".to_string(),
         full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
     };
-    let query = add::UserMutation::build(&args);
+    let query = add::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -89,7 +89,7 @@ async fn duplicate_username_update() -> Result<()> {
         name: "khawa1".to_string(),
         full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
     };
-    let query = add::UserMutation::build(&args);
+    let query = add::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -114,7 +114,7 @@ async fn duplicate_username_update() -> Result<()> {
         name: "khawa".to_string(),
         full_name: None,
     };
-    let query = update::UserMutation::build(&args);
+    let query = update::UserMutation::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
