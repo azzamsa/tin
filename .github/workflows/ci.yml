@@ -31,7 +31,7 @@ jobs:
           tool: dprint
 
       - name: Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Ensure `fmt` has been run
         run:  just fmt-check
@@ -70,7 +70,7 @@ jobs:
           tool: sqlx-cli
 
       - name: Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Prepare the environment variables
         run: |
@@ -115,7 +115,7 @@ jobs:
           profile: minimal
 
       # - name: Cache
-      #   uses: Swatinem/rust-cache@v1
+      #   uses: Swatinem/rust-cache@v2
 
       - name: Show version information
         shell: bash
