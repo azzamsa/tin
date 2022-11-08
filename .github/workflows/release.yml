@@ -25,8 +25,8 @@ jobs:
           os: ubuntu-latest
           rust: stable
           target: x86_64-unknown-linux-gnu
-          artifact_name: graph
-          asset_name: graph-linux-amd64
+          artifact_name: tin
+          asset_name: tin-linux-amd64
 
     steps:
       - name: Checkout repository
