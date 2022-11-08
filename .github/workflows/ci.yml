@@ -25,15 +25,13 @@ jobs:
       - name: Install latest just release
         uses: extractions/setup-just@v1
 
-      - name: Install dprint
-        run: |
-          curl --location https://github.com/dprint/dprint/releases/download/0.30.3/dprint-x86_64-unknown-linux-gnu.zip --output dprint.zip
-          unzip dprint.zip
-          cp dprint ~/.cargo/bin/
-          dprint --version
+      - name: Install latest dprint release
+        uses: taiki-e/install-action@v1
+        with:
+          tool: dprint
 
       - name: Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Ensure `fmt` has been run
         run:  just fmt-check
@@ -46,7 +44,7 @@ jobs:
           SQLX_OFFLINE: true
         run: just lint
 
-  min_version:
+  msrv:
     name: Minimum supported rust version
     runs-on: ubuntu-latest
     steps:
@@ -60,11 +58,14 @@ jobs:
           default: true
           profile: minimal
 
+      - name: Install latest nextest release
+        uses: taiki-e/install-action@nextest
+
       - name: Install latest just release
         uses: extractions/setup-just@v1
 
       - name: Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Prepare the environment variables
         run: |
@@ -94,8 +95,8 @@ jobs:
           override: true
           profile: minimal
 
-      - name: Cache
-        uses: Swatinem/rust-cache@v1
+      # - name: Cache
+      #   uses: Swatinem/rust-cache@v2
 
       - name: Show version information
         shell: bash

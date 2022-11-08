@@ -17,6 +17,7 @@ _default:
 # Setup the repository
 setup:
     git cliff --version || cargo install git-cliff
+    cargo nextest --version || cargo install --locked cargo-nextest
     cargo-set-version --help || cargo install cargo-edit
     cargo watch --version || cargo install cargo-watch
     cargo outdated --version || cargo install --locked cargo-outdated
@@ -33,12 +34,12 @@ run:
 # Format the codebase.
 fmt:
     cargo +nightly fmt --all
-    dprint fmt --config configs/dprint.json
+    dprint fmt --config .config/dprint.json
 
 # Check is the codebase properly formatted.
 fmt-check:
     cargo +nightly fmt --all -- --check
-    dprint check --config configs/dprint.json
+    dprint check --config .config/dprint.json
 
 # Lint the codebase.
 lint:
@@ -50,17 +51,17 @@ _doc-check:
 
 # Run the unit tests.
 _unit-test:
-    cargo test --lib
+    cargo nextest run --lib
 
 # Test the codebase.
 test:
-    cargo test --all-targets -- --test-threads 1
+    cargo nextest run --all-targets
 
 # Tasks to make the code-base comply with the rules. Mostly used in git hooks.
 comply: fmt lint test
 
 # Check if the repository comply with the rules and ready to be pushed.
-check: fmt-check lint test _doc-check
+check:  fmt-check lint test _doc-check
 
 # Create a new release. Example `just release v2.2.0`
 release version:
@@ -76,8 +77,3 @@ up arg="":
     	cargo +nightly udeps
         cargo outdated --root-deps-only
     fi;
-
-# Local Variables:
-# mode: makefile
-# End:
-# vim: set ft=make :

@@ -4,8 +4,6 @@ mod schema {
 
 #[cynic::schema_for_derives(file = "tests/schema.graphql", module = "schema")]
 pub mod queries {
-    use serde::Deserialize;
-
     use super::schema;
 
     #[derive(cynic::QueryFragment, Debug)]
@@ -19,7 +17,7 @@ pub mod queries {
     // of in `schema.rs` just to avoid duplication.
     // If `serde::Deserialize` changes cynic behavior, we will
     // move it to separate struct in `schema.rs`
-    #[derive(cynic::QueryFragment, Debug, Deserialize)]
+    #[derive(cynic::QueryFragment, Debug)]
     pub struct Health {
         pub status: String,
     }

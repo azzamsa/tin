@@ -1,11 +1,9 @@
-# inspired by ripgrep workflow
-
 name: Release
 
 on:
   push:
     tags:
-    - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v*'
 
 jobs:
   publish:
@@ -24,17 +22,15 @@ jobs:
         build: [linux]
         include:
         - build: linux
-          os: ubuntu-20.04
+          os: ubuntu-latest
           rust: stable
           target: x86_64-unknown-linux-gnu
-          artifact_name: graph
-          asset_name: graph-linux-amd64
+          artifact_name: tin
+          asset_name: tin-linux-amd64
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v3
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
@@ -48,14 +44,16 @@ jobs:
         run: |
           sudo apt-get install pkg-config libssl-dev
 
+      - name: Install latest cross release
+        uses: taiki-e/install-action@cross
+
       - name: Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       - name: Use Cross
         # currently only used for non-windows
         # because they didn't pick up these variables
         run: |
-          cargo install --version 0.2.4 cross
           echo "CARGO=cross" >> $GITHUB_ENV
           echo "TARGET_FLAGS=--target ${{ matrix.target }}" >> $GITHUB_ENV
           echo "TARGET_DIR=./target/${{ matrix.target }}" >> $GITHUB_ENV
@@ -70,9 +68,9 @@ jobs:
         run: ${{ env.CARGO }} build --locked --verbose --release ${{ env.TARGET_FLAGS }}
 
       - name: Strip release binary (linux and macos)
-        if: matrix.build == 'linux'
+        if: "!contains(matrix.buid, 'windows')"
         run: |
-          strip "target/${{ matrix.target }}/release/graph"
+          strip "target/${{ matrix.target }}/release/tin"
 
       - name: Upload binaries to release
         if: matrix.build == 'linux'

@@ -12,21 +12,22 @@ repository = "https://github.com/azzamsa/tin"
 description = "Rust GraphQL Template"
 
 [dependencies]
-axum = "0.5.16"
-hyper = "0.14.20"
+axum = "0.5.17"
+hyper = "0.14.23"
 tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
 
 # GraphQL
-async-graphql = { version = "4.0.15" }
-async-graphql-axum = "4.0.15"
+async-graphql = { version = "4.0.16" }
+async-graphql-axum = "4.0.16"
 
 # Rest
 utoipa = { version = "2.2.0", features = ["axum_extras"] }
 utoipa-swagger-ui = { version = "2.0.1", features = ["axum"] }
 
 # Logging
-env_logger = "0.9.1"
-log = "0.4"
+time = "0.3"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "time", "local-time"] }
 
 # Configurations
 dotenv = "0.15"
@@ -40,8 +41,8 @@ thiserror = "1.0"
 cargo-husky = { version = "1", features = ["user-hooks"] }
 
 anyhow = "1.0"
-cynic = "1.0.0"
-hyper = { version = "0.14.20", features = ["full"] }
+cynic = "2.0.0"
+hyper = { version = "0.14.23", features = ["full"] }
 mime = "0.3.16"
 serde = { version = "1.0", features = ["derive"] }
 tower = { version = "0.4", features = ["util"] }
