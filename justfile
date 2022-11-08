@@ -26,7 +26,7 @@ setup:
 
 # Develop the app.
 dev:
-    cargo watch -x clippy
+    cargo watch -x 'clippy --locked --all-targets --all-features'
 
 # Develop the app.
 run:
