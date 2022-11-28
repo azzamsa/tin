@@ -90,6 +90,5 @@ up arg="":
     	cargo upgrade
     	cargo update
     else
-    	cargo +nightly udeps
         cargo outdated --root-deps-only
     fi;
