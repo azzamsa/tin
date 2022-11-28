@@ -76,9 +76,7 @@ pub async fn app() -> Result<Router, Error> {
     if config.env != config::Env::Production {
         app = app
             .route("/playground", get(routes::graphql_playground))
-            .merge(
-                SwaggerUi::new("/swagger/*tail").url("/api-doc/openapi.json", ApiDoc::openapi()),
-            );
+            .merge(SwaggerUi::new("/swagger").url("/api-doc/openapi.json", ApiDoc::openapi()));
     }
     let app = app.layer(Extension(schema));
 
