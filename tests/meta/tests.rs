@@ -11,7 +11,7 @@ use tower::util::ServiceExt;
 use super::{graphql::queries::MetaQuery, schema::MetaResponse};
 
 #[tokio::test]
-async fn health() -> Result<()> {
+async fn meta() -> Result<()> {
     let app = app().await?;
 
     let query = MetaQuery::build(());
