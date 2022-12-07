@@ -74,7 +74,7 @@ _reset-db:
     sqlx database drop && sqlx database create
 
 # Tasks to make the code-base comply with the rules. Mostly used in git hooks.
-comply: fmt lint test _update-sqlx-schema
+comply: fmt lint test _doc-check _update-sqlx-schema
 
 # Check if the repository comply with the rules and ready to be pushed.
 check: _check-sqlx-schema fmt-check lint test _doc-check
