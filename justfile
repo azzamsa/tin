@@ -35,12 +35,12 @@ run:
 # Format the codebase.
 fmt:
     cargo +nightly fmt --all
-    dprint fmt --config .config/dprint.json
+    dprint fmt --config configs/dprint.json
 
 # Check is the codebase properly formatted.
 fmt-check:
     cargo +nightly fmt --all -- --check
-    dprint check --config .config/dprint.json
+    dprint check --config configs/dprint.json
 
 # Lint the codebase.
 lint:
