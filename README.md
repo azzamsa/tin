@@ -26,6 +26,7 @@
 - [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator
 - Exhaustive Integration tests
   - Uses [Cynic](https://github.com/obmarg/cynic) for GraphQL client
+  - [Hurl](https://github.com/Orange-OpenSource/hurl) for E2E test
 - GitHub Action for CI and release
 - Git hooks for continuous development (format, lint, test)
   - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky)
