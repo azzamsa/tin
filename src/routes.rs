@@ -51,12 +51,9 @@ pub async fn app() -> Result<Router, Error> {
         .finish();
 
     // Export schema to file
-    match &config.schema_location {
-        Some(location) => {
-            fs::write(location, &schema.sdl())?;
-        }
-        None => (),
-    };
+    if let Some(location) = &config.schema_location {
+        fs::write(location, schema.sdl())?;
+    }
 
     #[derive(OpenApi)]
     #[openapi(
