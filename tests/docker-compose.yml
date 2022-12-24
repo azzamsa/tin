@@ -8,3 +8,4 @@ services:
     environment:
       POSTGRES_USER: superuser
       POSTGRES_PASSWORD: secret
+      POSTGRES_DB: tin

@@ -62,11 +62,6 @@ jobs:
         with:
           tool: just
 
-      - name: Install latest sqlx-cli release
-        uses: taiki-e/install-action@v1
-        with:
-          tool: sqlx-cli
-
       - name: Cache
         uses: Swatinem/rust-cache@v2
 
@@ -75,16 +70,14 @@ jobs:
           cp .example.env .env
 
       - name: Prepare the database
-        run: |
-          docker-compose -f ./tests/docker-compose.yml run -d -p 5432:5432 --name postgres_db postgres_db
-          docker exec postgres_db bash -c "until pg_isready; do sleep 1; done"
-
-      - name: Migrate the database
         env:
-          DATABASE_URL: postgres://superuser:secret@localhost:5432/tin
+          PGPASSWORD: secret
         run: |
-          sqlx database create
-          sqlx migrate --source db/migrations/ run
+          docker-compose --file ./tests/docker-compose.yml run --detach -p 5432:5432 --name postgres_db postgres_db
+          # Wait until the DB is up
+          docker exec postgres_db bash -c "until pg_isready; do sleep 1; done"
+          # Check DB version
+          docker exec postgres_db psql -h localhost -p 5432 -U superuser --version
 
       - name: Run tests
         env:
