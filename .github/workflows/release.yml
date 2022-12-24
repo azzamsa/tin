@@ -18,15 +18,50 @@ jobs:
       # Emit backtraces on panics.
       RUST_BACKTRACE: 1
     strategy:
+      fail-fast: false
       matrix:
-        build: [linux]
+        build: [linux, linux-musl, macos, win-msvc, win-gnu]
         include:
         - build: linux
           os: ubuntu-22.04
           rust: stable
           target: x86_64-unknown-linux-gnu
-          artifact_name: tin
+          artifact_name: target/x86_64-unknown-linux-gnu/release/tin
           asset_name: tin-linux-amd64
+          strip: true
+
+        - build: linux-musl
+          os: ubuntu-22.04
+          rust: stable
+          target: x86_64-unknown-linux-musl
+          artifact_name: target/x86_64-unknown-linux-musl/release/tin
+          asset_name: tin-linux-amd64-musl
+          use-cross: true
+          strip: true
+
+        - build: macos
+          os: macos-latest
+          rust: stable
+          target: x86_64-apple-darwin
+          artifact_name: target/x86_64-apple-darwin/release/tin
+          asset_name: tin-macos-amd64
+          strip: true
+
+        - build: win-msvc
+          os: windows-2022
+          rust: stable
+          target: x86_64-pc-windows-msvc
+          artifact_name: target/release/tin.exe
+          # need to append `.exe` as the filename
+          # used in relase page is `asset_name`
+          asset_name: tin-windows-amd64-msvc.exe
+
+        - build: win-gnu
+          os: windows-2022
+          rust: stable
+          target: x86_64-pc-windows-gnu
+          artifact_name: target/release/tin.exe
+          asset_name: tin-windows-amd64-gnu.exe
 
     steps:
       - name: Checkout repository
@@ -38,18 +73,8 @@ jobs:
           toolchain: ${{ matrix.rust }}
           target: ${{ matrix.target }}
 
-      - name: Install OpenSSL
-        run: |
-          sudo apt-get install pkg-config libssl-dev
-
-      - name: Install latest cross release
-        if: ${{ matrix.use-cross == true }}
+      - name: Install cross
         uses: taiki-e/install-action@cross
-
-      - name: Rust cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.os }}-${{ matrix.target }}
 
       - name: Use Cross
         # currently only used for non-windows
@@ -66,19 +91,18 @@ jobs:
           echo "target dir is: ${{ env.TARGET_DIR }}"
 
       - name: Build release binary
-        run: ${{ env.CARGO }} build --locked --verbose --release ${{ env.TARGET_FLAGS }}
+        run: ${{ env.CARGO }} build --verbose --release ${{ env.TARGET_FLAGS }}
 
       - name: Strip release binary (linux and macos)
-        if: "!contains(matrix.buid, 'windows')"
+        if: matrix.strip == true
         run: |
-          strip "target/${{ matrix.target }}/release/tin"
+          strip "${{ matrix.artifact_name }}"
 
       - name: Upload binaries to release
-        if: matrix.build == 'linux'
-        uses: svenstaro/upload-release-action@v1-release
+        uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GH_TOKEN }}
-          file: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
           overwrite: true
