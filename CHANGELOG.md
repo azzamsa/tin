@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2022-12-24
+
+### Bug fixes
+
+- Avoid checking if the config exists ([fdb8796](fdb8796958f91a3de4f7ca6d794e5099048e86e2))
+
 ## [0.3.0] - 2022-11-08
 
 ### Features
