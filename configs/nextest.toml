@@ -1,0 +1,3 @@
+[[profile.default.overrides]]
+filter = 'test(user::)'
+threads-required = "num-test-threads"

@@ -56,7 +56,7 @@ _unit-test:
 
 # Test the codebase.
 test:
-    cargo nextest run --all-targets --test-threads 1
+    cargo nextest run --config-file configs/nextest.toml
 
 _update-sqlx-schema:
     cargo sqlx prepare -- --lib
