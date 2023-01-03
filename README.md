@@ -31,6 +31,7 @@
 - Git hooks for continuous development (format, lint, test)
   - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky)
 - Consistent formatting using [dprint](https://github.com/dprint/dprint)
+- [cargo-binstall](https://github.com/cargo-bins/cargo-binstall) support
 
 ## Variations
 

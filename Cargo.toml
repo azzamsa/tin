@@ -60,3 +60,8 @@ pre-build = [
   "dpkg --add-architecture $CROSS_DEB_ARCH",
   "apt-get update && apt-get install --assume-yes libssl-dev:$CROSS_DEB_ARCH",
 ]
+
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/{ name }-{ version}-{ target }.tar.gz"
+bin-dir = "{ bin }{ binary-ext }"
+pkg-fmt = "tgz"
