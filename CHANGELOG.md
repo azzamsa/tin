@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2023-01-04
+
+### Bug fixes
+
+- Migrate to `tokio` runtime ([6a83302](6a833026e333129c9eb33a56d8b5d6e1e8984c1b))
+
 ## [0.3.1] - 2022-12-24
 
 ### Bug fixes
