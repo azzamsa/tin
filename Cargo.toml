@@ -53,14 +53,6 @@ cynic = "2.2"
 mime = "0.3"
 tower = { version = "0.4", features = ["util"] }
 
-# cross-rs configuration
-[package.metadata.cross.target.x86_64-unknown-linux-gnu]
-# The latest version of cross-rs doesn't include OpenSSL support
-pre-build = [
-  "dpkg --add-architecture $CROSS_DEB_ARCH",
-  "apt-get update && apt-get install --assume-yes libssl-dev:$CROSS_DEB_ARCH",
-]
-
 [package.metadata.binstall]
 pkg-url = "{ repo }/releases/download/v{ version }/{ name }-{ version}-{ target }.tar.gz"
 bin-dir = "{ bin }{ binary-ext }"
