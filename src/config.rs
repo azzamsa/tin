@@ -60,9 +60,9 @@ impl FromStr for Env {
 impl fmt::Display for Env {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Env::Dev => write!(f, "{}", APP_ENV_DEV),
-            Env::Staging => write!(f, "{}", APP_ENV_STAGING),
-            Env::Production => write!(f, "{}", APP_ENV_PRODUCTION),
+            Env::Dev => write!(f, "{APP_ENV_DEV}"),
+            Env::Staging => write!(f, "{APP_ENV_STAGING}"),
+            Env::Production => write!(f, "{APP_ENV_PRODUCTION}"),
         }
     }
 }
@@ -158,5 +158,5 @@ impl Config {
 }
 
 fn env_not_found(var: &str) -> Error {
-    Error::NotFound(format!("config: {} env var not found", var))
+    Error::NotFound(format!("config: {var} env var not found"))
 }

@@ -19,7 +19,7 @@ impl Repository {
         match (first, after, last, before) {
             // First
             (Some(first), None, None, None) => {
-                query = format!("{query} order by id asc limit {}", first);
+                query = format!("{query} order by id asc limit {first}");
             }
             // First & after,
             (Some(first), Some(after), None, None) => {
@@ -37,7 +37,7 @@ impl Repository {
                 query = format!("select * from ( select * from user_ where id < '{before}' order by id desc limit {limit} ) as data order by id asc;", limit = last + 1)
             }
             // Default page size
-            _ => query = format!("{query} limit {}", default_page_size),
+            _ => query = format!("{query} limit {default_page_size}"),
         };
 
         let mut rows = match sqlx::query_as::<_, entities::User>(&query)

@@ -84,7 +84,7 @@ impl std::convert::From<std::num::ParseIntError> for Error {
 
 impl std::convert::From<url::ParseError> for Error {
     fn from(err: url::ParseError) -> Self {
-        Error::InvalidArgument(format!("url is not valid: {}", err))
+        Error::InvalidArgument(format!("url is not valid: {err}"))
     }
 }
 
