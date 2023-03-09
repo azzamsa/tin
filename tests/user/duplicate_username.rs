@@ -9,7 +9,7 @@ use tin::routes::app;
 use tower::{util::ServiceExt, Service};
 
 use super::{graphql::add, schema::CreateUserResponse};
-use crate::user::{graphql::update, teardown};
+use super::{graphql::update, teardown};
 
 #[tokio::test]
 async fn duplicate_username_create() -> Result<()> {

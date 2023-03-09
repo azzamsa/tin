@@ -8,8 +8,8 @@ use serde_json::{from_slice, to_string};
 use tin::routes::app;
 use tower::util::ServiceExt;
 
+use super::teardown;
 use super::{graphql::add, schema::CreateUserResponse};
-use crate::user::teardown;
 
 #[tokio::test]
 async fn create_user_without_full_name() -> Result<()> {

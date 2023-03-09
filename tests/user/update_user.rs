@@ -8,11 +8,11 @@ use serde_json::{from_slice, to_string};
 use tin::routes::app;
 use tower::{util::ServiceExt, Service};
 
+use super::{graphql::update::Uuid, teardown};
 use super::{
     graphql::{add, update},
     schema::{CreateUserResponse, UpdateUserResponse},
 };
-use crate::user::{graphql::update::Uuid, teardown};
 
 #[tokio::test]
 async fn update_user() -> Result<()> {

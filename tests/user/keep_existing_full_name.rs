@@ -8,11 +8,11 @@ use serde_json::{from_slice, to_string};
 use tin::routes::app;
 use tower::{util::ServiceExt, Service};
 
+use super::teardown;
 use super::{
     graphql::{add, update},
     schema::{CreateUserResponse, UpdateUserResponse},
 };
-use crate::user::teardown;
 
 #[tokio::test]
 async fn keep_existing_full_name() -> Result<()> {

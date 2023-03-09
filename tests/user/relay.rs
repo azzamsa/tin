@@ -8,6 +8,7 @@ use serde_json::{from_slice, to_string, Value};
 use tin::routes::app;
 use tower::{util::ServiceExt, Service};
 
+use super::teardown;
 use super::{
     graphql::{
         add,
@@ -15,7 +16,6 @@ use super::{
     },
     schema::UsersResponse,
 };
-use crate::user::teardown;
 
 #[tokio::test]
 async fn no_first_no_last() -> Result<()> {
