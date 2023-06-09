@@ -2,10 +2,10 @@ version: "3"
 services:
 
   postgres_db:
-    image: postgres:14.1
+    image: postgres:15
     ports:
       - 5432
     environment:
-      POSTGRES_USER: superuser
-      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: durin
+      POSTGRES_PASSWORD: SpeakFriendAndEnter
       POSTGRES_DB: tin

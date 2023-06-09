@@ -1,5 +1,16 @@
 # Contributing Guide
 
+## Development
+
+```bash
+$ # start the container database
+$ podman-compose -f docker-compose.local.yml up db -d
+
+$ # start the backend in host
+$ # you need to prepare the .env. Otherwise, start it in container. See "Configure Environment Variables"
+$ just check
+```
+
 ## Commit Message Format
 
 This repo is using [Agular's commit message format][commit-message]

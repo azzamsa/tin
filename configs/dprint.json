@@ -10,6 +10,7 @@
     "**/*-lock.json",
     "**/*-lock.toml",
     "./target",
+    "./cdata",
     "sqlx-data.json"
   ],
   "plugins": [

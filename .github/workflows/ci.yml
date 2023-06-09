@@ -65,11 +65,11 @@ jobs:
           # Wait until the DB is up
           docker exec postgres_db bash -c "until pg_isready; do sleep 1; done"
           # Check DB version
-          docker exec postgres_db psql -h localhost -p 5432 -U superuser --version
+          docker exec postgres_db psql -h localhost -p 5432 -U durin --version
 
       - name: Run tests
         env:
-          DATABASE_URL: postgres://superuser:secret@localhost:5432/tin
+          DATABASE_URL: postgres://durin:SpeakFriendAndEnter@localhost:5432/tin
         run: just test
 
   build:

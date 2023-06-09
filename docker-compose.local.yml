@@ -1,0 +1,32 @@
+
+# This file is used for local environment
+
+version: "3"
+services:
+
+  backend:
+    image: tin:latest
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8001:8001
+    environment:
+      - APP_ENV=dev
+      - APP_BASE_URL=0.0.0.0
+      - PORT=8001
+      - UTC_OFFSET_HOUR=7
+      - DATABASE_URL=postgres://durin:SpeakFriendAndEnter@db/tin
+
+  db:
+    image: postgres:15
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      # can't work without `:Z` in Fedora. Permission denied.
+      - ./cdata/db:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: durin
+      POSTGRES_PASSWORD: SpeakFriendAndEnter
+      POSTGRES_DB: tin

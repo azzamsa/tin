@@ -21,16 +21,17 @@
   - Store GraphQL schema to file automatically
 - [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit
 - [Axum](https://github.com/tokio-rs/axum) web framework
-- [Tracing](https://github.com/tokio-rs/tracing) with local timestamp.
+- [Tracing](https://github.com/tokio-rs/tracing) with local timestamp
 - [utoipa](https://github.com/juhaku/utoipa) Auto-generated OpenAPI documentation
 - [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator
 - Exhaustive Integration tests
   - Uses [Cynic](https://github.com/obmarg/cynic) for GraphQL client
   - [Hurl](https://github.com/Orange-OpenSource/hurl) for E2E test
+- Fast and tiny image container. Using [cargo-chef](https://github.com/LukeMathWalker/cargo-chef) and `scratch` or `distroless` image.
 - GitHub Action for CI and release
 - Git hooks for continuous development (format, lint, test)
   - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky)
-- Consistent formatting using [dprint](https://github.com/dprint/dprint)
+- Consistent formatting using [dprint](https://github.com/dprint/dprint) for non Rust files
 - [cargo-binstall](https://github.com/cargo-bins/cargo-binstall) support
 
 ## Variations
@@ -44,7 +45,7 @@ When you use this template, try to follow the checklist to update your info prop
 - [ ] Change the author name in `LICENSE`
 - [ ] Change the package info in `Cargo.toml`
 - [ ] Change the application name:
-  - [ ] Database name and other values in `.env` and `.example.env` file.
+  - [ ] Database name and other values in `.env` and `.example.env` files.
   - [ ] The OpenAPI info in `routes.rs`
   - [ ] App name in `release.sh`
   - [ ] App name in `release.yml`

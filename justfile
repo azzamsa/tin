@@ -28,9 +28,17 @@ setup:
 dev:
     cargo watch -x 'clippy --locked --all-targets --all-features'
 
+# Build the docker image.
+build-image:
+    podman build -t tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD) .
+
 # Develop the app.
 run:
     cargo run
+
+# Run the docker image.
+run-image:
+    podman-compose --file docker-compose.local.yml up
 
 # Format the codebase.
 fmt:
