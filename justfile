@@ -1,7 +1,5 @@
 #!/usr/bin/env -S just --justfile
 
-shebang := if os() == 'windows' { 'powershell.exe' } else { '/usr/bin/sh' }
-
 set dotenv-load := true
 
 alias d := dev
@@ -14,19 +12,19 @@ alias t := test
 _default:
     just --list --unsorted
 
-# Setup the repository
-setup:
-    git cliff --version || cargo install git-cliff
-    cargo nextest --version || cargo install --locked cargo-nextest
-    cargo-set-version --help || cargo install cargo-edit
-    sqlx --version || cargo install sqlx-cli --no-default-features --features postgres,native-tls
-    cargo watch --version || cargo install cargo-watch
-    cargo outdated --version || cargo install --locked cargo-outdated
-    dprint --version || cargo install dprint
+# Setup the repository.
+setup: _areyousure _setup-dev
+
+# Setup the development tools.
+_setup-dev:
+    sudo apt install --yes  pkg-config libssl-dev
+
+    just _cargo-install 'cargo-edit cargo-nextest cargo-outdated cargo-watch dprint git-cliff spacer'
+    just _cargo-install 'sqlx-cli'
 
 # Develop the app.
 dev:
-    cargo watch -x 'clippy --locked --all-targets --all-features'
+    cargo watch -x 'clippy --locked --all-targets --all-features' | spacer
 
 # Build the docker image.
 build-image:
@@ -92,11 +90,56 @@ release version:
     bash scripts/release.sh {{ version }}
 
 # Check dependencies health. Pass `--write` to uppgrade dependencies.
+[unix]
 up arg="":
-    #!{{ shebang }}
+    #!/usr/bin/env bash
     if [ "{{ arg }}" = "--write" ]; then
-    	cargo upgrade
-    	cargo update
+        cargo upgrade
+        cargo update
     else
         cargo outdated --root-deps-only
     fi;
+
+[windows]
+up arg="":
+    #!powershell.exe
+    if ( "tool" -eq "--write") {
+        cargo upgrade
+        cargo update
+    }
+    else {
+        cargo outdated --root-deps-only
+    }
+
+#
+# Helper
+#
+
+[unix]
+_cargo-install tool:
+    #!/usr/bin/env bash
+    if command -v cargo-binstall >/dev/null 2>&1; then
+        echo "cargo-binstall..."
+        cargo binstall --no-confirm --no-symlinks {{ tool }}
+    else
+        echo "Building from source"
+        cargo install --locked {{ tool }}
+    fi
+
+[unix]
+_areyousure:
+    #!/usr/bin/env bash
+    echo -e "This command will alter your system. ⚠️
+    You are advised to run in inside containerized environment.
+    Such as [toolbx](https://containertoolbx.org/).
+
+    If you are unsure. Run the installation commands manually.
+    Take a look at the 'setup' recipe in the Justfile.\n"
+
+    read -p "Are you sure you want to proceed? (Y/n) " response;
+    if [[ $response =~ ^[Yy] ]]; then
+        echo "Continue!";
+    else
+        echo "Cancelled!";
+        exit 1;
+    fi
