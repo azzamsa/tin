@@ -75,5 +75,5 @@ The file only contains user-facing changes, so you won't get lost navigating the
 
 ## Credits
 
-- [Clean and Scalable Architecture for Web Applications in Rust](https://kerkour.com/rust-web-application-clean-architecture) by Sylvain Kerkour
+- Clean and Scalable Architecture for Web Applications in Rust by Sylvain Kerkour. [Article](https://kerkour.com/rust-web-application-clean-architecture), [Code](https://github.com/skerkour/bloom-legacy/tree/v2-e2ee).
 - Icons and emoji from [Noto Emoji](https://github.com/googlefonts/noto-emoji)
