@@ -24,11 +24,11 @@ _setup-dev:
 
 # Develop the app.
 dev:
-    cargo watch -x 'clippy --locked --all-targets --all-features' | spacer
+    cargo watch --exec 'clippy --locked --all-targets --all-features' | spacer
 
 # Build the docker image.
 build-image:
-    podman build -t tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD) .
+    podman build --tag tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD) .
 
 # Develop the app.
 run:
