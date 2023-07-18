@@ -1,4 +1,0 @@
-just fmt
-just lint
-just _unit-test
-just _update-sqlx-schema
