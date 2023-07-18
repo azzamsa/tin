@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use sqlx::{self, postgres::PgPoolOptions, Executor, Pool, Postgres, Transaction};
+use sqlx::{self, postgres::PgPoolOptions, Executor, Pool, Postgres};
 
 use crate::{config, Error};
 
@@ -8,7 +8,6 @@ pub type DB = Pool<Postgres>;
 pub trait Queryer<'c>: Executor<'c, Database = sqlx::Postgres> {}
 
 impl<'c> Queryer<'c> for &Pool<Postgres> {}
-impl<'c> Queryer<'c> for &'c mut Transaction<'_, Postgres> {}
 
 pub async fn connect(database: &config::Database) -> Result<DB, Error> {
     // See https://www.alexedwards.net/blog/configuring-sqldb
