@@ -38,6 +38,11 @@ run:
 run-image:
     podman-compose --file docker-compose.local.yml up
 
+# Run the docker image.
+restart-image:
+    podman-compose --file docker-compose.local.yml down
+    podman-compose --file docker-compose.local.yml up
+
 # Format the codebase.
 fmt:
     cargo fmt --all
