@@ -18,6 +18,8 @@ jobs:
         with:
           components: clippy, rustfmt
 
+      - uses: Swatinem/rust-cache@v2
+
       - name: Install latest just release
         uses: taiki-e/install-action@just
 
@@ -46,6 +48,8 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ env.MIN_SUPPORTED_RUST_VERSION }}
+
+      - uses: Swatinem/rust-cache@v2
 
       - name: Install latest nextest release
         uses: taiki-e/install-action@nextest

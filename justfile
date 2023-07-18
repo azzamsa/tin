@@ -85,9 +85,19 @@ comply: fmt lint test _doc-check _update-sqlx-schema
 # Check if the repository comply with the rules and ready to be pushed.
 check: _check-sqlx-schema fmt-check lint test _doc-check
 
-# Create a new release. Example `just release v2.2.0`
-release version:
-    bash scripts/release.sh {{ version }}
+# Create a new release. Example `cargo-release release minor --tag-name v0.2.0`
+release level:
+    cargo-release release {{ level }} --execute
+
+# Make sure the repo is ready for release
+_release-check level:
+    just up
+    cargo-release release {{ level }}
+
+# Release hooks
+_prepare-release version:
+    git-cliff --config configs/cliff.toml --output CHANGELOG.md --tag {{ version }}
+    just fmt
 
 # Check dependencies health. Pass `--write` to uppgrade dependencies.
 [unix]

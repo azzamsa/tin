@@ -54,3 +54,8 @@ tower = { version = "0.4.13", features = ["util"] }
 pkg-url = "{ repo }/releases/download/v{ version }/{ name }-{ version}-{ target }.tar.gz"
 bin-dir = "{ bin }{ binary-ext }"
 pkg-fmt = "tgz"
+
+[package.metadata.release]
+tag-message = "v{{version}}"
+pre-release-commit-message = "v{{version}}"
+pre-release-hook = ["just", "_prepare-release", "{{version}}"]
