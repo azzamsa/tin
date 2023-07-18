@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::{health, meta, user};
+use crate::domain::{health, meta, user};
 
 #[derive(Clone)]
 pub struct ServerContext {

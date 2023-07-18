@@ -18,9 +18,11 @@ use crate::{
     config,
     config::Config,
     context::ServerContext,
-    db, health, meta, routes,
+    db,
+    domain::{health, meta, user},
+    routes,
     schema::{AppSchema, Mutation, Query},
-    user, Error,
+    Error,
 };
 
 pub async fn graphql_handler(schema: Extension<AppSchema>, req: GraphQLRequest) -> GraphQLResponse {

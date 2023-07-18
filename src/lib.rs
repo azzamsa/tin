@@ -1,13 +1,12 @@
 pub mod config;
 pub mod context;
 pub mod db;
+pub mod domain;
 mod errors;
-pub mod health;
 pub mod logger;
-pub mod meta;
 pub mod relay;
 pub mod routes;
+pub mod scalar;
 pub mod schema;
-pub mod user;
 
 pub use errors::Error;

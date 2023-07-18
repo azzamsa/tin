@@ -1,6 +1,6 @@
 use async_graphql::{EmptySubscription, MergedObject, Schema};
 
-use crate::{
+use crate::domain::{
     health::resolver::HealthQuery,
     meta::resolver::MetaQuery,
     user::resolver::{UserMutation, UserQuery},
