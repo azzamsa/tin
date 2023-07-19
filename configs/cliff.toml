@@ -16,14 +16,20 @@ body = """
     ### {{ group | striptags | trim | upper_first }}
     {% for commit in commits %}
         {%- if commit.scope -%}
-            - **{{commit.scope}}:** {{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}]({{ commit.id }}))
+            - **{{ commit.scope }}:** {{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}]({{ commit.id }}))
             {% if commit.breaking -%}
-            {% raw %}  {% endraw %}- **BREAKING!** ⚠️ : {{commit.breaking_description}}
+            {% raw %}  {% endraw %}- **BREAKING!** ⚠️ : {{ commit.breaking_description }}
+            {% endif -%}
+            {% if commit.body -%}
+            {% raw %}\n{% endraw %}{% raw %}  {% endraw %}{{ commit.body | indent(width=4) }}{% raw %}\n{% endraw %}
             {% endif -%}
         {% else -%}
             - {{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}]({{ commit.id }}))
             {% if commit.breaking -%}
-            {% raw %}  {% endraw %}- **BREAKING!** ⚠️ : {{commit.breaking_description}}
+            {% raw %}  {% endraw %}- **BREAKING!** ⚠️ : {{ commit.breaking_description }}
+            {% endif -%}
+            {% if commit.body -%}
+            {% raw %}\n{% endraw %}{% raw %}  {% endraw %}{{ commit.body | indent(width=4) }}{% raw %}\n{% endraw %}
             {% endif -%}
         {% endif -%}
     {% endfor -%}
