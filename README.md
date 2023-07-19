@@ -46,10 +46,10 @@ When you use this template, try to follow the checklist to update your info prop
 - [ ] Change the author name in `LICENSE`
 - [ ] Change the package info in `Cargo.toml`
 - [ ] Change the application name:
-  - [ ] Database name and other values in `.env` and `.example.env` files.
+  - [ ] Database name and other values in `.env`, `.example.env`, and other containr related files.
   - [ ] The OpenAPI info in `routes.rs`
-  - [ ] App name in `release.sh`
   - [ ] App name in `release.yml`
+  - [ ] Project URL in `cliff.toml`
   - [ ] App name in the import statements across Rust source and tests files.
 - [ ] Clean up the READMEs and remove routes
 
