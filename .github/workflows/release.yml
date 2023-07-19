@@ -7,7 +7,6 @@ on:
 
 env:
   BIN_NAME: tin
-  WINDOWS_VERSION: windows-2022
 
 jobs:
   create-github-release:
@@ -61,12 +60,11 @@ jobs:
       matrix:
         include:
           # `sfackler/rust-openssl` needs more effort to compile to musl
-          # - { build: linux-musl, os: ubuntu-22.04, target: x86_64-unknown-linux-musl   }
-          - { build: linux-gnu,  os: ubuntu-22.04,             target: x86_64-unknown-linux-gnu  }
-          - { build: win-gnu,    os: "${{ WINDOWS_VERSION }}", target: x86_64-pc-windows-gnu     }
-          - { build: win-msvc,   os: "${{ WINDOWS_VERSION }}", target: x86_64-pc-windows-msvc    }
-          - { build: win32-msvc, os: "${{ WINDOWS_VERSION }}", target: i686-pc-windows-msvc      }
-          - { build: macos,      os: macos-12,                 target: x86_64-apple-darwin       }
+          - { build: linux-gnu,  os: ubuntu-22.04, target: x86_64-unknown-linux-gnu  }
+          - { build: win-gnu,    os: windows-2022, target: x86_64-pc-windows-gnu     }
+          - { build: win-msvc,   os: windows-2022, target: x86_64-pc-windows-msvc    }
+          - { build: win32-msvc, os: windows-2022, target: i686-pc-windows-msvc      }
+          - { build: macos,      os: macos-12,     target: x86_64-apple-darwin       }
 
     steps:
       - name: Checkout
@@ -103,7 +101,7 @@ jobs:
           cp -r {README.md,LICENSE*} "$staging/"
           cp -r {CHANGELOG.md,docs/*} "$staging/doc/"
 
-          if [ "${{ matrix.os }}" = "${{ WINDOWS_VERSION }}" ]; then
+          if [[ "${{ matrix.os }}" =~ ^windows-.*$ ]]; then
             cp "target/${{ matrix.target }}/release/${{ env.BIN_NAME }}.exe" "$staging/"
             cd "$staging"
             7z a "../$staging.zip" .
