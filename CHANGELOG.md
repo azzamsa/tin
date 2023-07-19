@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2023-07-19
+
+### Features
+
+- Min sized binary ([198afea](198afea463ad3a069c7519c54cf32f582906162f))
+
 ## [0.4.0] - 2023-07-19
 
 ### Features
@@ -12,6 +18,8 @@ All notable changes to this project will be documented in this file.
 ### Bug fixes
 
 - Git-hooks should run only in CI ([d990616](d9906164db7eb30cf66e2ed32edb220c0787fe13))
+
+  It slows down the development.
 
 ## [0.3.2] - 2023-01-04
 
@@ -25,6 +33,8 @@ All notable changes to this project will be documented in this file.
 
 - Avoid checking if the config exists ([fdb8796](fdb8796958f91a3de4f7ca6d794e5099048e86e2))
 
+  This eliminates a [race condition between "check to see if file exists" and "open file if it exists"](https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use).
+
 ## [0.3.0] - 2022-11-08
 
 ### Features
@@ -34,6 +44,9 @@ All notable changes to this project will be documented in this file.
 ### Bug fixes
 
 - Migrate to tracing ([8d9710d](8d9710d83329f4286f32efafcc3db3d03babc67a))
+
+  - local timestamp support
+    - log function name support
 
 ## [0.2.1] - 2022-10-16
 
@@ -70,10 +83,15 @@ All notable changes to this project will be documented in this file.
 - Stand-alone health REST endpoint ([3988721](39887214e948e6d5fb6f1a22b058da0bd59d471e))
 - Disable GraphQL playground in production ([b8b43ec](b8b43ece8a59aefe1de6fbc81c4f7b1c3c980d9a))
 
+  For performance reason.
+
 ### Bug fixes
 
 - `ServerParseError` in GraphQL playground ([9b80607](9b806076801c02eec2399c0210e27d05e15becb6))
 - Migrate to axum ([3ab3468](3ab34682fec5b834376f4e8038e62cc8add7be55))
 - Remove `unique hash` field ([ed4acd1](ed4acd1f00c4335b044e80b310ba7d6b1ffcc694))
+
+  Demonstrate the strength of kerkour architecture later using a real model.
+
 - Refine struct visibility ([f57ee25](f57ee25b8ae6f59ed93043739b746329d4887490))
 - Check existing username before update ([7d970d7](7d970d77b22494bfc938129b73d9ae91184c4a5f))
