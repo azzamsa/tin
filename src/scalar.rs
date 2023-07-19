@@ -1,3 +1,5 @@
+/// It is easier to track each type alias if this file is located on the top-level directory (here)
+/// than in each domain. Also, separating them will create a lot of duplicate code.
 use chrono;
 use uuid::Uuid;
 
