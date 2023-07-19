@@ -59,8 +59,8 @@ And, enjoy :)
 ```shell
 $ # Clone the repository
 
-$ # Create a database
-$ sudo -u postgres createdb tin
+$ # Run the database
+$ podman-compose -f docker-compose.local.yml up db -d
 
 $ touch $SCHEMA_LOCATION # See .example.env
 $ just dev  # See also `just setup`
