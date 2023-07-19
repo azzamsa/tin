@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2023-07-19
+
+### Features
+
+- Avoid boilerplate with `frunk` ([05a920b](05a920bd38715746fbe46c2a15a7ce5374b24597))
+- Containerize app ([7a0b138](7a0b138520b535877b75e036bd50b77302036e78))
+
+### Bug fixes
+
+- Git-hooks should run only in CI ([d990616](d9906164db7eb30cf66e2ed32edb220c0787fe13))
+
 ## [0.3.2] - 2023-01-04
 
 ### Bug fixes
