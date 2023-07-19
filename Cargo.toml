@@ -12,6 +12,13 @@ publish = false
 repository = "https://github.com/azzamsa/tin"
 description = "Rust GraphQL Template"
 
+[profile.release]
+strip = true
+opt-level = 'z' # Optimize for size.
+codegen-units = 1
+lto = true
+panic = 'abort'
+
 [dependencies]
 axum = "0.6.19"
 hyper = "0.14.27"
