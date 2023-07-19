@@ -2,6 +2,8 @@ pub mod input;
 use std::sync::Arc;
 
 use async_graphql::{ComplexObject, Context, Result, SimpleObject};
+use frunk::LabelledGeneric;
+use frunk_core::labelled::Transmogrifier;
 use sqlx::Row;
 
 use crate::{
@@ -11,7 +13,7 @@ use crate::{
     scalar::{Id, Time},
 };
 
-#[derive(Debug, SimpleObject)]
+#[derive(Debug, SimpleObject, LabelledGeneric)]
 pub struct User {
     /// The ID of the User.
     pub id: Id,
@@ -23,19 +25,7 @@ pub struct User {
     pub full_name: Option<String>,
 }
 
-impl From<entities::User> for User {
-    fn from(user: entities::User) -> Self {
-        Self {
-            id: user.id,
-            created_at: user.created_at,
-
-            name: user.name,
-            full_name: user.full_name,
-        }
-    }
-}
-
-#[derive(Debug, SimpleObject)]
+#[derive(Debug, SimpleObject, LabelledGeneric)]
 pub struct UserEdge {
     // The item at the end of the edge.
     pub node: User,
@@ -43,19 +33,10 @@ pub struct UserEdge {
     pub cursor: String,
 }
 
-impl From<entities::UserEdge> for UserEdge {
-    fn from(user: entities::UserEdge) -> Self {
-        Self {
-            node: user.node.into(),
-            cursor: user.cursor,
-        }
-    }
-}
-
 impl From<entities::User> for UserEdge {
     fn from(user: entities::User) -> Self {
         let cursor = Base64Cursor::new(user.id).encode();
-        let user_model = user.into();
+        let user_model = user.transmogrify();
         Self {
             node: user_model,
             cursor,
@@ -81,7 +62,7 @@ pub struct UserConnection {
     pub last: Option<i32>,
 }
 
-#[derive(Debug, SimpleObject)]
+#[derive(Debug, SimpleObject, LabelledGeneric)]
 pub struct PageInfo {
     // When paginating forwards, the cursor to continue.
     pub end_cursor: Option<String>,
@@ -91,17 +72,6 @@ pub struct PageInfo {
     pub start_cursor: Option<String>,
     // When paginating backwards, are there more items?
     pub has_previous_page: bool,
-}
-
-impl From<entities::PageInfo> for PageInfo {
-    fn from(page_info: entities::PageInfo) -> Self {
-        Self {
-            has_next_page: page_info.has_next_page,
-            has_previous_page: page_info.has_previous_page,
-            start_cursor: page_info.start_cursor,
-            end_cursor: page_info.end_cursor,
-        }
-    }
 }
 
 #[ComplexObject]
@@ -118,7 +88,7 @@ impl UserConnection {
                 self.before.clone(),
             )
             .await?;
-        Ok(page_info.into())
+        Ok(page_info.transmogrify())
     }
     // Identifies the total count of items in the connection.
     async fn total_count(&self, ctx: &Context<'_>) -> Result<i64> {

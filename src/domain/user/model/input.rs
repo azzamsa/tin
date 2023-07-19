@@ -1,8 +1,9 @@
 use async_graphql::InputObject;
+use frunk::LabelledGeneric;
 
 use crate::scalar::Id;
 
-#[derive(InputObject)]
+#[derive(InputObject, LabelledGeneric)]
 pub struct CreateUserInput {
     /// The name for the User.
     pub name: String,
@@ -10,7 +11,7 @@ pub struct CreateUserInput {
     pub full_name: Option<String>,
 }
 
-#[derive(InputObject)]
+#[derive(InputObject, LabelledGeneric)]
 pub struct UpdateUserInput {
     /// The ID of the User to modify.
     pub id: Id,
@@ -20,7 +21,7 @@ pub struct UpdateUserInput {
     pub full_name: Option<String>,
 }
 
-#[derive(InputObject)]
+#[derive(InputObject, LabelledGeneric)]
 pub struct DeleteUserInput {
     pub user_id: Id,
 }

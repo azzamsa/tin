@@ -34,8 +34,11 @@ tracing-subscriber = { version = "0.3.17", features = ["env-filter", "time", "lo
 # Configurations
 dotenv = "0.15.0"
 
+# Misc
 base64 = "0.21.2"
 chrono = "0.4.26"
+frunk = "0.4.2"
+frunk_core = { version = "0.4.2" }
 serde = "1.0.171"
 serde_json = "1.0.103"
 thiserror = "1.0.43"

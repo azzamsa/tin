@@ -5,6 +5,7 @@ mod find_user;
 mod find_users;
 mod update_user;
 
+use frunk::LabelledGeneric;
 use uuid::Uuid;
 
 use super::repository::Repository;
@@ -23,13 +24,13 @@ impl Service {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, LabelledGeneric)]
 pub struct CreateUserInput {
     pub name: String,
     pub full_name: Option<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, LabelledGeneric)]
 pub struct UpdateUserInput {
     pub id: Uuid,
     pub name: String,

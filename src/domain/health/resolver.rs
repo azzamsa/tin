@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use async_graphql::{Context, Error, FieldResult, Object};
 use axum::{response::IntoResponse, Json};
+use frunk_core::labelled::Transmogrifier;
 
 use super::model;
 use crate::context::ServerContext;
@@ -16,7 +17,7 @@ impl HealthQuery {
 
         let result = server_ctx.health_service.get_health().await;
         match result {
-            Ok(res) => Ok(res.into()),
+            Ok(res) => Ok(res.transmogrify()),
             Err(err) => Err(Error::new(err.to_string())),
         }
     }

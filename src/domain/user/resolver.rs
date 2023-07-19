@@ -1,9 +1,10 @@
 use std::sync::Arc;
 
 use async_graphql::{Context, Error, FieldResult, Object};
+use frunk_core::labelled::Transmogrifier;
 use uuid::Uuid;
 
-use super::{model, service};
+use super::model;
 use crate::{context::ServerContext, scalar::Id};
 
 #[derive(Default)]
@@ -24,7 +25,10 @@ impl UserQuery {
             .user_service
             .find_users(first, after.clone(), last, before.clone())
             .await?;
-        let edges: Vec<model::UserEdge> = user_edges.into_iter().map(|user| user.into()).collect();
+        let edges: Vec<model::UserEdge> = user_edges
+            .into_iter()
+            .map(|user| user.transmogrify())
+            .collect();
 
         let user_connection = model::UserConnection {
             edges,
@@ -42,7 +46,7 @@ impl UserQuery {
 
         let result = server_ctx.user_service.find_user(id).await;
         match result {
-            Ok(res) => Ok(res.into()),
+            Ok(res) => Ok(res.transmogrify()),
             Err(err) => Err(Error::new(err.to_string())),
         }
     }
@@ -60,13 +64,12 @@ impl UserMutation {
     ) -> FieldResult<model::User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
-        let service_input = service::CreateUserInput {
-            name: input.name,
-            full_name: input.full_name,
-        };
-        let result = server_ctx.user_service.create_user(service_input).await;
+        let result = server_ctx
+            .user_service
+            .create_user(input.transmogrify())
+            .await;
         match result {
-            Ok(res) => Ok(res.into()),
+            Ok(res) => Ok(res.transmogrify()),
             Err(err) => Err(Error::new(err.to_string())),
         }
     }
@@ -77,14 +80,12 @@ impl UserMutation {
     ) -> FieldResult<model::User> {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
 
-        let service_input = service::UpdateUserInput {
-            id: input.id,
-            name: input.name,
-            full_name: input.full_name,
-        };
-        let result = server_ctx.user_service.update_user(service_input).await;
+        let result = server_ctx
+            .user_service
+            .update_user(input.transmogrify())
+            .await;
         match result {
-            Ok(res) => Ok(res.into()),
+            Ok(res) => Ok(res.transmogrify()),
             Err(err) => Err(Error::new(err.to_string())),
         }
     }
@@ -93,7 +94,7 @@ impl UserMutation {
 
         let result = server_ctx.user_service.delete_user(id).await;
         match result {
-            Ok(res) => Ok(res.into()),
+            Ok(res) => Ok(res.transmogrify()),
             Err(err) => Err(Error::new(err.to_string())),
         }
     }

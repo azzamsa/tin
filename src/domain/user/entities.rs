@@ -1,27 +1,22 @@
-use chrono;
 use sqlx;
 
-use crate::relay::Base64Cursor;
+use frunk::LabelledGeneric;
 
-#[derive(sqlx::FromRow, Debug, Clone)]
+use crate::{
+    relay::Base64Cursor,
+    scalar::{Id, Time},
+};
+
+#[derive(Debug, Clone, sqlx::FromRow, LabelledGeneric)]
 pub struct User {
-    pub id: uuid::Uuid,
-    pub created_at: chrono::DateTime<chrono::Utc>,
-    pub updated_at: chrono::DateTime<chrono::Utc>,
-
+    pub id: Id,
+    pub created_at: Time,
+    pub updated_at: Time,
     pub name: String,
     pub full_name: Option<String>,
 }
 
-#[derive(Debug)]
-pub struct PageInfo {
-    pub end_cursor: Option<String>,
-    pub has_next_page: bool,
-    pub start_cursor: Option<String>,
-    pub has_previous_page: bool,
-}
-
-#[derive(Debug)]
+#[derive(Debug, LabelledGeneric)]
 pub struct UserEdge {
     pub node: User,
     pub cursor: String,
@@ -32,4 +27,12 @@ impl From<User> for UserEdge {
         let cursor = Base64Cursor::new(user.id).encode();
         Self { node: user, cursor }
     }
+}
+
+#[derive(Debug, LabelledGeneric)]
+pub struct PageInfo {
+    pub end_cursor: Option<String>,
+    pub has_next_page: bool,
+    pub start_cursor: Option<String>,
+    pub has_previous_page: bool,
 }

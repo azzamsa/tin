@@ -1,20 +1,11 @@
 use async_graphql::SimpleObject;
+use frunk::LabelledGeneric;
 use serde::Serialize;
 use utoipa::ToSchema;
 
-use crate::domain::health::entities;
-
-#[derive(Debug, SimpleObject, Serialize, ToSchema)]
+#[derive(Debug, SimpleObject, Serialize, ToSchema, LabelledGeneric)]
 pub struct Health {
     pub status: String,
-}
-
-impl From<entities::Health> for Health {
-    fn from(health: entities::Health) -> Self {
-        Self {
-            status: health.status,
-        }
-    }
 }
 
 #[derive(Debug, Serialize, ToSchema)]
