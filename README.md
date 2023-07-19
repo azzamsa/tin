@@ -30,8 +30,7 @@
   - [Hurl](https://github.com/Orange-OpenSource/hurl) for E2E test.
 - Fast and tiny image container. Using [cargo-chef](https://github.com/LukeMathWalker/cargo-chef) and `scratch` or `distroless` image.
 - GitHub Action for CI and release.
-- Git hooks for continuous development (format, lint, test).
-  - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky).
+- ~~Git hooks for continuous development (format, lint, test).~~. [Removed](https://github.com/azzamsa/tin/commit/d9906164db7eb30cf66e2ed32edb220c0787fe13)
 - Consistent formatting using [dprint](https://github.com/dprint/dprint) for non Rust files (Markdown, Dockerfiles, Etc).
 - [cargo-binstall](https://github.com/cargo-bins/cargo-binstall) support.
 
