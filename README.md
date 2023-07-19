@@ -33,6 +33,7 @@
 - ~~Git hooks for continuous development (format, lint, test).~~. [Removed](https://github.com/azzamsa/tin/commit/d9906164db7eb30cf66e2ed32edb220c0787fe13)
 - Consistent formatting using [dprint](https://github.com/dprint/dprint) for non Rust files (Markdown, Dockerfiles, Etc).
 - [cargo-binstall](https://github.com/cargo-bins/cargo-binstall) support.
+- [cargo-release](https://github.com/crate-ci/cargo-release) workflow.
 
 ## Variations
 
