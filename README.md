@@ -15,24 +15,25 @@
 
 ## Features
 
-- [Async-GraphQL](https://github.com/async-graphql/async-graphql) GraphQL server library
-  - Relay-compatible cursor-based pagination
-  - Playground disabled in the production environment for performance reasons
-  - Store GraphQL schema to file automatically
-- [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit
-- [Axum](https://github.com/tokio-rs/axum) web framework
-- [Tracing](https://github.com/tokio-rs/tracing) with local timestamp
-- [utoipa](https://github.com/juhaku/utoipa) Auto-generated OpenAPI documentation
-- [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator
-- Exhaustive Integration tests
-  - Uses [Cynic](https://github.com/obmarg/cynic) for GraphQL client
-  - [Hurl](https://github.com/Orange-OpenSource/hurl) for E2E test
+- [Async-GraphQL](https://github.com/async-graphql/async-graphql) GraphQL server library.
+  - Relay-compatible cursor-based pagination.
+  - Playground disabled in the production environment for performance reasons.
+  - Store GraphQL schema to file automatically.
+- [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit.
+- [Axum](https://github.com/tokio-rs/axum) web framework.
+- [Tracing](https://github.com/tokio-rs/tracing) with local timestamp.
+- [Frunk](https://github.com/lloydmeta/frunk) to avoid writing repetitive boilerplate.
+- [utoipa](https://github.com/juhaku/utoipa) Auto-generated OpenAPI documentation.
+- [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator.
+- Exhaustive Integration tests.
+  - Uses [Cynic](https://github.com/obmarg/cynic) for GraphQL client.
+  - [Hurl](https://github.com/Orange-OpenSource/hurl) for E2E test.
 - Fast and tiny image container. Using [cargo-chef](https://github.com/LukeMathWalker/cargo-chef) and `scratch` or `distroless` image.
-- GitHub Action for CI and release
-- Git hooks for continuous development (format, lint, test)
-  - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky)
-- Consistent formatting using [dprint](https://github.com/dprint/dprint) for non Rust files
-- [cargo-binstall](https://github.com/cargo-bins/cargo-binstall) support
+- GitHub Action for CI and release.
+- Git hooks for continuous development (format, lint, test).
+  - Uses [Cargo Husky](https://github.com/rhysd/cargo-husky).
+- Consistent formatting using [dprint](https://github.com/dprint/dprint) for non Rust files (Markdown, Dockerfiles, Etc).
+- [cargo-binstall](https://github.com/cargo-bins/cargo-binstall) support.
 
 ## Variations
 
