@@ -27,7 +27,7 @@ check: _doc-check _check-sqlx-schema fmt-check lint test
 
 # Develop the app.
 dev:
-    cargo watch --exec 'clippy --locked --all-targets --all-features' | spacer
+    cargo watch --exec 'clippy --all-targets --all-features' | spacer
 
 # Develop the app.
 run:
@@ -38,7 +38,7 @@ image-build:
     podman build --tag tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD) .
 
 # Run the docker image.
-image-run service="":
+image-start service="":
     podman-compose --file docker-compose.local.yml up {{ service }} -d
 
 # Run the docker image.
@@ -101,7 +101,7 @@ _check-sqlx-schema:
     cargo sqlx prepare --check -- --lib
 
 # Release hooks
-_release_prepare version:
+_release-prepare version:
     git-cliff --config configs/cliff.toml --output CHANGELOG.md --tag {{ version }}
     just fmt
 
