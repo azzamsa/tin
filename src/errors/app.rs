@@ -8,21 +8,11 @@ pub enum Error {
     Internal,
     MissingFirstAndLastPaginationArguments,
     PassedFirstAndLastPaginationArguments,
-
-    // User
-    UserNotFound,
-    UsernameAlreadyExists,
 }
 
 impl std::convert::From<Error> for crate::Error {
     fn from(err: Error) -> Self {
         match err {
-            // Users
-            Error::UserNotFound => crate::Error::NotFound(String::from("user not found")),
-            Error::UsernameAlreadyExists => {
-                crate::Error::AlreadyExists(String::from("username is already in use"))
-            }
-
             // Other
             Error::Internal => crate::Error::Internal(String::new()),
             Error::MissingFirstAndLastPaginationArguments => crate::Error::InvalidArgument(

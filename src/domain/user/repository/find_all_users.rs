@@ -2,7 +2,8 @@ use sqlx::{self, Row};
 use uuid::Uuid;
 
 use super::Repository;
-use crate::{db::Queryer, domain::user::entities, errors::app::Error, relay::Base64Cursor};
+use crate::domain::user::{entities, Error};
+use crate::{db::Queryer, relay::Base64Cursor};
 
 impl Repository {
     pub async fn find_all_users<'c, C: Queryer<'c> + Copy>(
@@ -12,7 +13,7 @@ impl Repository {
         after: Option<Uuid>,
         last: Option<i32>,
         before: Option<Uuid>,
-    ) -> Result<Vec<entities::User>, Error> {
+    ) -> Result<Vec<entities::User>, crate::Error> {
         let default_page_size = 10;
         let mut query: String = "select * from user_".to_string();
 
@@ -82,7 +83,7 @@ impl Repository {
         after: Option<Uuid>,
         last: Option<i32>,
         before: Option<Uuid>,
-    ) -> Result<entities::PageInfo, Error> {
+    ) -> Result<entities::PageInfo, crate::Error> {
         let mut has_next_query: String = String::new();
         let mut has_next_page: bool = false;
 

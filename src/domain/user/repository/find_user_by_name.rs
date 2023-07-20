@@ -1,14 +1,17 @@
 use sqlx;
 
 use super::Repository;
-use crate::{db::Queryer, domain::user::entities, errors::app::Error};
+use crate::{
+    db::Queryer,
+    domain::user::{entities, Error},
+};
 
 impl Repository {
     pub async fn find_user_by_name<'c, C: Queryer<'c>>(
         &self,
         db: C,
         name: &str,
-    ) -> Result<entities::User, Error> {
+    ) -> Result<entities::User, crate::Error> {
         const QUERY: &str = "SELECT * FROM user_ WHERE name = $1";
 
         match sqlx::query_as::<_, entities::User>(QUERY)
@@ -20,7 +23,7 @@ impl Repository {
                 tracing::error!("{}", &err);
                 Err(err.into())
             }
-            Ok(None) => Err(Error::UserNotFound),
+            Ok(None) => Err(Error::UserNotFound.into()),
             Ok(Some(res)) => Ok(res),
         }
     }

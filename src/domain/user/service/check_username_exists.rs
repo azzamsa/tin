@@ -1,5 +1,5 @@
 use super::Service;
-use crate::{db::Queryer, errors::app::Error};
+use crate::db::Queryer;
 
 impl Service {
     /// returns true if a username exists. false otherwise
@@ -11,8 +11,8 @@ impl Service {
         let find_existing_username_res = self.repo.find_user_by_name(db, name).await;
         match find_existing_username_res {
             Ok(_) => Ok(true),
-            Err(Error::UserNotFound) => Ok(false),
-            Err(err) => Err(err.into()),
+            Err(crate::Error::NotFound(_)) => Ok(false),
+            Err(err) => Err(err),
         }
     }
 }

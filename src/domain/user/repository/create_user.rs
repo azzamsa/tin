@@ -1,14 +1,14 @@
 use sqlx;
 
 use super::Repository;
-use crate::{db::Queryer, domain::user::entities, errors::app::Error};
+use crate::{db::Queryer, domain::user::entities};
 
 impl Repository {
     pub async fn create_user<'c, C: Queryer<'c>>(
         &self,
         db: C,
         user: &entities::User,
-    ) -> Result<entities::User, Error> {
+    ) -> Result<entities::User, crate::Error> {
         const QUERY: &str = "insert into user_ (id, created_at, updated_at,
                               name, full_name) values ($1, $2, $3, $4, $5) returning *";
 

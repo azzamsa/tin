@@ -1,7 +1,7 @@
 use chrono::Utc;
 
 use super::{Service, UpdateUserInput};
-use crate::{domain::user::entities, errors::app::Error};
+use crate::domain::user::{entities, Error};
 
 impl Service {
     pub async fn update_user(
