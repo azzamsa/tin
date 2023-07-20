@@ -17,12 +17,14 @@ impl Service {
         let user_input = entities::User {
             id: Ulid::new().into(),
             name: input.name,
+            email: input.email,
             full_name: input.full_name,
             created_at: Utc::now(),
             updated_at: Utc::now(),
         };
 
         let user = self.repo.create_user(&self.db, &user_input).await?;
+        self.notify_user(&user.email).await?;
 
         Ok(user)
     }

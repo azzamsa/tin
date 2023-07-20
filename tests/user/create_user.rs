@@ -8,18 +8,14 @@ use serde_json::{from_slice, to_string};
 use tin::routes::app;
 use tower::util::ServiceExt;
 
-use super::teardown;
+use super::{fake_user, teardown};
 use super::{graphql::add, schema::CreateUserResponse};
 
 #[tokio::test]
 async fn create_user() -> Result<()> {
     let app = app().await?;
 
-    let args = add::CreateUserInput {
-        name: "khawa".to_string(),
-        full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
-    };
-    let query = add::UserMutation::build(args);
+    let query = add::UserMutation::build(fake_user());
 
     let request = Request::builder()
         .method(http::Method::POST)

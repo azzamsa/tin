@@ -8,7 +8,7 @@ use serde_json::{from_slice, to_string};
 use tin::routes::app;
 use tower::{util::ServiceExt, Service};
 
-use super::{graphql::update::Uuid, teardown};
+use super::{fake_user, graphql::update::Uuid, teardown};
 use super::{
     graphql::{add, update},
     schema::{CreateUserResponse, UpdateUserResponse},
@@ -21,11 +21,7 @@ async fn update_user() -> Result<()> {
     // Create User
     //
 
-    let args = add::CreateUserInput {
-        name: "khawa".to_string(),
-        full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
-    };
-    let query = add::UserMutation::build(args);
+    let query = add::UserMutation::build(fake_user());
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -50,6 +46,7 @@ async fn update_user() -> Result<()> {
     let args = update::UpdateUserInput {
         id: user_id,
         name: "haitham".to_string(),
+        email: "haitam@email.com".to_string(),
         full_name: None,
     };
     let query = update::UserMutation::build(args);

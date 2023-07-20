@@ -16,6 +16,7 @@ impl Service {
         let user_input = entities::User {
             id: input.id,
             name: input.name,
+            email: input.email,
             full_name: input.full_name,
             updated_at: Utc::now(),
             // FIXME

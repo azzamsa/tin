@@ -7,6 +7,8 @@ use crate::scalar::Id;
 pub struct CreateUserInput {
     /// The name for the User.
     pub name: String,
+    /// The email for the User.
+    pub email: String,
     /// The full name for the User.
     pub full_name: Option<String>,
 }
@@ -15,6 +17,8 @@ pub struct CreateUserInput {
 pub struct UpdateUserInput {
     /// The ID of the User to modify.
     pub id: Id,
+    /// The email for the User.
+    pub email: String,
     /// The name for the User.
     pub name: String,
     /// The full name for the User.

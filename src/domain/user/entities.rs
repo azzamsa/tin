@@ -13,6 +13,7 @@ pub struct User {
     pub created_at: Time,
     pub updated_at: Time,
     pub name: String,
+    pub email: String,
     pub full_name: Option<String>,
 }
 

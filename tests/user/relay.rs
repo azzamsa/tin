@@ -115,6 +115,7 @@ async fn create_users() -> Result<()> {
     for name in names {
         let args = add::CreateUserInput {
             name: name.to_string(),
+            email: "fake@email.com".to_string(),
             full_name: None,
         };
         let query = add::UserMutation::build(args);

@@ -20,6 +20,7 @@ use crate::{
     context::ServerContext,
     db,
     domain::{health, meta, user},
+    drivers::mailer::Mailer,
     routes,
     schema::{AppSchema, Mutation, Query},
     Error,
@@ -38,9 +39,10 @@ pub async fn app() -> Result<Router, Error> {
     let db = db::connect(&config.database).await?;
     db::migrate(&db).await?;
 
-    let user_service = Arc::new(user::Service::new(db.clone()));
-    let meta_service = Arc::new(meta::Service::new());
     let health_service = Arc::new(health::Service::new());
+    let meta_service = Arc::new(meta::Service::new());
+    let mailer_service = Mailer::new();
+    let user_service = Arc::new(user::Service::new(db.clone(), mailer_service));
 
     let server_context = Arc::new(ServerContext {
         user_service,

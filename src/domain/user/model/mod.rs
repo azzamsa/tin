@@ -19,6 +19,8 @@ pub struct User {
     pub id: Id,
     pub created_at: Time,
 
+    /// The email for the User.
+    pub email: String,
     /// The name for the User.
     pub name: String,
     /// The full name for the User.

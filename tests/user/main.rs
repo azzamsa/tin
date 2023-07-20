@@ -22,3 +22,11 @@ async fn teardown() -> Result<()> {
 
     Ok(())
 }
+
+fn fake_user() -> graphql::add::CreateUserInput {
+    graphql::add::CreateUserInput {
+        name: "khawa".to_string(),
+        email: "khawa@email.com".to_string(),
+        full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
+    }
+}

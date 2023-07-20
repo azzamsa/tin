@@ -8,8 +8,8 @@ use serde_json::{from_slice, to_string, Value};
 use tin::routes::app;
 use tower::{util::ServiceExt, Service};
 
+use super::{fake_user, graphql::update, teardown};
 use super::{graphql::add, schema::CreateUserResponse};
-use super::{graphql::update, teardown};
 
 #[tokio::test]
 async fn duplicate_username_create() -> Result<()> {
@@ -17,12 +17,7 @@ async fn duplicate_username_create() -> Result<()> {
     //
     // Create User
     //
-
-    let args = add::CreateUserInput {
-        name: "khawa".to_string(),
-        full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
-    };
-    let query = add::UserMutation::build(args);
+    let query = add::UserMutation::build(fake_user());
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -36,11 +31,7 @@ async fn duplicate_username_create() -> Result<()> {
     // Create next user with the same name
     //
 
-    let args = add::CreateUserInput {
-        name: "khawa".to_string(),
-        full_name: None,
-    };
-    let query = add::UserMutation::build(args);
+    let query = add::UserMutation::build(fake_user());
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -66,11 +57,7 @@ async fn duplicate_username_update() -> Result<()> {
     // Create User
     //
 
-    let args = add::CreateUserInput {
-        name: "khawa".to_string(),
-        full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
-    };
-    let query = add::UserMutation::build(args);
+    let query = add::UserMutation::build(fake_user());
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -87,7 +74,8 @@ async fn duplicate_username_update() -> Result<()> {
 
     let args = add::CreateUserInput {
         name: "khawa1".to_string(),
-        full_name: Some("Abu Musa Al-Khawarizmi".to_string()),
+        email: "khawa1@email.com".to_string(),
+        full_name: None,
     };
     let query = add::UserMutation::build(args);
 
@@ -112,6 +100,7 @@ async fn duplicate_username_update() -> Result<()> {
     let args = update::UpdateUserInput {
         id: user_id,
         name: "khawa".to_string(),
+        email: "haitam@email.com".to_string(),
         full_name: None,
     };
     let query = update::UserMutation::build(args);

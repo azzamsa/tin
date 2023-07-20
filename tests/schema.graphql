@@ -5,6 +5,10 @@ input CreateUserInput {
 	"""
 	name: String!
 	"""
+	The email for the User.
+	"""
+	email: String!
+	"""
 	The full name for the User.
 	"""
 	fullName: String
@@ -68,6 +72,10 @@ input UpdateUserInput {
 	"""
 	id: UUID!
 	"""
+	The email for the User.
+	"""
+	email: String!
+	"""
 	The name for the User.
 	"""
 	name: String!
@@ -83,6 +91,10 @@ type User {
 	"""
 	id: UUID!
 	createdAt: DateTime!
+	"""
+	The email for the User.
+	"""
+	email: String!
 	"""
 	The name for the User.
 	"""

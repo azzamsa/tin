@@ -17,6 +17,7 @@ async fn create_user_without_full_name() -> Result<()> {
 
     let args = add::CreateUserInput {
         name: "khawa".to_string(),
+        email: "khawa@email.com".to_string(),
         full_name: None,
     };
     let query = add::UserMutation::build(args);

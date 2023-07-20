@@ -38,6 +38,7 @@ pub mod queries {
     pub struct User {
         pub id: Uuid,
         pub name: String,
+        pub email: String,
         pub full_name: Option<String>,
     }
 
@@ -67,6 +68,7 @@ pub mod add {
     #[derive(cynic::QueryVariables, Debug)]
     pub struct CreateUserInput {
         pub name: String,
+        pub email: String,
         pub full_name: Option<String>,
     }
 
@@ -75,6 +77,7 @@ pub mod add {
     pub struct UserMutation {
         #[arguments(input : {
             name: $name,
+            email: $email,
             fullName: $full_name,
         })]
         pub create_user: User,
@@ -100,6 +103,7 @@ pub mod update {
     pub struct UpdateUserInput {
         pub id: Uuid,
         pub name: String,
+        pub email: String,
         pub full_name: Option<String>,
     }
 
@@ -109,6 +113,7 @@ pub mod update {
         #[arguments(input : {
             id: $id,
             name: $name,
+            email: $email,
             fullName: $full_name,
         })]
         pub update_user: User,
@@ -146,6 +151,7 @@ pub mod delete {
     pub struct User {
         pub id: Uuid,
         pub name: String,
+        pub email: String,
         pub full_name: Option<String>,
     }
 

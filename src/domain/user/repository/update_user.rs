@@ -12,7 +12,8 @@ impl Repository {
         const QUERY: &str = "update user_ set
               updated_at = $2,
               name = $3,
-              full_name = COALESCE($4, full_name)
+              email = $4,
+              full_name = COALESCE($5, full_name)
            where id = $1 returning *";
 
         match sqlx::query_as::<_, entities::User>(QUERY)
@@ -20,6 +21,7 @@ impl Repository {
             .bind(user.updated_at)
             //
             .bind(&user.name)
+            .bind(&user.email)
             .bind(&user.full_name)
             .fetch_one(db)
             .await
