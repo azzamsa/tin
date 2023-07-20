@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2023-07-20
+
+### Features
+
+- Add driver example ([e76f8c0](https://github.com/azzamsa/tin/commit/e76f8c0059c5d26dc34b677cd79947159f1a066d))
+- Move user error to user module ([b8e8fab](https://github.com/azzamsa/tin/commit/b8e8fabc6364983a746b9bbceb6fcf059f503206))
+
 ## [0.5.1] - 2023-07-19
 
 ### Features

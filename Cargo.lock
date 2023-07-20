@@ -2512,7 +2512,7 @@ dependencies = [
 
 [[package]]
 name = "tin"
-version = "0.5.1"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "async-graphql",
