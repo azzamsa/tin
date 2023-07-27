@@ -67,6 +67,8 @@ bin-dir = "{ bin }{ binary-ext }"
 pkg-fmt = "tgz"
 
 [package.metadata.release]
+sign-commit = true
+sign-tag = true
 tag-message = "v{{version}}"
 pre-release-commit-message = "v{{version}}"
 pre-release-hook = ["just", "_release-prepare", "{{version}}"]
