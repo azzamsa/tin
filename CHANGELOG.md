@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2023-07-27
+
+### Bug fixes
+
+- Match module name with upstream ([314b5e7](https://github.com/azzamsa/tin/commit/314b5e7d843144ece1c3645c1112f5e4fff1ec2b))
+
 ## [1.0.0] - 2023-07-20
 
 ### Features
