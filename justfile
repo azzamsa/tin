@@ -33,19 +33,19 @@ dev:
 run:
     cargo run
 
-# Build the docker image.
+# Build the container image.
 image-build:
     podman build --tag tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD) .
 
-# Run the docker image.
+# Run the container.
 image-start service="":
     podman-compose --file docker-compose.local.yml up {{ service }} -d
 
-# Run the docker image.
+# Stop the container.
 image-stop:
     podman-compose --file docker-compose.local.yml down
 
-# Run the docker image.
+# Restart the containers.
 image-restart:
     just image-stop
     just image-run
@@ -62,7 +62,7 @@ fmt-check:
 
 # Lint the codebase.
 lint:
-    cargo clippy --locked --all-targets --all-features
+    cargo clippy --all-targets --all-features
 
 # Test the codebase.
 test:
