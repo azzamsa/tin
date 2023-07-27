@@ -10,7 +10,7 @@ use frunk::LabelledGeneric;
 use uuid::Uuid;
 
 use super::repository::Repository;
-use crate::{db::DB, drivers::Mailer};
+use crate::{db::DB, driver::Mailer};
 
 #[derive(Debug)]
 pub struct Service {

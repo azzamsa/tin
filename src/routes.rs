@@ -20,7 +20,7 @@ use crate::{
     context::ServerContext,
     db,
     domain::{health, meta, user},
-    drivers::mailer::Mailer,
+    driver::mailer::Mailer,
     routes,
     schema::{AppSchema, Mutation, Query},
     Error,
