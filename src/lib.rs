@@ -3,11 +3,11 @@ pub mod context;
 pub mod db;
 pub mod domain;
 pub mod driver;
-mod errors;
+mod error;
 pub mod logger;
 pub mod relay;
-pub mod routes;
+pub mod route;
 pub mod scalar;
 pub mod schema;
 
-pub use errors::Error;
+pub use error::Error;

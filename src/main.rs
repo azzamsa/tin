@@ -4,7 +4,7 @@ use std::{
 };
 
 use axum::Server;
-use tin::{config::Config, logger, routes::app};
+use tin::{config::Config, logger, route::app};
 
 #[tokio::main]
 async fn main() -> Result<(), tin::Error> {

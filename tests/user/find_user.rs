@@ -5,7 +5,7 @@ use axum::{
 };
 use cynic::QueryBuilder;
 use serde_json::{from_slice, to_string, Value};
-use tin::routes::app;
+use tin::route::app;
 use tower::util::ServiceExt;
 
 use super::graphql::queries::{ReadUserArguments, UserQuery, Uuid};

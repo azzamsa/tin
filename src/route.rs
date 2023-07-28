@@ -21,7 +21,7 @@ use crate::{
     db,
     domain::{health, meta, user},
     driver::mailer::Mailer,
-    routes,
+    route,
     schema::{AppSchema, Mutation, Query},
     Error,
 };
@@ -77,11 +77,11 @@ pub async fn app() -> Result<Router, Error> {
     struct ApiDoc;
 
     let mut app = Router::new()
-        .route("/graphql", post(routes::graphql_handler))
+        .route("/graphql", post(route::graphql_handler))
         .route("/health", get(health::resolver::health));
     if config.env != config::Env::Production {
         app = app
-            .route("/playground", get(routes::graphql_playground))
+            .route("/playground", get(route::graphql_playground))
             .merge(SwaggerUi::new("/swagger").url("/api-doc/openapi.json", ApiDoc::openapi()));
     }
     let app = app.layer(Extension(schema));

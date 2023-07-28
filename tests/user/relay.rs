@@ -5,7 +5,7 @@ use axum::{
 };
 use cynic::{MutationBuilder, QueryBuilder};
 use serde_json::{from_slice, to_string, Value};
-use tin::routes::app;
+use tin::route::app;
 use tower::{util::ServiceExt, Service};
 
 use super::teardown;
