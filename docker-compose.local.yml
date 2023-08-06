@@ -18,7 +18,7 @@ services:
       - DATABASE_URL=postgres://durin:SpeakFriendAndEnter@db/tin
 
   db:
-    image: postgres:15
+    image: docker.io/postgres:15
     restart: always
     ports:
       - 5432:5432
