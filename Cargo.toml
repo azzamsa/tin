@@ -20,16 +20,16 @@ lto = true
 panic = 'abort'
 
 [dependencies]
-axum = "0.6.19"
+axum = "0.6.20"
 hyper = "0.14.27"
 tokio = { version = "1.29.1", features = ["macros", "rt-multi-thread"] }
 
 # GraphQL
-async-graphql = { version = "5.0.10", features = ["uuid", "chrono"] }
-async-graphql-axum = "5.0.10"
+async-graphql = { version = "6.0.1", features = ["uuid", "chrono"] }
+async-graphql-axum = "6.0.1"
 
 # Rest
-utoipa = { version = "3.4.3", features = ["axum_extras"] }
+utoipa = { version = "3.4.4", features = ["axum_extras"] }
 utoipa-swagger-ui = { version = "3.1.4", features = ["axum"] }
 
 # Database
@@ -47,10 +47,10 @@ base64 = "0.21.2"
 chrono = "0.4.26"
 frunk = "0.4.2"
 frunk_core = { version = "0.4.2" }
-serde = "1.0.176"
+serde = "1.0.182"
 serde_json = "1.0.104"
 thiserror = "1.0.44"
-time = "0.3.23"
+time = "0.3.25"
 ulid = { version = "1.0.0", features = ["uuid"] }
 url = "2.4.0"
 uuid = "1.4.1"
