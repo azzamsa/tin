@@ -23,8 +23,8 @@ services:
     ports:
       - 5432:5432
     volumes:
-      # can't work without `:Z` in Fedora. Permission denied.
-      - ./cdata/db:/var/lib/postgresql/data/
+      # Use `:Z` in SELinux-enabled disro.
+      - ./cdata/db:/var/lib/postgresql/data/:Z
     environment:
       POSTGRES_USER: durin
       POSTGRES_PASSWORD: SpeakFriendAndEnter
