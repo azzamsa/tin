@@ -62,6 +62,7 @@ pub async fn app() -> Result<Router, Error> {
                 &location
             ))
         })?;
+        tracing::info!("Wrote GraphQL schema to {}", location);
     }
 
     #[derive(OpenApi)]
