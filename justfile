@@ -14,12 +14,6 @@ _default:
 
 # Setup the repository.
 setup: _areyousure
-    # Debian
-    # just _package-install 'pkg-config libssl-dev'
-
-    # Fedora
-    just _package-install 'openssl-devel'
-
     just _cargo-install 'cargo-edit cargo-nextest cargo-outdated cargo-watch dprint git-cliff spacer'
     just _cargo-install 'sqlx-cli'
 
@@ -162,17 +156,4 @@ _areyousure:
     else
         echo "Cancelled!";
         exit 1;
-    fi
-
-[unix]
-_package-install tool:
-    #!/usr/bin/env bash
-    if command -v apt >/dev/null 2>&1; then
-        echo "Using apt..."
-        sudo apt install --yes {{ tool }}
-    elif command -v dnf >/dev/null 2>&1; then
-        echo "Using dnf..."
-        sudo dnf install --assumeyes {{ tool }}
-    else
-        echo "Unable to determine the package manager."
     fi
