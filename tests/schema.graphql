@@ -1,4 +1,11 @@
 
+type Config {
+	env: String!
+	baseUrl: String!
+	port: Int!
+	utcOffsetHour: Int!
+}
+
 input CreateUserInput {
 	"""
 	The name for the User.
@@ -31,6 +38,7 @@ type Health {
 type Meta {
 	build: String!
 	version: String!
+	config: Config!
 }
 
 type Mutation {

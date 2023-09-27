@@ -1,16 +1,16 @@
 mod get_meta;
 
-#[derive(Debug)]
-pub struct Service;
+use std::sync::Arc;
 
-impl Service {
-    pub fn new() -> Self {
-        Self {}
-    }
+use crate::config::Config;
+
+#[derive(Debug)]
+pub struct Service {
+    config: Arc<Config>,
 }
 
-impl Default for Service {
-    fn default() -> Self {
-        Self::new()
+impl Service {
+    pub fn new(config: Arc<Config>) -> Self {
+        Self { config }
     }
 }
