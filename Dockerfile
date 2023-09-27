@@ -3,7 +3,7 @@
 
 ARG VCS_REVISION
 
-FROM docker.io/lukemathwalker/cargo-chef:latest-rust-1.71.0 as chef
+FROM docker.io/lukemathwalker/cargo-chef:latest-rust-1 as chef
 WORKDIR app
 
 FROM chef as planner
@@ -18,6 +18,6 @@ COPY . .
 ARG VCS_REVISION
 RUN VCS_REVISION=$VCS_REVISION cargo build --release
 
-FROM gcr.io/distroless/cc-debian11
+FROM gcr.io/distroless/cc-debian12
 COPY --from=builder /app/target/release/tin /
 CMD ["./tin"]

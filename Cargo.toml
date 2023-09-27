@@ -33,7 +33,7 @@ utoipa = { version = "3.5.0", features = ["axum_extras"] }
 utoipa-swagger-ui = { version = "3.1.5", features = ["axum"] }
 
 # Database
-sqlx = { version = "0.7.1", features = ["runtime-tokio-native-tls", "postgres", "uuid", "chrono", "migrate"] }
+sqlx = { version = "0.7.1", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate"] }
 
 # Logging
 tracing = "0.1.37"
