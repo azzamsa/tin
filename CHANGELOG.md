@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2023-09-27
+
+### Features
+
+- Show config in `meta` query ([b5529d9](https://github.com/azzamsa/tin/commit/b5529d96cbd11d78cce9146746eeaf2418d38ff2))
+- Inform user about writing GraphQL schema to a file ([5743068](https://github.com/azzamsa/tin/commit/5743068b35edd29ef0ea2bfc4c6998a0aff2b3fa))
+
 ## [1.0.1] - 2023-07-27
 
 ### Bug fixes
