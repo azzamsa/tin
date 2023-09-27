@@ -29,7 +29,7 @@ check: _doc-check _check-sqlx-schema fmt-check lint test
 dev:
     cargo watch --exec 'clippy --all-targets --all-features' | spacer
 
-# Develop the app.
+# Run the app.
 run:
     cargo run
 
