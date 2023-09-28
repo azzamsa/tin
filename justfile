@@ -14,7 +14,7 @@ _default:
 
 # Setup the repository.
 setup: _areyousure
-    just _cargo-install 'cargo-edit cargo-nextest cargo-outdated cargo-watch dprint git-cliff spacer'
+    just _cargo-install 'cargo-edit cargo-nextest cargo-outdated dprint git-cliff bacon'
     just _cargo-install 'sqlx-cli'
 
 # Tasks to make the code-base comply with the rules. Mostly used in git hooks.
@@ -25,7 +25,7 @@ check: _doc-check _check-sqlx-schema fmt-check lint test
 
 # Develop the app.
 dev:
-    cargo watch --exec 'clippy --all-targets --all-features' | spacer
+    bacon
 
 # Run the app.
 run:
