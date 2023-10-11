@@ -1,8 +1,5 @@
 name: CI
 
-env:
-  MIN_SUPPORTED_RUST_VERSION: "1.71.0"
-
 on: [push, pull_request]
 
 jobs:
@@ -26,11 +23,20 @@ jobs:
       - name: Install latest dprint release
         uses: taiki-e/install-action@dprint
 
+      - name: Check MSRV
+        run: |
+          cargo_msrv=$(sed -n 's/rust-version = "\(.*\)"/\1/p' Cargo.toml)
+          clippy_msrv=$(sed -n 's/msrv = "\(.*\)"/\1/p' clippy.toml)
+
+          if [ "$cargo_msrv" != "$clippy_msrv" ]; then
+              echo "MSRV do not match"
+              exit 1
+          else
+              echo "MSRV match"
+          fi
+
       - name: Ensure `fmt` has been run
         run:  just fmt-check
-
-      - name: Ensure MSRV is set in `clippy.toml`
-        run: grep "^msrv = \"${{ env.MIN_SUPPORTED_RUST_VERSION }}\"\$" clippy.toml
 
       - name: Run clippy
         env:

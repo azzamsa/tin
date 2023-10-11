@@ -10,6 +10,7 @@ keywords = ["boilerplate"]
 license = "MIT"
 publish = false
 repository = "https://github.com/azzamsa/tin"
+rust-version = "1.73.0"
 description = "Rust GraphQL Template"
 
 [profile.release]
