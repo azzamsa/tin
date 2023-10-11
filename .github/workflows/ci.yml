@@ -10,30 +10,36 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Install rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           components: clippy, rustfmt
 
-      - uses: Swatinem/rust-cache@v2
-
-      - name: Install latest just release
-        uses: taiki-e/install-action@just
-
-      - name: Install latest dprint release
-        uses: taiki-e/install-action@dprint
+      - uses: taiki-e/install-action@just
+      - uses: taiki-e/install-action@dprint
 
       - name: Check MSRV
         run: |
           cargo_msrv=$(sed -n 's/rust-version = "\(.*\)"/\1/p' Cargo.toml)
           clippy_msrv=$(sed -n 's/msrv = "\(.*\)"/\1/p' clippy.toml)
+          toolchain_channel=$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)
 
-          if [ "$cargo_msrv" != "$clippy_msrv" ]; then
+          echo "Cargo MSRV: $cargo_msrv"
+          echo "Clippy MSRV: $clippy_msrv"
+          echo "Toolchain Channel: $toolchain_channel"
+
+          if [ "$cargo_msrv" = "$clippy_msrv" ] && [ "$cargo_msrv" = "$toolchain_channel" ]; then
+              echo "MSRV match"
+          else
               echo "MSRV do not match"
               exit 1
-          else
-              echo "MSRV match"
           fi
+
+      - name: Show version information
+        shell: bash
+        run: |
+          rustc --version
+          cargo --version
+          cargo fmt --version
 
       - name: Ensure `fmt` has been run
         run:  just fmt-check
@@ -50,18 +56,10 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Install rust toolchain (v${{ env.MIN_SUPPORTED_RUST_VERSION }})
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ env.MIN_SUPPORTED_RUST_VERSION }}
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
 
-      - uses: Swatinem/rust-cache@v2
-
-      - name: Install latest nextest release
-        uses: taiki-e/install-action@nextest
-
-      - name: Install latest just release
-        uses: taiki-e/install-action@just
+      - uses: taiki-e/install-action@nextest
+      - uses: taiki-e/install-action@just
 
       - name: Prepare the environment variables
         run: |
@@ -76,6 +74,12 @@ jobs:
           docker exec postgres_db bash -c "until pg_isready; do sleep 1; done"
           # Check DB version
           docker exec postgres_db psql -h localhost -p 5432 -U durin --version
+
+      - name: Show version information
+        shell: bash
+        run: |
+          rustc --version
+          cargo --version
 
       - name: Run tests
         env:
@@ -101,20 +105,15 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           target: ${{ matrix.target }}
 
       - name: Show version information
         shell: bash
         run: |
-          gcc --version || true
-          rustup -V
-          rustup toolchain list
-          rustup default
-          cargo -V
-          rustc -V
+          rustc --version
+          cargo --version
 
       - name: Install musl-tools
         if: matrix.target == 'x86_64-unknown-linux-musl'
@@ -122,11 +121,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             --allow-unauthenticated musl-tools
-
-      - name: Rust cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.os }}-${{ matrix.target }}
 
       - name: Build
         run: cargo build --release --locked --target ${{ matrix.target }}
