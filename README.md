@@ -35,10 +35,6 @@
 - [cargo-binstall](https://github.com/cargo-bins/cargo-binstall) support.
 - [cargo-release](https://github.com/crate-ci/cargo-release) workflow.
 
-## Variations
-
-- [Without the database](https://github.com/azzamsa/tin/tree/no-database)
-
 ## Checklist
 
 When you use this template, try to follow the checklist to update your info properly
