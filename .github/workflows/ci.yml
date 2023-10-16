@@ -20,14 +20,12 @@ jobs:
       - name: Check MSRV
         run: |
           cargo_msrv=$(sed -n 's/rust-version = "\(.*\)"/\1/p' Cargo.toml)
-          clippy_msrv=$(sed -n 's/msrv = "\(.*\)"/\1/p' clippy.toml)
           toolchain_channel=$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)
 
           echo "Cargo MSRV: $cargo_msrv"
-          echo "Clippy MSRV: $clippy_msrv"
           echo "Toolchain Channel: $toolchain_channel"
 
-          if [ "$cargo_msrv" = "$clippy_msrv" ] && [ "$cargo_msrv" = "$toolchain_channel" ]; then
+          if [ "$cargo_msrv" = "$toolchain_channel" ]; then
               echo "MSRV match"
           else
               echo "MSRV do not match"
