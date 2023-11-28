@@ -3,7 +3,6 @@ type Config {
 	env: String!
 	baseUrl: String!
 	port: Int!
-	utcOffsetHour: Int!
 }
 
 input CreateUserInput {

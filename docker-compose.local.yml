@@ -14,7 +14,6 @@ services:
       - APP_ENV=dev
       - APP_BASE_URL=0.0.0.0
       - PORT=8001
-      - UTC_OFFSET_HOUR=7
       - DATABASE_URL=postgres://durin:SpeakFriendAndEnter@db/tin
 
   db:

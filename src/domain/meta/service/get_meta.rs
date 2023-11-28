@@ -7,7 +7,6 @@ impl Service {
             env: self.config.env.to_string(),
             base_url: self.config.base_url.clone(),
             port: self.config.http.port,
-            utc_offset_hour: self.config.utc_offset_hour,
         };
         let meta = entities::Meta {
             build: option_env!("VCS_REVISION").unwrap_or("unknown").to_string(),

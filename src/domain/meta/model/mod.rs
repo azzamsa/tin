@@ -13,5 +13,4 @@ pub struct Config {
     pub env: String,
     pub base_url: String,
     pub port: u16,
-    pub utc_offset_hour: i8,
 }
