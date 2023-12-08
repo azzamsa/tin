@@ -23,7 +23,7 @@ impl HealthQuery {
     }
 }
 
-/// Test server health wihout invoking many
+/// Test server health without invoking many
 /// moving parts.
 #[utoipa::path(
         get,

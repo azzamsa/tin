@@ -70,7 +70,7 @@ pub struct DeleteUserResponse {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all(deserialize = "camelCase"))]
 pub struct DeleteUserWrapper {
-    pub delte_user: User,
+    pub delete_user: User,
 }
 
 //

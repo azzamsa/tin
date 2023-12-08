@@ -10,7 +10,7 @@ use crate::{
     relay::Base64Cursor,
 };
 
-/// Parse `after` and `befor` to cursor
+/// Parse `after` and `before` to cursor
 pub fn convert_params(
     after: Option<String>,
     before: Option<String>,

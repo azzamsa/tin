@@ -42,7 +42,7 @@ When you use this template, try to follow the checklist to update your info prop
 - [ ] Change the author name in `LICENSE`
 - [ ] Change the package info in `Cargo.toml`
 - [ ] Change the application name:
-  - [ ] Database name and other values in `.env`, `.example.env`, and other containr related files.
+  - [ ] Database name and other values in `.env`, `.example.env`, and other container related files.
   - [ ] The OpenAPI info in `routes.rs`
   - [ ] App name in `release.yml`
   - [ ] Project URL in `cliff.toml`

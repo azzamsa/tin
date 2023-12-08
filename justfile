@@ -14,7 +14,7 @@ _default:
 
 # Setup the repository.
 setup: _areyousure
-    just _cargo-install 'cargo-edit cargo-nextest cargo-outdated dprint git-cliff bacon'
+    just _cargo-install 'cargo-edit cargo-nextest cargo-outdated dprint git-cliff bacon typos-cli'
     just _cargo-install 'sqlx-cli'
 
 # Tasks to make the code-base comply with the rules. Mostly used in git hooks.
@@ -61,6 +61,7 @@ fmt-check:
 # Lint the codebase.
 lint:
     cargo clippy --all-targets --all-features
+    typos --config configs/typos.toml
 
 # Test the codebase.
 test:

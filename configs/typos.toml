@@ -1,0 +1,6 @@
+[files]
+extend-exclude = ["CHANGELOG.md"]
+
+[default.extend-words]
+# [RFC 4122 - A Universally Unique IDentifier (UUID) URN Namespace](https://datatracker.ietf.org/doc/html/rfc4122)
+Dentifier = "Dentifier"

@@ -29,7 +29,7 @@ impl std::convert::From<Error> for crate::Error {
 impl std::convert::From<sqlx::Error> for Error {
     fn from(err: sqlx::Error) -> Self {
         match err {
-            // Not found error should be catched manually
+            // Not found error should be caught manually
             _ => Error::Internal,
         }
     }
