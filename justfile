@@ -78,7 +78,7 @@ release level:
     cargo-release release {{ level }} --execute
 
 # Make sure the repo is ready for release
-release-check level:
+release-check level: check
     just up
     cargo-release release {{ level }}
 
