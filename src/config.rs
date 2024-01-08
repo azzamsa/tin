@@ -104,25 +104,24 @@ impl Config {
             Err(_) => None,
         };
 
-        // http
-        let http_port = std::env::var(ENV_HTTP_PORT)
-            .ok()
-            .map_or(Ok(DEFAULT_HTTP_PORT), |env_val| env_val.parse::<u16>())?;
+        let http = {
+            let port = std::env::var(ENV_HTTP_PORT)
+                .ok()
+                .map_or(Ok(DEFAULT_HTTP_PORT), |env_val| env_val.parse::<u16>())?;
 
-        let http = Http { port: http_port };
+            Http { port }
+        };
 
-        // database
-        let database_url =
-            std::env::var(ENV_DATABASE_URL).map_err(|_| env_not_found(ENV_DATABASE_URL))?;
-        let database_pool_size = std::env::var(ENV_DATABASE_POOL_SIZE)
-            .ok()
-            .map_or(Ok(DEFAULT_DATABASE_POOL_SIZE), |pool_size_str| {
-                pool_size_str.parse::<u32>()
-            })?;
+        let database = {
+            let url =
+                std::env::var(ENV_DATABASE_URL).map_err(|_| env_not_found(ENV_DATABASE_URL))?;
+            let pool_size = std::env::var(ENV_DATABASE_POOL_SIZE)
+                .ok()
+                .map_or(Ok(DEFAULT_DATABASE_POOL_SIZE), |pool_size_str| {
+                    pool_size_str.parse::<u32>()
+                })?;
 
-        let database = Database {
-            url: database_url,
-            pool_size: database_pool_size,
+            Database { url, pool_size }
         };
 
         let mut config = Self {
