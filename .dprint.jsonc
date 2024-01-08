@@ -5,6 +5,8 @@
   },
   "toml": {
   },
+  "dockerfile": {
+  },
   "includes": ["**/*.{json,md,toml,dockerfile}"],
   "excludes": [
     "**/*-lock.json",

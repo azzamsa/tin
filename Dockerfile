@@ -3,14 +3,14 @@
 
 ARG VCS_REVISION
 
-FROM docker.io/lukemathwalker/cargo-chef:0.1.62-rust-1.74 as chef
+FROM docker.io/lukemathwalker/cargo-chef:0.1.62-rust-1.74 AS chef
 WORKDIR app
 
-FROM chef as planner
+FROM chef AS planner
 COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
-FROM chef as builder
+FROM chef AS builder
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
