@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2024-01-08
+
+### Features
+
+- Get rid of hardcoded UTC offset ([69a4ec8](https://github.com/azzamsa/tin/commit/69a4ec886e17dd3a9b2106af5767a43cb9665a7d))
+
+  Thanks to the new `chrono` support in `tracing-subscriber`.
+
+  - https://docs.rs/tracing-subscriber/latest/tracing_subscriber/fmt/time/struct.ChronoLocal.html
+  - https://github.com/tokio-rs/tracing/pull/2690
+
+- Cargo support `rust-version` ([dc2df95](https://github.com/azzamsa/tin/commit/dc2df95a1f0a4fdc44f9ce98664d69b4dc9d5b25))
+
+### Bug fixes
+
+- We don't have any env for tracing ([fdd3540](https://github.com/azzamsa/tin/commit/fdd35403747a8408204ccd45f95cad1eb1f648c3))
+
 ## [1.1.0] - 2023-09-27
 
 ### Features
