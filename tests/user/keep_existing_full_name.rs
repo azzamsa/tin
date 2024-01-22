@@ -5,7 +5,7 @@ use axum::{
 };
 use cynic::MutationBuilder;
 use http_body_util::BodyExt;
-use serde_json::{from_slice, to_string};
+use serde_json as json;
 use tin::route::app;
 use tower::{util::ServiceExt, Service};
 
@@ -30,14 +30,14 @@ async fn keep_existing_full_name() -> Result<()> {
         .method(http::Method::POST)
         .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
         .uri("/graphql")
-        .body(Body::from(to_string(&query)?))?;
+        .body(Body::from(json::to_string(&query)?))?;
 
     let response = ServiceExt::<Request<Body>>::ready(&mut app)
         .await?
         .call(request)
         .await?;
     let body = response.into_body().collect().await?.to_bytes();
-    let user_response: CreateUserResponse = from_slice(&body)?;
+    let user_response: CreateUserResponse = json::from_slice(&body)?;
     let user_id = user_response.data.create_user.id;
     //
     // Update Only the user name
@@ -54,7 +54,7 @@ async fn keep_existing_full_name() -> Result<()> {
         .method(http::Method::POST)
         .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
         .uri("/graphql")
-        .body(Body::from(to_string(&query)?))?;
+        .body(Body::from(json::to_string(&query)?))?;
 
     let response = ServiceExt::<Request<Body>>::ready(&mut app)
         .await?
@@ -64,7 +64,7 @@ async fn keep_existing_full_name() -> Result<()> {
     // Make sure the full name preserved
     //
     let body = response.into_body().collect().await?.to_bytes();
-    let user_response: UpdateUserResponse = from_slice(&body)?;
+    let user_response: UpdateUserResponse = json::from_slice(&body)?;
     assert_eq!(user_response.data.update_user.name, "khawa1");
     assert_eq!(
         user_response.data.update_user.full_name,

@@ -5,7 +5,7 @@ use axum::{
 };
 use cynic::{MutationBuilder, QueryBuilder};
 use http_body_util::BodyExt;
-use serde_json::{from_slice, to_string, Value};
+use serde_json as json;
 use tin::route::app;
 use tower::{util::ServiceExt, Service};
 
@@ -33,7 +33,7 @@ async fn no_first_no_last() -> Result<()> {
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
-        .body(Body::from(to_string(&query)?))?;
+        .body(Body::from(json::to_string(&query)?))?;
 
     let response = ServiceExt::<Request<Body>>::ready(&mut app)
         .await?
@@ -42,7 +42,7 @@ async fn no_first_no_last() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let body: Value = from_slice(&body)?;
+    let body: json::Value = json::from_slice(&body)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(
         error_message,
@@ -66,7 +66,7 @@ async fn both_first_and_last() -> Result<()> {
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
-        .body(Body::from(to_string(&query)?))?;
+        .body(Body::from(json::to_string(&query)?))?;
 
     let response = ServiceExt::<Request<Body>>::ready(&mut app)
         .await?
@@ -75,7 +75,7 @@ async fn both_first_and_last() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let body: Value = from_slice(&body)?;
+    let body: json::Value = json::from_slice(&body)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(
         error_message,
@@ -99,7 +99,7 @@ async fn invalid_cursor() -> Result<()> {
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
-        .body(Body::from(to_string(&query)?))?;
+        .body(Body::from(json::to_string(&query)?))?;
 
     let response = ServiceExt::<Request<Body>>::ready(&mut app)
         .await?
@@ -108,7 +108,7 @@ async fn invalid_cursor() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let body: Value = from_slice(&body)?;
+    let body: json::Value = json::from_slice(&body)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(error_message, "Invalid cursor");
     Ok(())
@@ -130,7 +130,7 @@ async fn create_users() -> Result<()> {
             .method(http::Method::POST)
             .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
             .uri("/graphql")
-            .body(Body::from(to_string(&query)?))?;
+            .body(Body::from(json::to_string(&query)?))?;
 
         let response = ServiceExt::<Request<Body>>::ready(&mut app)
             .await?
@@ -156,13 +156,13 @@ async fn find_paginated_user() -> Result<()> {
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
-        .body(Body::from(to_string(&query)?))?;
+        .body(Body::from(json::to_string(&query)?))?;
 
     let response = app.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let users_response: UsersResponse = from_slice(&body)?;
+    let users_response: UsersResponse = json::from_slice(&body)?;
     assert_eq!(users_response.data.users.total_count, 6);
     //
     // first edges
@@ -184,13 +184,13 @@ async fn find_paginated_user() -> Result<()> {
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
-        .body(Body::from(to_string(&query)?))?;
+        .body(Body::from(json::to_string(&query)?))?;
 
     let response = app.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let users_response: UsersResponse = from_slice(&body)?;
+    let users_response: UsersResponse = json::from_slice(&body)?;
     assert_eq!(users_response.data.users.edges[0].node.name, "two");
 
     let two_cursor = users_response.data.users.edges[0].cursor.clone();
@@ -207,13 +207,13 @@ async fn find_paginated_user() -> Result<()> {
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
-        .body(Body::from(to_string(&query)?))?;
+        .body(Body::from(json::to_string(&query)?))?;
 
     let response = app.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let users_response: UsersResponse = from_slice(&body)?;
+    let users_response: UsersResponse = json::from_slice(&body)?;
     assert_eq!(users_response.data.users.edges[0].node.name, "one");
 
     teardown().await?;
