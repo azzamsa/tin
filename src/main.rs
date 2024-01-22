@@ -3,7 +3,8 @@ use std::{
     sync::Arc,
 };
 
-use axum::Server;
+use tokio::net::TcpListener;
+
 use tin::{config::Config, logger, route::app};
 
 #[tokio::main]
@@ -18,7 +19,7 @@ async fn main() -> Result<(), tin::Error> {
     let address = &SocketAddr::new(host, port);
 
     tracing::info!("App started at `{}`", address);
-    Server::bind(address).serve(app.into_make_service()).await?;
+    axum::serve(TcpListener::bind(address).await?, app).await?;
 
     Ok(())
 }

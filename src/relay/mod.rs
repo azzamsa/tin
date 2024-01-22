@@ -1,6 +1,7 @@
 pub mod validation;
 
-use async_graphql::static_assertions::_core::fmt::Formatter;
+use std::fmt;
+
 use base64::prelude::{Engine as _, BASE64_URL_SAFE_NO_PAD};
 use uuid::Uuid;
 
@@ -14,7 +15,7 @@ pub enum Base64CursorError {
 }
 
 impl std::fmt::Display for Base64CursorError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Invalid cursor")
     }
 }
@@ -56,7 +57,7 @@ impl Base64Cursor {
 }
 
 impl std::fmt::Debug for Base64Cursor {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", &self.index)
     }
 }

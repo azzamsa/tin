@@ -4,6 +4,7 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use cynic::MutationBuilder;
+use http_body_util::BodyExt;
 use serde_json::{from_slice, to_string};
 use tin::route::app;
 use tower::{util::ServiceExt, Service};
@@ -29,11 +30,14 @@ async fn update_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.ready().await?.call(request).await?;
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await?
+        .call(request)
+        .await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let user_response: CreateUserResponse = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let user_response: CreateUserResponse = from_slice(&body)?;
     assert_eq!(user_response.data.create_user.name, "khawa");
 
     let user_id = user_response.data.create_user.id;
@@ -57,9 +61,12 @@ async fn update_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.ready().await?.call(request).await?;
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let user_response: UpdateUserResponse = from_slice(&resp_byte)?;
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await?
+        .call(request)
+        .await?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let user_response: UpdateUserResponse = from_slice(&body)?;
 
     assert_eq!(user_response.data.update_user.name, "haitham");
 

@@ -6,7 +6,7 @@ use async_graphql::{
 };
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::{
-    extract::Extension,
+    extract::State,
     response::{self, IntoResponse},
     routing::{get, post},
     Router,
@@ -26,7 +26,10 @@ use crate::{
     Error,
 };
 
-pub async fn graphql_handler(schema: Extension<AppSchema>, req: GraphQLRequest) -> GraphQLResponse {
+pub async fn graphql_handler(
+    State(schema): State<AppSchema>,
+    req: GraphQLRequest,
+) -> GraphQLResponse {
     schema.execute(req.into_inner()).await.into()
 }
 pub async fn graphql_playground() -> impl IntoResponse {
@@ -85,7 +88,7 @@ pub async fn app() -> Result<Router, Error> {
             .route("/playground", get(route::graphql_playground))
             .merge(SwaggerUi::new("/swagger").url("/api-doc/openapi.json", ApiDoc::openapi()));
     }
-    let app = app.layer(Extension(schema));
+    let app = app.with_state(schema);
 
     Ok(app)
 }

@@ -4,6 +4,7 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use cynic::{MutationBuilder, QueryBuilder};
+use http_body_util::BodyExt;
 use serde_json::{from_slice, to_string, Value};
 use tin::route::app;
 use tower::{util::ServiceExt, Service};
@@ -19,8 +20,7 @@ use super::{
 
 #[tokio::test]
 async fn no_first_no_last() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
     create_users().await?;
 
     let args = ReadUsersArguments {
@@ -35,11 +35,14 @@ async fn no_first_no_last() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await?
+        .call(request)
+        .await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let body: Value = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let body: Value = from_slice(&body)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(
         error_message,
@@ -50,8 +53,7 @@ async fn no_first_no_last() -> Result<()> {
 
 #[tokio::test]
 async fn both_first_and_last() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
     create_users().await?;
 
     let args = ReadUsersArguments {
@@ -66,11 +68,14 @@ async fn both_first_and_last() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await?
+        .call(request)
+        .await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let body: Value = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let body: Value = from_slice(&body)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(
         error_message,
@@ -81,8 +86,7 @@ async fn both_first_and_last() -> Result<()> {
 
 #[tokio::test]
 async fn invalid_cursor() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
     create_users().await?;
 
     let args = ReadUsersArguments {
@@ -97,19 +101,21 @@ async fn invalid_cursor() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.call(request).await?;
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await?
+        .call(request)
+        .await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let body: Value = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let body: Value = from_slice(&body)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(error_message, "Invalid cursor");
     Ok(())
 }
 
 async fn create_users() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
 
     let names = ["one", "two", "three", "four", "five", "six"];
     for name in names {
@@ -126,7 +132,10 @@ async fn create_users() -> Result<()> {
             .uri("/graphql")
             .body(Body::from(to_string(&query)?))?;
 
-        let response = app.call(request).await?;
+        let response = ServiceExt::<Request<Body>>::ready(&mut app)
+            .await?
+            .call(request)
+            .await?;
         assert_eq!(response.status(), StatusCode::OK);
     }
     Ok(())
@@ -134,8 +143,7 @@ async fn create_users() -> Result<()> {
 
 #[tokio::test]
 async fn find_paginated_user() -> Result<()> {
-    let mut router = app().await?;
-    let app = router.ready().await?;
+    let mut app = app().await?;
     create_users().await?;
 
     let args = ReadUsersArguments {
@@ -153,8 +161,8 @@ async fn find_paginated_user() -> Result<()> {
     let response = app.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let users_response: UsersResponse = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let users_response: UsersResponse = from_slice(&body)?;
     assert_eq!(users_response.data.users.total_count, 6);
     //
     // first edges
@@ -181,8 +189,8 @@ async fn find_paginated_user() -> Result<()> {
     let response = app.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let users_response: UsersResponse = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let users_response: UsersResponse = from_slice(&body)?;
     assert_eq!(users_response.data.users.edges[0].node.name, "two");
 
     let two_cursor = users_response.data.users.edges[0].cursor.clone();
@@ -204,8 +212,8 @@ async fn find_paginated_user() -> Result<()> {
     let response = app.call(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let users_response: UsersResponse = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let users_response: UsersResponse = from_slice(&body)?;
     assert_eq!(users_response.data.users.edges[0].node.name, "one");
 
     teardown().await?;

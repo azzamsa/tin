@@ -4,6 +4,7 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use cynic::{MutationBuilder, QueryBuilder};
+use http_body_util::BodyExt;
 use serde_json::{from_slice, to_string, Value};
 use tin::route::app;
 use tower::{util::ServiceExt, Service};
@@ -32,11 +33,14 @@ async fn delete_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.ready().await?.call(request).await?;
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await?
+        .call(request)
+        .await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let user_response: CreateUserResponse = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let user_response: CreateUserResponse = from_slice(&body)?;
     assert_eq!(user_response.data.create_user.name, "khawa");
 
     let user_id = user_response.data.create_user.id;
@@ -55,7 +59,10 @@ async fn delete_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let _ = app.ready().await?.call(request).await?;
+    let _ = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await?
+        .call(request)
+        .await?;
     //
     // Make sure user deleted
     //
@@ -70,9 +77,12 @@ async fn delete_user() -> Result<()> {
         .uri("/graphql")
         .body(Body::from(to_string(&query)?))?;
 
-    let response = app.ready().await?.call(request).await?;
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let body: Value = from_slice(&resp_byte)?;
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await?
+        .call(request)
+        .await?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let body: Value = from_slice(&body)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(error_message, "user not found");
 

@@ -4,6 +4,7 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use cynic::QueryBuilder;
+use http_body_util::BodyExt;
 use serde_json::{from_slice, to_string, Value};
 use tin::route::app;
 use tower::util::ServiceExt;
@@ -27,8 +28,8 @@ async fn find_user() -> Result<()> {
     let response = app.oneshot(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let body: Value = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let body: Value = from_slice(&body)?;
     let error_message = &body["errors"][0]["message"];
     assert_eq!(error_message, "user not found");
 

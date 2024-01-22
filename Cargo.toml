@@ -21,17 +21,17 @@ lto = true
 panic = 'abort'
 
 [dependencies]
-axum = "0.6.20"
-hyper = "0.14.28"
+axum = "0.7.4"
+hyper = "1.1.0"
 tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
 
 # GraphQL
-async-graphql = { version = "6.0.11", features = ["uuid", "chrono"] }
-async-graphql-axum = "6.0.11"
+async-graphql = { version = "7.0.1", features = ["uuid", "chrono"] }
+async-graphql-axum = "7.0.1"
 
 # Rest
-utoipa = { version = "4.1.0", features = ["axum_extras"] }
-utoipa-swagger-ui = { version = "4.0.0", features = ["axum"] }
+utoipa = { version = "4.2.0", features = ["axum_extras"] }
+utoipa-swagger-ui = { version = "6.0.0", features = ["axum"] }
 
 # Database
 sqlx = { version = "0.7.3", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate"] }
@@ -44,7 +44,7 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter", "chrono"] }
 dotenv = "0.15.0"
 
 # Misc
-base64 = "0.21.5"
+base64 = "0.21.7"
 chrono = "0.4.31"
 frunk = "0.4.2"
 frunk_core = { version = "0.4.2" }
@@ -54,11 +54,12 @@ thiserror = "1.0.56"
 time = "0.3.31"
 ulid = { version = "1.1.0", features = ["uuid"] }
 url = "2.5.0"
-uuid = "1.6.1"
+uuid = "1.7.0"
 
 [dev-dependencies]
 anyhow = "1.0.79"
-cynic = "3.3.1"
+cynic = "3.4.0"
+http-body-util = "0.1.0"
 mime = "0.3.17"
 tower = { version = "0.4.13", features = ["util"] }
 

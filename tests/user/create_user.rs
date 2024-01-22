@@ -4,6 +4,7 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use cynic::MutationBuilder;
+use http_body_util::BodyExt; // for `collect`
 use serde_json::{from_slice, to_string};
 use tin::route::app;
 use tower::util::ServiceExt;
@@ -26,8 +27,8 @@ async fn create_user() -> Result<()> {
     let response = app.oneshot(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let user_response: CreateUserResponse = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let user_response: CreateUserResponse = from_slice(&body)?;
     assert_eq!(user_response.data.create_user.name, "khawa");
 
     teardown().await?;

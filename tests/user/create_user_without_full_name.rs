@@ -4,6 +4,7 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use cynic::MutationBuilder;
+use http_body_util::BodyExt;
 use serde_json::{from_slice, to_string};
 use tin::route::app;
 use tower::util::ServiceExt;
@@ -31,8 +32,8 @@ async fn create_user_without_full_name() -> Result<()> {
     let response = app.oneshot(request).await?;
     assert_eq!(response.status(), StatusCode::OK);
 
-    let resp_byte = hyper::body::to_bytes(response.into_body()).await?;
-    let user_response: CreateUserResponse = from_slice(&resp_byte)?;
+    let body = response.into_body().collect().await?.to_bytes();
+    let user_response: CreateUserResponse = from_slice(&body)?;
     assert_eq!(user_response.data.create_user.name, "khawa");
     assert_eq!(user_response.data.create_user.full_name, None);
 
