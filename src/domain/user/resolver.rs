@@ -23,7 +23,7 @@ impl UserQuery {
         let server_ctx = ctx.data::<Arc<ServerContext>>()?;
         let user_edges = server_ctx
             .user_service
-            .find_users(first, after.clone(), last, before.clone())
+            .find_users(first, after.as_deref(), last, before.as_deref())
             .await?;
         let edges: Vec<model::UserEdge> = user_edges
             .into_iter()

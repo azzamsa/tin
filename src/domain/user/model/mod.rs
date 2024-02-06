@@ -85,9 +85,9 @@ impl UserConnection {
             .user_service
             .find_page_info(
                 self.first,
-                self.after.clone(),
+                self.after.as_deref(),
                 self.last,
-                self.before.clone(),
+                self.before.as_deref(),
             )
             .await?;
         Ok(page_info.transmogrify())

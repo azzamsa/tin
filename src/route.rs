@@ -45,7 +45,7 @@ pub async fn app() -> Result<Router, Error> {
     let health_service = Arc::new(health::Service::new());
     let meta_service = Arc::new(meta::Service::new(Arc::clone(&config)));
     let mailer_service = Mailer::new();
-    let user_service = Arc::new(user::Service::new(db.clone(), mailer_service));
+    let user_service = Arc::new(user::Service::new(db, mailer_service));
 
     let server_context = Arc::new(ServerContext {
         user_service,

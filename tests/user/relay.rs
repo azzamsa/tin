@@ -170,13 +170,13 @@ async fn find_paginated_user() -> Result<()> {
     assert_eq!(users_response.data.users.edges.len(), 1);
     assert_eq!(users_response.data.users.edges[0].node.name, "one");
 
-    let one_cursor = users_response.data.users.edges[0].cursor.clone();
+    let one_cursor = &users_response.data.users.edges[0].cursor;
     //
     // after
     //
     let args = ReadUsersArguments {
         first: Some(1),
-        after: Some(one_cursor),
+        after: Some(one_cursor.to_string()),
         last: None,
         before: None,
     };
@@ -193,7 +193,7 @@ async fn find_paginated_user() -> Result<()> {
     let users_response: UsersResponse = json::from_slice(&body)?;
     assert_eq!(users_response.data.users.edges[0].node.name, "two");
 
-    let two_cursor = users_response.data.users.edges[0].cursor.clone();
+    let two_cursor = &users_response.data.users.edges[0].cursor;
     //
     // before
     //
@@ -201,7 +201,7 @@ async fn find_paginated_user() -> Result<()> {
         first: Some(1),
         after: None,
         last: None,
-        before: Some(two_cursor),
+        before: Some(two_cursor.to_string()),
     };
     let query = UsersQuery::build(args);
     let request = Request::builder()
