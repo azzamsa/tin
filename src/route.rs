@@ -43,7 +43,7 @@ pub async fn app() -> Result<Router, Error> {
     db::migrate(&db).await?;
 
     let health_service = Arc::new(health::Service::new());
-    let meta_service = Arc::new(meta::Service::new(config.clone()));
+    let meta_service = Arc::new(meta::Service::new(Arc::clone(&config)));
     let mailer_service = Mailer::new();
     let user_service = Arc::new(user::Service::new(db.clone(), mailer_service));
 
