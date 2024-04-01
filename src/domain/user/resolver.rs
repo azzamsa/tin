@@ -27,7 +27,7 @@ impl UserQuery {
             .await?;
         let edges: Vec<model::UserEdge> = user_edges
             .into_iter()
-            .map(|user| user.transmogrify())
+            .map(frunk::labelled::Transmogrifier::transmogrify)
             .collect();
 
         let user_connection = model::UserConnection {

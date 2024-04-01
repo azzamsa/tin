@@ -48,7 +48,7 @@ impl Base64Cursor {
         let index = cursor
             .split(':')
             .last()
-            .map(|s| s.parse::<Uuid>())
+            .map(str::parse)
             .ok_or(Base64CursorError::Invalid)?
             .map_err(|_| Base64CursorError::Invalid)?;
 

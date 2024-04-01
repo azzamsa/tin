@@ -125,9 +125,9 @@ impl Config {
         };
 
         let mut config = Self {
+            env,
             base_url,
             schema_location,
-            env,
             http,
             database,
         };

@@ -29,7 +29,7 @@ pub async fn connect(database: &config::Database) -> Result<DB, Error> {
 
 pub async fn migrate(db: &DB) -> Result<(), Error> {
     match sqlx::migrate!("db/migrations").run(db).await {
-        Ok(_) => Ok(()),
+        Ok(()) => Ok(()),
         Err(err) => {
             tracing::error!("{}", &err);
             Err(err)

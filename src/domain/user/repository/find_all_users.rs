@@ -35,7 +35,7 @@ impl Repository {
             }
             // Last & before
             (None, None, Some(last), Some(before)) => {
-                query = format!("select * from ( select * from user_ where id < '{before}' order by id desc limit {limit} ) as data order by id asc;", limit = last + 1)
+                query = format!("select * from ( select * from user_ where id < '{before}' order by id desc limit {limit} ) as data order by id asc;", limit = last + 1);
             }
             // Default page size
             _ => query = format!("{query} limit {default_page_size}"),
@@ -65,20 +65,20 @@ impl Repository {
     }
     pub async fn has_previous_page(
         &self,
-        rows: &Vec<entities::User>,
+        rows: &[entities::User],
         last: Option<i32>,
     ) -> Result<bool, Error> {
         let mut has_previous_page: bool = false;
         if let Some(last) = last {
             tracing::debug!("rows length: {}. last: {}", rows.len(), last);
-            has_previous_page = rows.len() > last as usize
+            has_previous_page = rows.len() > last as usize;
         };
         Ok(has_previous_page)
     }
     pub async fn find_page_info<'c, C: Queryer<'c> + Copy>(
         &self,
         db: C,
-        rows: &Vec<entities::User>,
+        rows: &[entities::User],
         first: Option<i32>,
         after: Option<Uuid>,
         last: Option<i32>,
@@ -122,20 +122,20 @@ impl Repository {
             };
         };
 
-        let (start_cursor, end_cursor) = if !rows.is_empty() {
+        let (start_cursor, end_cursor) = if rows.is_empty() {
+            (None, None)
+        } else {
             let start_cursor = Base64Cursor::new(rows[0].id).encode();
             let end_cursor = Base64Cursor::new(rows[rows.len() - 1].id).encode();
             (Some(start_cursor), Some(end_cursor))
-        } else {
-            (None, None)
         };
 
         let has_previous_page = self.has_previous_page(rows, last).await?;
         let page_info = entities::PageInfo {
-            has_next_page,
-            has_previous_page,
-            start_cursor,
             end_cursor,
+            has_next_page,
+            start_cursor,
+            has_previous_page,
         };
 
         Ok(page_info)

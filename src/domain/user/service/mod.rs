@@ -22,7 +22,7 @@ pub struct Service {
 impl Service {
     pub fn new(db: DB, mailer: Mailer) -> Self {
         let repo = Repository::new();
-        Self { db, repo, mailer }
+        Self { repo, db, mailer }
     }
 }
 
