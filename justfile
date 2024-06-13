@@ -54,11 +54,13 @@ image-restart:
 fmt:
     cargo fmt --all
     dprint fmt
+    hurlfmt tests/api-collection/**/*.hurl --in-place
 
 # Check is the codebase properly formatted.
 fmt-check:
     cargo fmt --all -- --check
     dprint check
+    hurlfmt tests/api-collection/**/*.hurl --check
 
 # Lint the codebase.
 lint:
