@@ -15,25 +15,25 @@
 
 ## Features
 
-- [Async-GraphQL](https://github.com/async-graphql/async-graphql) GraphQL server library.
-  - Relay-compatible cursor-based pagination.
-  - Playground disabled in the production environment for performance reasons.
-  - Store GraphQL schema to file automatically.
-- [SQLx](https://github.com/launchbadge/sqlx) SQL toolkit.
-- [Axum](https://github.com/tokio-rs/axum) web framework.
-- [Tracing](https://github.com/tokio-rs/tracing) with local timestamp.
-- [Frunk](https://github.com/lloydmeta/frunk) to avoid writing repetitive boilerplate.
-- [utoipa](https://github.com/juhaku/utoipa) Auto-generated OpenAPI documentation.
-- [git-cliff](https://github.com/orhun/git-cliff) Changelog Generator.
-- Exhaustive Integration tests.
-  - Uses [Cynic](https://github.com/obmarg/cynic) for GraphQL client.
-  - [Hurl](https://github.com/Orange-OpenSource/hurl) for E2E test.
-- Fast and tiny image container. Using [cargo-chef](https://github.com/LukeMathWalker/cargo-chef) and `scratch` or `distroless` image.
-- GitHub Action for CI and release.
-- ~~Git hooks for continuous development (format, lint, test).~~. [Removed](https://github.com/azzamsa/tin/commit/d9906164db7eb30cf66e2ed32edb220c0787fe13)
-- Consistent formatting using [dprint](https://github.com/dprint/dprint) for non Rust files (Markdown, Dockerfiles, Etc).
-- [cargo-binstall](https://github.com/cargo-bins/cargo-binstall) support.
-- [cargo-release](https://github.com/crate-ci/cargo-release) workflow.
+- [Async-GraphQL](https://github.com/async-graphql/async-graphql): GraphQL server library.
+  - Supports Relay-compatible cursor-based pagination.
+  - Automatically disables Playground in the production environment for performance reasons.
+  - Automatically stores GraphQL schema to file.
+- [SQLx](https://github.com/launchbadge/sqlx): SQL toolkit.
+- [Axum](https://github.com/tokio-rs/axum): web framework.
+- [Tracing](https://github.com/tokio-rs/tracing): includes local timestamps.
+- [Frunk](https://github.com/lloydmeta/frunk): avoids writing repetitive boilerplate.
+- [utoipa](https://github.com/juhaku/utoipa): automatically generates OpenAPI documentation.
+- [git-cliff](https://github.com/orhun/git-cliff): Changelog Generator.
+- Includes exhaustive integration tests.
+  - Uses [Cynic](https://github.com/obmarg/cynic) as GraphQL client.
+  - Uses [Hurl](https://github.com/Orange-OpenSource/hurl) for API collection.
+- Utilizes fast and tiny image containers, leveraging [cargo-chef](https://github.com/LukeMathWalker/cargo-chef) and `scratch` or `distroless` images.
+- Implements GitHub Actions for CI and release workflows.
+- Removed Git hooks for continuous development (formatting, linting, testing) [commit link](https://github.com/azzamsa/tin/commit/d9906164db7eb30cf66e2ed32edb220c0787fe13).
+- Ensures consistent formatting using [dprint](https://github.com/dprint/dprint) for non-Rust files (Markdown, Dockerfiles, etc.).
+- Supports [cargo-binstall](https://github.com/cargo-bins/cargo-binstall).
+- Includes [cargo-release](https://github.com/crate-ci/cargo-release) workflow.
 
 ## Checklist
 
