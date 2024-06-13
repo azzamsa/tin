@@ -39,11 +39,11 @@ image-build:
 
 # Run the container.
 image-start service="":
-    podman-compose --file docker-compose.local.yml up {{ service }} -d
+    podman-compose --file compose.local.yml up {{ service }} -d
 
 # Stop the container.
 image-stop:
-    podman-compose --file docker-compose.local.yml down
+    podman-compose --file compose.local.yml down
 
 # Restart the containers.
 image-restart:

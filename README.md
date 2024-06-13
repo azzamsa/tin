@@ -57,7 +57,7 @@ And, enjoy :)
 $ # Clone the repository
 
 $ # Run the database
-$ podman-compose -f docker-compose.local.yml up db -d
+$ podman-compose -f compose.local.yml up db -d
 
 $ touch $SCHEMA_LOCATION # See .example.env
 $ just dev  # See also `just setup`

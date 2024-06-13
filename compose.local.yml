@@ -14,10 +14,10 @@ services:
       - APP_ENV=dev
       - APP_BASE_URL=0.0.0.0
       - PORT=8001
-      - DATABASE_URL=postgres://durin:SpeakFriendAndEnter@db/tin
+      - DATABASE_URL=postgres://gandalf:SpeakFriendAndEnter@db/tin
 
   db:
-    image: docker.io/postgres:15
+    image: docker.io/postgres:16
     restart: always
     ports:
       - 5432:5432
@@ -25,6 +25,6 @@ services:
       # Use `:Z` in SELinux-enabled disro.
       - ./cdata/db:/var/lib/postgresql/data/:Z
     environment:
-      POSTGRES_USER: durin
+      POSTGRES_USER: gandalf
       POSTGRES_PASSWORD: SpeakFriendAndEnter
       POSTGRES_DB: tin

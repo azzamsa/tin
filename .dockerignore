@@ -16,7 +16,7 @@ configs
 .env
 CHANGELOG.md
 README.md
-docker-compose.example.yml
+compose.example.yml
 
 # Container Data
 cdata

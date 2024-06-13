@@ -70,11 +70,11 @@ jobs:
         env:
           PGPASSWORD: secret
         run: |
-          docker-compose --file ./tests/docker-compose.yml run --detach -p 5432:5432 --name postgres_db postgres_db
+          docker-compose --file ./tests/compose.yml run --detach -p 5432:5432 --name postgres_db postgres_db
           # Wait until the DB is up
           docker exec postgres_db bash -c "until pg_isready; do sleep 1; done"
           # Check DB version
-          docker exec postgres_db psql -h localhost -p 5432 -U durin --version
+          docker exec postgres_db psql -h localhost -p 5432 -U gandalf --version
 
       - name: Show version information
         shell: bash
@@ -84,7 +84,7 @@ jobs:
 
       - name: Run tests
         env:
-          DATABASE_URL: postgres://durin:SpeakFriendAndEnter@localhost:5432/tin
+          DATABASE_URL: postgres://gandalf:SpeakFriendAndEnter@localhost:5432/tin
         run: just test
 
   build:
