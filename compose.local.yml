@@ -1,6 +1,5 @@
 # This file is used for local environment
 
-version: "3"
 services:
 
   backend:
