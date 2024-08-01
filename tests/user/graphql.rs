@@ -13,7 +13,7 @@ pub mod queries {
         pub users: UserConnection,
     }
 
-    // All sturct must be inline
+    // All struct must be inline
     #[derive(cynic::QueryVariables, Debug)]
     pub struct ReadUsersArguments {
         pub first: Option<i32>,
@@ -49,13 +49,11 @@ pub mod queries {
         pub user: User,
     }
 
-    // All sturct must be inline
     #[derive(cynic::QueryVariables, Debug)]
     pub struct ReadUserArguments {
         pub id: Uuid,
     }
 
-    // All sturct must be inline
     #[derive(cynic::Scalar, Debug, Clone)]
     #[cynic(graphql_type = "UUID")]
     pub struct Uuid(pub String);
