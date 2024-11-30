@@ -1,7 +1,6 @@
 # This file is used for local environment
 
 services:
-
   backend:
     image: tin:latest
     restart: always
@@ -16,7 +15,7 @@ services:
       - DATABASE_URL=postgres://gandalf:SpeakFriendAndEnter@db/tin
 
   db:
-    image: docker.io/postgres:16
+    image: docker.io/postgres:17
     restart: always
     ports:
       - 5432:5432

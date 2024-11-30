@@ -29,7 +29,7 @@ impl HealthQuery {
         get,
         path = "/health",
         responses(
-            (status = 200, description = "server is running", body = HealthResponse),
+            (status = 200, description = "server is running", body = model::HealthResponse),
         ),
     )]
 pub async fn health() -> impl IntoResponse {
