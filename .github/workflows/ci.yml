@@ -43,7 +43,7 @@ jobs:
           cargo fmt --version
 
       - name: Ensure `fmt` has been run
-        run:  just fmt-check
+        run: just fmt-check
 
       - name: Run clippy
         env:
@@ -70,7 +70,7 @@ jobs:
         env:
           PGPASSWORD: secret
         run: |
-          docker-compose --file ./tests/compose.yml run --detach -p 5432:5432 --name postgres_db postgres_db
+          docker compose --file ./tests/compose.yml run --detach -p 5432:5432 --name postgres_db postgres_db
           # Wait until the DB is up
           docker exec postgres_db bash -c "until pg_isready; do sleep 1; done"
           # Check DB version
@@ -94,13 +94,25 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { build: linux-gnu,  os: ubuntu-22.04, target: x86_64-unknown-linux-gnu    }
+          - {
+              build: linux-gnu,
+              os: ubuntu-22.04,
+              target: x86_64-unknown-linux-gnu,
+            }
           # `sfackler/rust-openssl` needs more effort to compile to musl
           # - { build: linux-musl, os: ubuntu-22.04, target: x86_64-unknown-linux-musl   }
-          - { build: win-gnu,    os: windows-2022, target: x86_64-pc-windows-gnu       }
-          - { build: win-msvc,   os: windows-2022, target: x86_64-pc-windows-msvc      }
-          - { build: win32-msvc, os: windows-2022, target: i686-pc-windows-msvc        }
-          - { build: macos,      os: macos-12    , target: x86_64-apple-darwin         }
+          - { build: win-gnu, os: windows-2022, target: x86_64-pc-windows-gnu }
+          - {
+              build: win-msvc,
+              os: windows-2022,
+              target: x86_64-pc-windows-msvc,
+            }
+          - {
+              build: win32-msvc,
+              os: windows-2022,
+              target: i686-pc-windows-msvc,
+            }
+          - { build: macos, os: macos-12, target: x86_64-apple-darwin }
 
     steps:
       - name: Checkout source code
