@@ -3,7 +3,7 @@
 
 ARG VCS_REVISION
 
-FROM docker.io/lukemathwalker/cargo-chef:0.1.67-rust-1.78 AS chef
+FROM docker.io/lukemathwalker/cargo-chef:0.1.71-rust-1.85 AS chef
 WORKDIR app
 
 FROM chef AS planner
