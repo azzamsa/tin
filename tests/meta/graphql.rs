@@ -14,7 +14,6 @@ pub mod queries {
 
     #[derive(cynic::QueryFragment, Debug)]
     pub struct Meta {
-        pub build: String,
         pub version: String,
     }
 }

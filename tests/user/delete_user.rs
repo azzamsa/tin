@@ -9,14 +9,8 @@ use serde_json as json;
 use tin::route::app;
 use tower::{util::ServiceExt, Service};
 
-use super::{fake_user, teardown};
-use super::{
-    graphql::{
-        add, delete, queries,
-        queries::{ReadUserArguments, UserQuery},
-    },
-    schema::CreateUserResponse,
-};
+use super::graphql::{mutations, queries};
+use super::teardown;
 
 #[tokio::test]
 async fn delete_user() -> Result<()> {
@@ -25,7 +19,14 @@ async fn delete_user() -> Result<()> {
     //
     // Create User
     //
-    let query = add::UserMutation::build(fake_user());
+
+    let args = mutations::CreateUserInput {
+        // Blue Wizard's fate is ambiguous
+        name: "Blue Wizard".to_string(),
+        email: "blue@mail.com".to_string(),
+        full_name: None,
+    };
+    let query = mutations::CreateUser::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -40,18 +41,18 @@ async fn delete_user() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let user_response: CreateUserResponse = json::from_slice(&body)?;
-    assert_eq!(user_response.data.create_user.name, "khawa");
-
-    let user_id = user_response.data.create_user.id;
+    let response: json::Value = json::from_slice(&body)?;
+    let response: queries::User = json::from_value(response["data"]["createUser"].clone())?;
+    assert_eq!(response.name, "Blue Wizard");
 
     //
-    // Update User
+    // Delete User
     //
-
-    let user_id_str = delete::Uuid(user_id.to_string());
-    let args = delete::DeleteUserArguments { id: user_id_str };
-    let query = delete::UserMutation::build(args);
+    let user_id: queries::Uuid = response.id;
+    let args = mutations::DeleteUserArguments {
+        id: user_id.clone(),
+    };
+    let query = mutations::DeleteUser::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -63,13 +64,13 @@ async fn delete_user() -> Result<()> {
         .await?
         .call(request)
         .await?;
+
     //
     // Make sure user deleted
     //
-    let args = ReadUserArguments {
-        id: queries::Uuid(user_id.to_string()),
-    };
-    let query = UserQuery::build(args);
+
+    let args = queries::ReadUserArguments { id: user_id };
+    let query = queries::UserQuery::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)

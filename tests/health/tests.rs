@@ -10,7 +10,7 @@ use serde_json as json;
 use tin::route::app;
 use tower::util::ServiceExt;
 
-use super::{graphql::queries::HealthQuery, schema::HealthResponse};
+use super::graphql::queries::HealthQuery;
 
 #[tokio::test]
 async fn health() -> Result<()> {
@@ -27,8 +27,9 @@ async fn health() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let health_response: HealthResponse = json::from_slice(&body)?;
-    assert_eq!(health_response.data.health.status, "running");
+    let response: json::Value = json::from_slice(&body)?;
+    let response: HealthQuery = json::from_value(response["data"].clone())?;
+    assert_eq!(response.health.status, "running");
 
     Ok(())
 }

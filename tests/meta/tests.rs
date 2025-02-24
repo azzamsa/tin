@@ -9,7 +9,7 @@ use serde_json as json;
 use tin::route::app;
 use tower::util::ServiceExt;
 
-use super::{graphql::queries::MetaQuery, schema::MetaResponse};
+use super::graphql::queries::MetaQuery;
 
 #[tokio::test]
 async fn meta() -> Result<()> {
@@ -26,10 +26,11 @@ async fn meta() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let meta_response: MetaResponse = json::from_slice(&body)?;
+    let response: json::Value = json::from_slice(&body)?;
+    let response: MetaQuery = json::from_value(response["data"].clone())?;
 
     let cargo_package_version = env!("CARGO_PKG_VERSION").to_string();
-    assert_eq!(meta_response.data.meta.version, cargo_package_version);
+    assert_eq!(response.meta.version, cargo_package_version);
 
     Ok(())
 }

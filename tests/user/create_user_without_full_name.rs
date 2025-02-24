@@ -9,19 +9,19 @@ use serde_json as json;
 use tin::route::app;
 use tower::util::ServiceExt;
 
+use super::graphql::{mutations, queries};
 use super::teardown;
-use super::{graphql::add, schema::CreateUserResponse};
 
 #[tokio::test]
 async fn create_user_without_full_name() -> Result<()> {
     let app = app().await?;
 
-    let args = add::CreateUserInput {
-        name: "khawa".to_string(),
-        email: "khawa@email.com".to_string(),
+    let args = mutations::CreateUserInput {
+        name: "aragorn".to_string(),
+        email: "aragorn@mail.com".to_string(),
         full_name: None,
     };
-    let query = add::UserMutation::build(args);
+    let query = mutations::CreateUser::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -33,9 +33,10 @@ async fn create_user_without_full_name() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let user_response: CreateUserResponse = json::from_slice(&body)?;
-    assert_eq!(user_response.data.create_user.name, "khawa");
-    assert_eq!(user_response.data.create_user.full_name, None);
+    let response: json::Value = json::from_slice(&body)?;
+    let response: queries::User = json::from_value(response["data"]["createUser"].clone())?;
+    assert_eq!(response.name, "aragorn");
+    assert_eq!(response.full_name, None);
 
     teardown().await?;
     Ok(())

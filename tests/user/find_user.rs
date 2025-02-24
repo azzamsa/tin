@@ -9,16 +9,16 @@ use serde_json as json;
 use tin::route::app;
 use tower::util::ServiceExt;
 
-use super::graphql::queries::{ReadUserArguments, UserQuery, Uuid};
+use super::graphql::queries;
 
 #[tokio::test]
 async fn find_user() -> Result<()> {
     let app = app().await?;
 
-    let args = ReadUserArguments {
-        id: Uuid("017eb8d1-a5b5-9443-2d94-b6ad7787bf0e".to_string()),
+    let args = queries::ReadUserArguments {
+        id: queries::Uuid("00000000-0000-0000-0000-000000000000".to_string()),
     };
-    let query = UserQuery::build(args);
+    let query = queries::UserQuery::build(args);
     let request = Request::builder()
         .method(http::Method::POST)
         .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())

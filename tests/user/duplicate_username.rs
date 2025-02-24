@@ -9,8 +9,8 @@ use serde_json as json;
 use tin::route::app;
 use tower::{util::ServiceExt, Service};
 
-use super::{fake_user, graphql::update, teardown};
-use super::{graphql::add, schema::CreateUserResponse};
+use super::teardown;
+use crate::graphql::{mutations, queries};
 
 #[tokio::test]
 async fn duplicate_username_create() -> Result<()> {
@@ -18,7 +18,12 @@ async fn duplicate_username_create() -> Result<()> {
     //
     // Create User
     //
-    let query = add::UserMutation::build(fake_user());
+    let args = mutations::CreateUserInput {
+        name: "bilbo".to_string(),
+        email: "bilbo@mail.com".to_string(),
+        full_name: None,
+    };
+    let query = mutations::CreateUser::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -30,12 +35,17 @@ async fn duplicate_username_create() -> Result<()> {
         .await?
         .call(request)
         .await?;
+
     //
     // Create next user with the same name
     //
 
-    let query = add::UserMutation::build(fake_user());
-
+    let args = mutations::CreateUserInput {
+        name: "bilbo".to_string(),
+        email: "bilbo@mail.com".to_string(),
+        full_name: None,
+    };
+    let query = mutations::CreateUser::build(args);
     let request = Request::builder()
         .method(http::Method::POST)
         .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
@@ -55,6 +65,7 @@ async fn duplicate_username_create() -> Result<()> {
     Ok(())
 }
 
+// Update user's email to to one already in use by another user.
 #[tokio::test]
 async fn duplicate_username_update() -> Result<()> {
     let mut app = app().await?;
@@ -62,7 +73,12 @@ async fn duplicate_username_update() -> Result<()> {
     // Create User
     //
 
-    let query = add::UserMutation::build(fake_user());
+    let args = mutations::CreateUserInput {
+        name: "Pippin".to_string(),
+        email: "pippin@mail.com".to_string(),
+        full_name: None,
+    };
+    let query = mutations::CreateUser::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -77,15 +93,15 @@ async fn duplicate_username_update() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     //
-    // Create second user
+    // Create other user
     //
 
-    let args = add::CreateUserInput {
-        name: "khawa1".to_string(),
-        email: "khawa1@email.com".to_string(),
+    let args = mutations::CreateUserInput {
+        name: "Merry".to_string(),
+        email: "merry@mail.com".to_string(),
         full_name: None,
     };
-    let query = add::UserMutation::build(args);
+    let query = mutations::CreateUser::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)
@@ -100,21 +116,20 @@ async fn duplicate_username_update() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let user_response: CreateUserResponse = json::from_slice(&body)?;
-    let user_id = user_response.data.create_user.id;
+    let response: json::Value = json::from_slice(&body)?;
+    let response: queries::User = json::from_value(response["data"]["createUser"].clone())?;
+    let user_id = response.id;
 
     //
     // Update second user to the same name as first user
     //
-
-    let user_id = update::Uuid(user_id.to_string());
-    let args = update::UpdateUserInput {
+    let args = mutations::UpdateUserInput {
         id: user_id,
-        name: "khawa".to_string(),
-        email: "haitam@email.com".to_string(),
+        name: "Merry".to_string(),
+        email: "pippin@email.com".to_string(),
         full_name: None,
     };
-    let query = update::UserMutation::build(args);
+    let query = mutations::UpdateUser::build(args);
 
     let request = Request::builder()
         .method(http::Method::POST)

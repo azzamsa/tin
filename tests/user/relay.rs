@@ -9,27 +9,21 @@ use serde_json as json;
 use tin::route::app;
 use tower::{util::ServiceExt, Service};
 
+use super::graphql::{mutations, queries};
 use super::teardown;
-use super::{
-    graphql::{
-        add,
-        queries::{ReadUsersArguments, UsersQuery},
-    },
-    schema::UsersResponse,
-};
 
 #[tokio::test]
 async fn no_first_no_last() -> Result<()> {
     let mut app = app().await?;
     create_users().await?;
 
-    let args = ReadUsersArguments {
+    let args = queries::ReadUsersArguments {
         first: None,
         after: None,
         last: None,
         before: None,
     };
-    let query = UsersQuery::build(args);
+    let query = queries::UsersQuery::build(args);
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
@@ -56,13 +50,13 @@ async fn both_first_and_last() -> Result<()> {
     let mut app = app().await?;
     create_users().await?;
 
-    let args = ReadUsersArguments {
+    let args = queries::ReadUsersArguments {
         first: Some(1),
         after: None,
         last: Some(1),
         before: None,
     };
-    let query = UsersQuery::build(args);
+    let query = queries::UsersQuery::build(args);
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
@@ -89,13 +83,13 @@ async fn invalid_cursor() -> Result<()> {
     let mut app = app().await?;
     create_users().await?;
 
-    let args = ReadUsersArguments {
+    let args = queries::ReadUsersArguments {
         first: Some(1),
         after: Some("invalid_cursor".to_string()),
         last: None,
         before: None,
     };
-    let query = UsersQuery::build(args);
+    let query = queries::UsersQuery::build(args);
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
@@ -119,12 +113,12 @@ async fn create_users() -> Result<()> {
 
     let names = ["one", "two", "three", "four", "five", "six"];
     for name in names {
-        let args = add::CreateUserInput {
+        let args = mutations::CreateUserInput {
             name: name.to_string(),
-            email: "fake@email.com".to_string(),
+            email: format!("{name}@mail.com"),
             full_name: None,
         };
-        let query = add::UserMutation::build(args);
+        let query = mutations::CreateUser::build(args);
 
         let request = Request::builder()
             .method(http::Method::POST)
@@ -146,13 +140,13 @@ async fn find_paginated_user() -> Result<()> {
     let mut app = app().await?;
     create_users().await?;
 
-    let args = ReadUsersArguments {
+    let args = queries::ReadUsersArguments {
         first: Some(1),
         after: None,
         last: None,
         before: None,
     };
-    let query = UsersQuery::build(args);
+    let query = queries::UsersQuery::build(args);
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
@@ -162,25 +156,30 @@ async fn find_paginated_user() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let users_response: UsersResponse = json::from_slice(&body)?;
-    assert_eq!(users_response.data.users.total_count, 6);
+    let response: json::Value = json::from_slice(&body)?;
+    let response: queries::UsersQuery = json::from_value(response["data"].clone())?;
+    assert_eq!(response.users.total_count, 6);
+
     //
     // first edges
     //
-    assert_eq!(users_response.data.users.edges.len(), 1);
-    assert_eq!(users_response.data.users.edges[0].node.name, "one");
 
-    let one_cursor = &users_response.data.users.edges[0].cursor;
+    assert_eq!(response.users.edges.len(), 1);
+    assert_eq!(response.users.edges[0].node.name, "one");
+
+    let one_cursor = &response.users.edges[0].cursor;
+
     //
     // after
     //
-    let args = ReadUsersArguments {
+
+    let args = queries::ReadUsersArguments {
         first: Some(1),
         after: Some(one_cursor.to_string()),
         last: None,
         before: None,
     };
-    let query = UsersQuery::build(args);
+    let query = queries::UsersQuery::build(args);
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
@@ -190,20 +189,22 @@ async fn find_paginated_user() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let users_response: UsersResponse = json::from_slice(&body)?;
-    assert_eq!(users_response.data.users.edges[0].node.name, "two");
+    let response: json::Value = json::from_slice(&body)?;
+    let response: queries::UsersQuery = json::from_value(response["data"].clone())?;
+    assert_eq!(response.users.edges[0].node.name, "two");
 
-    let two_cursor = &users_response.data.users.edges[0].cursor;
     //
     // before
     //
-    let args = ReadUsersArguments {
+
+    let two_cursor = &response.users.edges[0].cursor;
+    let args = queries::ReadUsersArguments {
         first: Some(1),
         after: None,
         last: None,
         before: Some(two_cursor.to_string()),
     };
-    let query = UsersQuery::build(args);
+    let query = queries::UsersQuery::build(args);
     let request = Request::builder()
         .method(http::Method::POST)
         .uri("/graphql")
@@ -213,8 +214,9 @@ async fn find_paginated_user() -> Result<()> {
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = response.into_body().collect().await?.to_bytes();
-    let users_response: UsersResponse = json::from_slice(&body)?;
-    assert_eq!(users_response.data.users.edges[0].node.name, "one");
+    let response: json::Value = json::from_slice(&body)?;
+    let response: queries::UsersQuery = json::from_value(response["data"].clone())?;
+    assert_eq!(response.users.edges[0].node.name, "one");
 
     teardown().await?;
     Ok(())
