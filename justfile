@@ -39,7 +39,7 @@ image-build:
     docker build . --tag tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD)
 
 [doc('Run the container')]
-image-start service="":
+image-start service='':
     docker compose --file compose.local.yml up {{ service }} -d
 
 [doc('Stop the container')]
