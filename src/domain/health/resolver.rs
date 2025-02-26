@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use async_graphql::{Context, Error, FieldResult, Object};
-use axum::{response::IntoResponse, Json};
+use axum::{Json, response::IntoResponse};
 use frunk_core::labelled::Transmogrifier;
 
 use super::model;

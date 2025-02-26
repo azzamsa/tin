@@ -2,7 +2,7 @@ pub mod validation;
 
 use std::fmt;
 
-use base64::prelude::{Engine as _, BASE64_URL_SAFE_NO_PAD};
+use base64::prelude::{BASE64_URL_SAFE_NO_PAD, Engine as _};
 use uuid::Uuid;
 
 /// Base64 invalid states, used by `Base64Cursor`.

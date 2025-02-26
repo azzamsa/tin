@@ -3,7 +3,7 @@ use sqlx;
 use super::Repository;
 use crate::{
     db::Queryer,
-    domain::user::{entities, Error},
+    domain::user::{Error, entities},
 };
 
 impl Repository {

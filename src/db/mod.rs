@@ -1,8 +1,8 @@
 use std::time::Duration;
 
-use sqlx::{self, postgres::PgPoolOptions, Executor, Pool, Postgres};
+use sqlx::{self, Executor, Pool, Postgres, postgres::PgPoolOptions};
 
-use crate::{config, Error};
+use crate::{Error, config};
 
 pub type DB = Pool<Postgres>;
 pub trait Queryer<'c>: Executor<'c, Database = sqlx::Postgres> {}

@@ -1,21 +1,21 @@
 use std::{fs, sync::Arc};
 
 use async_graphql::{
-    http::{playground_source, GraphQLPlaygroundConfig},
     EmptySubscription, Schema,
+    http::{GraphQLPlaygroundConfig, playground_source},
 };
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::{
+    Router,
     extract::State,
     response::{self, IntoResponse},
     routing::{get, post},
-    Router,
 };
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
 use crate::{
-    config,
+    Error, config,
     config::Config,
     context::ServerContext,
     db,
@@ -23,7 +23,6 @@ use crate::{
     driver::mailer::Mailer,
     route,
     schema::{AppSchema, Mutation, Query},
-    Error,
 };
 
 pub async fn graphql_handler(

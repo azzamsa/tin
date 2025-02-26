@@ -2,7 +2,7 @@ use sqlx::{self, Row};
 use uuid::Uuid;
 
 use super::Repository;
-use crate::domain::user::{entities, Error};
+use crate::domain::user::{Error, entities};
 use crate::{db::Queryer, relay::Base64Cursor};
 
 impl Repository {
@@ -35,7 +35,10 @@ impl Repository {
             }
             // Last & before
             (None, None, Some(last), Some(before)) => {
-                query = format!("select * from ( select * from user_ where id < '{before}' order by id desc limit {limit} ) as data order by id asc;", limit = last + 1);
+                query = format!(
+                    "select * from ( select * from user_ where id < '{before}' order by id desc limit {limit} ) as data order by id asc;",
+                    limit = last + 1
+                );
             }
             // Default page size
             _ => query = format!("{query} limit {default_page_size}"),

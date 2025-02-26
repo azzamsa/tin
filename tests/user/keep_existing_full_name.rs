@@ -7,7 +7,7 @@ use cynic::MutationBuilder;
 use http_body_util::BodyExt;
 use serde_json as json;
 use tin::route::app;
-use tower::{util::ServiceExt, Service};
+use tower::{Service, util::ServiceExt};
 
 use super::graphql::{mutations, queries};
 use super::teardown;

@@ -2,10 +2,10 @@ use uuid::Uuid;
 
 use crate::{
     error::{
+        Error,
         app::Error::{
             MissingFirstAndLastPaginationArguments, PassedFirstAndLastPaginationArguments,
         },
-        Error,
     },
     relay::Base64Cursor,
 };

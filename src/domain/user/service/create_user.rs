@@ -2,7 +2,7 @@ use chrono::Utc;
 use ulid::Ulid;
 
 use super::{CreateUserInput, Service};
-use crate::domain::user::{entities, Error};
+use crate::domain::user::{Error, entities};
 
 impl Service {
     pub async fn create_user(
