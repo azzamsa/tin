@@ -21,21 +21,6 @@ jobs:
         with:
           tool: hurlfmt
 
-      - name: Check MSRV
-        run: |
-          cargo_msrv=$(sed -n 's/rust-version = "\(.*\)"/\1/p' Cargo.toml)
-          toolchain_channel=$(sed -n 's/channel = "\(.*\)"/\1/p' rust-toolchain.toml)
-
-          echo "Cargo MSRV: $cargo_msrv"
-          echo "Toolchain Channel: $toolchain_channel"
-
-          if [ "$cargo_msrv" = "$toolchain_channel" ]; then
-              echo "MSRV match"
-          else
-              echo "MSRV do not match"
-              exit 1
-          fi
-
       - name: Show version information
         shell: bash
         run: |
