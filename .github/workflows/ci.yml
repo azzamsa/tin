@@ -16,9 +16,10 @@ jobs:
 
       - uses: taiki-e/install-action@just
       - uses: taiki-e/install-action@dprint
+      - uses: taiki-e/install-action@typos
       - uses: taiki-e/install-action@v2
         with:
-          tool: typos-cli,hurlfmt
+          tool: hurlfmt
 
       - name: Check MSRV
         run: |
@@ -101,18 +102,18 @@ jobs:
             }
           # `sfackler/rust-openssl` needs more effort to compile to musl
           # - { build: linux-musl, os: ubuntu-22.04, target: x86_64-unknown-linux-musl   }
-          - { build: win-gnu, os: windows-2022, target: x86_64-pc-windows-gnu }
+          - { build: win-gnu, os: windows-2025, target: x86_64-pc-windows-gnu }
           - {
               build: win-msvc,
-              os: windows-2022,
+              os: windows-2025,
               target: x86_64-pc-windows-msvc,
             }
           - {
               build: win32-msvc,
-              os: windows-2022,
+              os: windows-2025,
               target: i686-pc-windows-msvc,
             }
-          - { build: macos, os: macos-14, target: x86_64-apple-darwin }
+          - { build: macos, os: macos-15, target: x86_64-apple-darwin }
 
     steps:
       - name: Checkout source code
