@@ -10,6 +10,7 @@ pub struct Service {
 }
 
 impl Service {
+    #[must_use]
     pub fn new(config: Arc<Config>) -> Self {
         Self { config }
     }

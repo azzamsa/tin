@@ -42,7 +42,7 @@ impl Repository {
             }
             // Default page size
             _ => query = format!("{query} limit {default_page_size}"),
-        };
+        }
 
         let mut rows = match sqlx::query_as::<_, entities::User>(&query)
             .fetch_all(db)
@@ -63,7 +63,7 @@ impl Repository {
             } else {
                 rows
             }
-        };
+        }
         Ok(rows)
     }
     pub async fn has_previous_page(
@@ -75,7 +75,7 @@ impl Repository {
         if let Some(last) = last {
             tracing::debug!("rows length: {}. last: {}", rows.len(), last);
             has_previous_page = rows.len() > last as usize;
-        };
+        }
         Ok(has_previous_page)
     }
     pub async fn find_page_info<'c, C: Queryer<'c> + Copy>(
@@ -110,7 +110,7 @@ impl Repository {
                 );
             }
             _ => (),
-        };
+        }
 
         //
         // has_next query
@@ -123,7 +123,7 @@ impl Repository {
                 }
                 Ok(row) => row.get(0),
             };
-        };
+        }
 
         let (start_cursor, end_cursor) = if rows.is_empty() {
             (None, None)

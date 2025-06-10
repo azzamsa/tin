@@ -99,10 +99,7 @@ impl Config {
             std::env::var(ENV_APP_BASE_URL).map_err(|_| env_not_found(ENV_APP_BASE_URL))?;
 
         // GraphQL
-        let schema_location = match std::env::var(ENV_SCHEMA_LOCATION) {
-            Ok(location) => Some(location),
-            Err(_) => None,
-        };
+        let schema_location = std::env::var(ENV_SCHEMA_LOCATION).ok();
 
         let http = {
             let port = std::env::var(ENV_HTTP_PORT)

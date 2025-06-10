@@ -26,6 +26,7 @@ pub struct Base64Cursor {
     index: Uuid,
 }
 impl Base64Cursor {
+    #[must_use]
     pub fn new(index: Uuid) -> Self {
         Self {
             name: "Cursor",
@@ -34,6 +35,7 @@ impl Base64Cursor {
     }
 
     /// Returns a base64 string representation of the cursor
+    #[must_use]
     pub fn encode(&self) -> String {
         BASE64_URL_SAFE_NO_PAD.encode(format!("{}:{}", self.name, self.index))
     }
@@ -47,7 +49,7 @@ impl Base64Cursor {
         let cursor = String::from_utf8(bytes).map_err(|_| Base64CursorError::Invalid)?;
         let index = cursor
             .split(':')
-            .last()
+            .next_back()
             .map(str::parse)
             .ok_or(Base64CursorError::Invalid)?
             .map_err(|_| Base64CursorError::Invalid)?;

@@ -21,7 +21,7 @@ impl Service {
             .await?;
 
         let user_edges: Vec<entities::UserEdge> =
-            users.into_iter().map(|user| user.into()).collect();
+            users.into_iter().map(std::convert::Into::into).collect();
         Ok(user_edges)
     }
     pub async fn find_page_info(

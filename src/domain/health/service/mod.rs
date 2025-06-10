@@ -4,6 +4,7 @@ mod get_health;
 pub struct Service;
 
 impl Service {
+    #[must_use]
     pub fn new() -> Self {
         Self {}
     }

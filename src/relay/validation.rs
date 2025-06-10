@@ -32,7 +32,7 @@ pub fn validate_params(first: Option<i32>, last: Option<i32>) -> Result<(), Erro
         (None, None) => return Err(MissingFirstAndLastPaginationArguments.into()),
         (Some(_), Some(_)) => return Err(PassedFirstAndLastPaginationArguments.into()),
         _ => (),
-    };
+    }
 
     Ok(())
 }

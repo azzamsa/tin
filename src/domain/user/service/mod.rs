@@ -20,6 +20,7 @@ pub struct Service {
 }
 
 impl Service {
+    #[must_use]
     pub fn new(db: DB, mailer: Mailer) -> Self {
         let repo = Repository::new();
         Self { repo, db, mailer }

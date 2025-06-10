@@ -8,6 +8,7 @@ impl Default for Mailer {
 }
 
 impl Mailer {
+    #[must_use]
     pub fn new() -> Self {
         Self {}
     }
