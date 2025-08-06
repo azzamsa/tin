@@ -1,6 +1,6 @@
 use std::{fmt, str::FromStr};
 
-use dotenv;
+use dotenvy;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -89,7 +89,7 @@ impl Config {
     /// Load and validate the configuration from the environment.
     /// If an error is found while parsing the values, or validating the data, an error is returned.
     pub fn load() -> Result<Self, Error> {
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
 
         // app
         let env = std::env::var(ENV_APP_ENV)
