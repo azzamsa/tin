@@ -1,6 +1,6 @@
 # This file is used for local environment
-
 services:
+
   backend:
     image: tin:latest
     depends_on:
@@ -14,12 +14,13 @@ services:
       - DATABASE_URL=postgres://gandalf:SpeakFriendAndEnter@db/tin
 
   db:
-    image: docker.io/postgres:17
+    image: docker.io/postgres:17.6
     ports:
       - 5432:5432
     volumes:
       # Use `:Z` in SELinux-enabled disro.
-      - ./cdata/db:/var/lib/postgresql/data/:Z
+      # - ./_volumes/db:/var/lib/postgresql/data/:Z
+      - ./_volumes/db:/var/lib/postgresql/data/
     environment:
       POSTGRES_USER: gandalf
       POSTGRES_PASSWORD: SpeakFriendAndEnter
