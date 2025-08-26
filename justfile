@@ -36,15 +36,15 @@ run:
 
 [doc('Build the container image')]
 image-build:
-    docker build . --tag tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD)
+    podman build . --tag tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD)
 
 [doc('Run the container')]
 image-start service='':
-    docker compose --file compose.local.yml up {{ service }} -d
+    podman compose --file compose.local.yml up {{ service }} -d
 
 [doc('Stop the container')]
 image-stop:
-    docker compose --file compose.local.yml down
+    podman compose --file compose.local.yml down
 
 [doc('Restart the containers')]
 image-restart:
