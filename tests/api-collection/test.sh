@@ -1,13 +1,16 @@
 #!/bin/bash
 
-#
 # Script to run all the `api-collection` assertions.
-#
 
-directories=("meta")
-for dir in "${directories[@]}"; do
-	hurl --test --glob "${dir}/**/*.hurl" --variables-file props/local
-done
+VARS="tests/api-collection/props/local"
+
+#
+# Test `Meta`
+
+hurl --test --variables-file "$VARS" --glob "tests/api-collection/meta/**/*.hurl"
+
+#
+# Test `User`
 
 # Only run `query` assertions.
 files=(
@@ -22,5 +25,5 @@ files=(
 	"users_no_first_or_last"
 )
 for file in "${files[@]}"; do
-	hurl --test --variables-file props/local "user/${file}.hurl"
+	hurl --test --variables-file "$VARS" "tests/api-collection/user/${file}.hurl"
 done

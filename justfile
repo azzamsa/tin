@@ -76,6 +76,10 @@ test:
 test-unit:
     cargo nextest run --lib
 
+[doc('Run the unit tests')]
+test-api:
+    ./tests/api-collection/test.sh
+
 [doc('Create a new release. Example `cargo-release release minor --tag-name v0.2.0`')]
 release level:
     cargo-release release {{ level }} --execute

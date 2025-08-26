@@ -11,6 +11,11 @@ $ # you need to prepare the .env. Otherwise, start it in container. See "Configu
 $ just check
 ```
 
+`just check` will run the `cargo test` only.
+If you want to use `hurl`, see [Running API collection](#running-api-collection).
+
+## Running API collection
+
 ## Commit Message Format
 
 This repo is using [Agular's commit message format][commit-message]
@@ -29,8 +34,12 @@ This repo is using [Agular's commit message format][commit-message]
 ## Running API collection
 
 ```shell
+# Run individual test
 hurl --variables-file props/local meta/meta.hurl | jq
 hurl --variables-file props/local meta/meta.hurl --ignore-asserts | jq
+
+# Run all tests
+./tests/api-collection/test.sh
 ```
 
 [commit-message]: https://github.com/angular/angular/blob/2095a08781167e91a60a4cec65c694688b319cd0/CONTRIBUTING.md#-commit-message-format
