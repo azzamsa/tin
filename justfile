@@ -17,8 +17,8 @@ _default:
 [confirm('⚠️ This command will alter your system. Run recipe `setup`?')]
 [doc('Setup the repository')]
 setup:
-    just _cargo-install 'cargo-edit cargo-nextest cargo-outdated dprint git-cliff bacon typos-cli'
-    just _cargo-install 'sqlx-cli'
+    cargo binstall 'cargo-edit cargo-nextest cargo-outdated dprint git-cliff bacon typos-cli'
+    cargo binstall 'sqlx-cli'
 
 [doc('Tasks to make the code-base comply with the rules. Mostly used in git hooks')]
 comply: _doc-check _update-sqlx-schema fmt lint test
@@ -130,19 +130,3 @@ up arg="":
     else
         cargo outdated --root-deps-only
     fi;
-
-#
-# Helper
-#
-
-[doc('Install using plain cargo or cargo-binstall')]
-[unix]
-_cargo-install tool:
-    #!/usr/bin/env bash
-    if command -v cargo-binstall >/dev/null 2>&1; then
-        echo "cargo-binstall..."
-        cargo binstall --no-confirm --no-symlinks {{ tool }}
-    else
-        echo "Building from source"
-        cargo install --locked {{ tool }}
-    fi
