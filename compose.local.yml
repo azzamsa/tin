@@ -19,7 +19,6 @@ services:
       - 5432:5432
     volumes:
       # Use `:Z` in SELinux-enabled disro.
-      # - ./_volumes/db:/var/lib/postgresql/data/:Z
       - ./_volumes/db:/var/lib/postgresql/data/
     environment:
       POSTGRES_USER: gandalf
