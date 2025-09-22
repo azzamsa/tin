@@ -9,8 +9,8 @@ impl Service {
             port: self.config.http.port,
         };
         let meta = entities::Meta {
-            build: option_env!("VCS_REVISION").unwrap_or("unknown").to_string(),
             version: env!("CARGO_PKG_VERSION").to_string(),
+            build_hash: option_env!("BUILD_HASH").unwrap_or("unknown").to_string(),
             config,
         };
         Ok(meta)

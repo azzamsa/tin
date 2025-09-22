@@ -34,9 +34,13 @@ dev:
 run:
     cargo run
 
+[doc('Build the app')]
+build:
+    BUILD_HASH=$(git rev-parse --short=12 HEAD) cargo build --release
+
 [doc('Build the container image')]
 image-build:
-    podman build . --tag tin:latest --build-arg VCS_REVISION=$(git rev-parse --short HEAD)
+    podman build -t tin:latest --build-arg BUILD_HASH=$(git rev-parse --short HEAD) .
 
 [doc('Run the container')]
 image-start service='':

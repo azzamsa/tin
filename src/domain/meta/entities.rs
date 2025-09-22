@@ -2,8 +2,8 @@ use frunk::LabelledGeneric;
 
 #[derive(Debug, LabelledGeneric)]
 pub struct Meta {
-    pub build: String,
     pub version: String,
+    pub build_hash: String,
     pub config: Config,
 }
 
