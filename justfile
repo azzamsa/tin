@@ -44,11 +44,11 @@ image-build:
 
 [doc('Run the container')]
 image-start service='':
-    podman compose --file compose.local.yml up {{ service }} -d
+    podman compose {{ service }} -d
 
 [doc('Stop the container')]
 image-stop:
-    podman compose --file compose.local.yml down
+    podman compose down
 
 [doc('Restart the containers')]
 image-restart:

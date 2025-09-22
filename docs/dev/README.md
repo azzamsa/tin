@@ -4,7 +4,7 @@
 
 ```bash
 $ # start the container database
-$ podman-compose -f compose.local.yml up db -d
+$ podman-compose up db -d
 
 $ # start the backend in host
 $ # you need to prepare the .env. Otherwise, start it in container. See "Configure Environment Variables"
