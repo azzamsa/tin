@@ -36,11 +36,11 @@ run:
 
 [doc('Build the app')]
 build:
-    BUILD_HASH=$(git rev-parse --short=12 HEAD) cargo build --release
+    BUILD_HASH=$(git rev-parse --short=12 HEAD) BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ) cargo build --release
 
 [doc('Build the container image')]
 image-build:
-    podman build -t tin:latest --build-arg BUILD_HASH=$(git rev-parse --short HEAD) .
+    podman build -t tin:latest --build-arg BUILD_HASH=$(git rev-parse --short HEAD) --build-arg BUILD_TIMESTAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)" .
 
 [doc('Run the container')]
 image-start service='':
