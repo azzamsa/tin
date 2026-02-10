@@ -10,7 +10,7 @@ keywords = ["boilerplate"]
 license = "MIT"
 publish = false
 repository = "https://github.com/azzamsa/tin"
-rust-version = "1.90.0"
+rust-version = "1.93.0"
 description = "Rust GraphQL Template"
 
 [profile.release]
@@ -21,13 +21,13 @@ lto = true
 panic = 'abort'
 
 [dependencies]
-axum = "0.8.4"
-hyper = "1.7.0"
-tokio = { version = "1.47.1", features = ["macros", "rt-multi-thread"] }
+axum = "0.8.8"
+hyper = "1.8.1"
+tokio = { version = "1.49.0", features = ["macros", "rt-multi-thread"] }
 
 # GraphQL
-async-graphql = { version = "7.0.17", features = ["uuid", "chrono"] }
-async-graphql-axum = "7.0.17"
+async-graphql = { version = "7.2.1", features = ["uuid", "chrono"] }
+async-graphql-axum = "7.2.1"
 
 # Rest
 utoipa = { version = "5.4.0", features = ["axum_extras"] }
@@ -37,32 +37,32 @@ utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }
 sqlx = { version = "0.8.6", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate"] }
 
 # Logging
-tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.19", features = ["env-filter", "chrono"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter", "chrono"] }
 
 # Configurations
 dotenvy = "0.15.7"
 
 # Misc
 base64 = "0.22.1"
-chrono = "0.4.41"
+chrono = "0.4.43"
 dotenv = "0.15.0"
 frunk = "0.4.4"
 frunk_core = { version = "0.4.4" }
-serde = "1.0.219"
-serde_json = "1.0.143"
-thiserror = "2.0.16"
-time = "0.3.41"
+serde = "1.0.228"
+serde_json = "1.0.149"
+thiserror = "2.0.18"
+time = "0.3.47"
 ulid = { version = "1.2.1", features = ["uuid"] }
-url = "2.5.7"
-uuid = "1.18.0"
+url = "2.5.8"
+uuid = "1.20.0"
 
 [dev-dependencies]
-anyhow = "1.0.99"
+anyhow = "1.0.101"
 cynic = "3.12.0"
 http-body-util = "0.1.3"
 mime = "0.3.17"
-tower = { version = "0.5.2", features = ["util"] }
+tower = { version = "0.5.3", features = ["util"] }
 
 [package.metadata.binstall]
 pkg-url = "{ repo }/releases/download/v{ version }/{ name }-{ version}-{ target }.tar.gz"
