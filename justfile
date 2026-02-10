@@ -39,7 +39,7 @@ image-build:
 
 [doc('Run the container')]
 image-start service='':
-    podman compose {{ service }} -d
+    podman compose up {{ service }} -d
 
 [doc('Stop the container')]
 image-stop:
