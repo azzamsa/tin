@@ -3,7 +3,6 @@
 set dotenv-load := true
 
 alias d := dev
-alias r := run
 alias f := fmt
 alias l := lint
 alias t := test
@@ -17,8 +16,8 @@ _default:
 [confirm('⚠️ This command will alter your system. Run recipe `setup`?')]
 [doc('Setup the repository')]
 setup:
-    cargo binstall 'cargo-edit cargo-nextest cargo-outdated dprint git-cliff bacon typos-cli'
-    cargo binstall 'sqlx-cli'
+    cargo binstall cargo-edit cargo-nextest cargo-outdated dprint git-cliff bacon typos-cli
+    cargo binstall sqlx-cli
 
 [doc('Tasks to make the code-base comply with the rules. Mostly used in git hooks')]
 comply: _doc-check _update-sqlx-schema fmt lint test
@@ -30,17 +29,13 @@ check: _doc-check _check-sqlx-schema fmt-check lint test
 dev:
     bacon
 
-[doc('Run the app')]
-run:
-    cargo run
-
 [doc('Build the app')]
 build:
     BUILD_HASH=$(git rev-parse --short=12 HEAD) BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ) cargo build --release
 
 [doc('Build the container image')]
 image-build:
-    podman build -t tin:latest --build-arg BUILD_HASH=$(git rev-parse --short HEAD) --build-arg BUILD_TIMESTAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)" .
+    podman build -t tin:latest --build-arg BUILD_HASH=$(git rev-parse --short HEAD) --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) .
 
 [doc('Run the container')]
 image-start service='':
@@ -120,13 +115,16 @@ _release-prepare version:
     just fmt
 
 [doc('Check dependencies health. Pass `--write` to upgrade dependencies')]
-[unix]
 up arg="":
-    #!/usr/bin/env bash
-    if [ "{{ arg }}" = "--write" ]; then
-        cargo upgrade --incompatible --recursive --verbose
-        cargo update
-        dprint config update
-    else
-        cargo outdated --root-deps-only
-    fi;
+    if [ "{{ arg }}" = "--write" ]; then \
+        cargo upgrade --incompatible --recursive --verbose && \
+        cargo update && \
+        dprint config update; \
+    else \
+        cargo outdated --root-deps-only; \
+    fi
+
+[doc('Dependency analysis')]
+meta:
+    cargo +nightly udeps
+    cargo audit
