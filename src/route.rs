@@ -25,13 +25,14 @@ use crate::{
     schema::{AppSchema, Mutation, Query},
 };
 
-pub async fn graphql_handler(
+async fn graphql_handler(
     State(schema): State<AppSchema>,
     req: GraphQLRequest,
 ) -> GraphQLResponse {
     schema.execute(req.into_inner()).await.into()
 }
-pub async fn graphql_playground() -> impl IntoResponse {
+
+async fn graphql_playground() -> impl IntoResponse {
     response::Html(playground_source(GraphQLPlaygroundConfig::new("/graphql")))
 }
 
