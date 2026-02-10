@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use async_graphql::{Context, Error, FieldResult, Object};
+use async_graphql::{Context, FieldResult, Object};
 use axum::{Json, response::IntoResponse};
 use frunk_core::labelled::Transmogrifier;
 
@@ -13,13 +13,9 @@ pub struct HealthQuery;
 #[Object]
 impl HealthQuery {
     pub async fn health(&self, ctx: &Context<'_>) -> FieldResult<model::Health> {
-        let server_ctx = ctx.data::<Arc<ServerContext>>()?;
-
-        let result = server_ctx.health_service.get_health().await;
-        match result {
-            Ok(res) => Ok(res.transmogrify()),
-            Err(err) => Err(Error::new(err.to_string())),
-        }
+        let ctx = ctx.data::<Arc<ServerContext>>()?;
+        let result = ctx.health_service.get_health().await?;
+        Ok(result.transmogrify())
     }
 }
 
@@ -37,6 +33,5 @@ pub async fn health() -> impl IntoResponse {
         status: "running".into(),
     };
     let response = model::HealthResponse { data };
-
     Json(response)
 }

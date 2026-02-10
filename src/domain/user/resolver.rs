@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use async_graphql::{Context, Error, FieldResult, Object};
+use async_graphql::{Context, FieldResult, Object};
 use frunk_core::labelled::Transmogrifier;
 use uuid::Uuid;
 
@@ -42,13 +42,9 @@ impl UserQuery {
         Ok(user_connection)
     }
     pub async fn user(&self, ctx: &Context<'_>, id: Uuid) -> FieldResult<model::User> {
-        let server_ctx = ctx.data::<Arc<ServerContext>>()?;
-
-        let result = server_ctx.user_service.find_user(id).await;
-        match result {
-            Ok(res) => Ok(res.transmogrify()),
-            Err(err) => Err(Error::new(err.to_string())),
-        }
+        let ctx = ctx.data::<Arc<ServerContext>>()?;
+        let result = ctx.user_service.find_user(id).await?;
+        Ok(result.transmogrify())
     }
 }
 
@@ -62,40 +58,22 @@ impl UserMutation {
         ctx: &Context<'_>,
         input: model::input::CreateUserInput,
     ) -> FieldResult<model::User> {
-        let server_ctx = ctx.data::<Arc<ServerContext>>()?;
-
-        let result = server_ctx
-            .user_service
-            .create_user(input.transmogrify())
-            .await;
-        match result {
-            Ok(res) => Ok(res.transmogrify()),
-            Err(err) => Err(Error::new(err.to_string())),
-        }
+        let ctx = ctx.data::<Arc<ServerContext>>()?;
+        let result = ctx.user_service.create_user(input.transmogrify()).await?;
+        Ok(result.transmogrify())
     }
     pub async fn update_user(
         &self,
         ctx: &Context<'_>,
         input: model::input::UpdateUserInput,
     ) -> FieldResult<model::User> {
-        let server_ctx = ctx.data::<Arc<ServerContext>>()?;
-
-        let result = server_ctx
-            .user_service
-            .update_user(input.transmogrify())
-            .await;
-        match result {
-            Ok(res) => Ok(res.transmogrify()),
-            Err(err) => Err(Error::new(err.to_string())),
-        }
+        let ctx = ctx.data::<Arc<ServerContext>>()?;
+        let result = ctx.user_service.update_user(input.transmogrify()).await?;
+        Ok(result.transmogrify())
     }
     pub async fn delete_user(&self, ctx: &Context<'_>, id: Id) -> FieldResult<model::User> {
-        let server_ctx = ctx.data::<Arc<ServerContext>>()?;
-
-        let result = server_ctx.user_service.delete_user(id).await;
-        match result {
-            Ok(res) => Ok(res.transmogrify()),
-            Err(err) => Err(Error::new(err.to_string())),
-        }
+        let ctx = ctx.data::<Arc<ServerContext>>()?;
+        let result = ctx.user_service.delete_user(id).await?;
+        Ok(result.transmogrify())
     }
 }
