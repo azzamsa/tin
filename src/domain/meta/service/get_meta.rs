@@ -11,9 +11,7 @@ impl Service {
         let meta = entities::Meta {
             version: env!("CARGO_PKG_VERSION").to_string(),
             build_hash: option_env!("BUILD_HASH").unwrap_or("unknown").to_string(),
-            build_timestamp: option_env!("BUILD_TIMESTAMP")
-                .unwrap_or("unknown")
-                .to_string(),
+            build_date: option_env!("BUILD_DATE").unwrap_or("unknown").to_string(),
             config,
         };
         Ok(meta)
