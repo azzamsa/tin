@@ -31,8 +31,9 @@ type Health {
 }
 
 type Meta {
-	build: String!
 	version: String!
+	buildHash: String!
+	buildDate: String!
 	config: Config!
 }
 
