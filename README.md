@@ -1,3 +1,6 @@
+> [!TIP]
+> Looking for something simpler? Try [Tun](https://github.com/azzamsa/tun).
+
 <div align="center">
 
 <img src='docs/logo.svg' width=250px />
